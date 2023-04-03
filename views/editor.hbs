@@ -27,23 +27,25 @@
 
         let jsonEditorConfig = JSON.parse(`{{{editorConfig}}}`);
 
-        const locale = new Promise(function(resolve, reject) {
+        {{!-- const locale = new Promise(function(resolve, reject) {
             AP.user.getLocale(function(lc) {
                 resolve(lc);
             });
-        });
+        }); --}}
 
-        const timeZone = new Promise(function(resolve, reject) {
+        {{!-- const timeZone = new Promise(function(resolve, reject) {
             AP.user.getTimeZone(function(tz) {
                 resolve(tz);
             });
-        });
+        }); --}}
 
-        Promise.all([locale, timeZone]).then(values => {
+        {{!-- Promise.all([locale, timeZone]).then(values => {
             jsonEditorConfig.document.info.uploaded = new Date(jsonEditorConfig.document.info.uploaded).toLocaleString(values[0].replace("_", "-"), {timeZone: values[1]});
             jsonEditorConfig.editorConfig.lang = values[0].replace("_", "-");
 
             var DocEditor = new DocsAPI.DocEditor("placeholder", jsonEditorConfig);
-        });
+        }); --}}
+
+        var DocEditor = new DocsAPI.DocEditor("placeholder", jsonEditorConfig);
     });
 </script>
