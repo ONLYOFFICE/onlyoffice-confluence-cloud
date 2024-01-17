@@ -17,6 +17,7 @@
     "react-dom": "ReactDOM"
   },
   "scripts": {
+    "install": "git config --local core.hooksPath .git-hooks/",
     "build-jsx-browser": "parcel build --log-level 1 --global __root_component --out-dir views views/*.jsx",
     "build-jsx-node": "parcel build --log-level 1 --no-minify --target node --out-dir views/node views/*.jsx",
     "build": "concurrently -i 'npm:build-*'",
