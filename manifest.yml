@@ -1,0 +1,70 @@
+app:
+  id: ari:cloud:ecosystem::app/a4f22bba-777b-44d2-9c3d-aa1eb92d5946
+  connect:
+    key: onlyoffice.onlyoffice-confluence-plugin
+    remote: connect
+    authentication: jwt
+  runtime:
+    name: nodejs18.x
+remotes:
+  - key: connect
+    baseUrl: https://confluence-cloud.onlyoffice.com
+connectModules:
+  confluence:lifecycle:
+    - key: lifecycle-events
+      installed: /installed
+      uninstalled: /uninstalled
+  confluence:generalPages:
+    - key: editor
+      name:
+        value: ONLYOFFICE Editor
+      url: >-
+        /editor?pageId={page.id}&attachmentId={attachment.id}&attachmentName={attachment.name}
+  confluence:webItems:
+    - key: web-item-onlyoffice-edit
+      name:
+        value: Edit in ONLYOFFICE
+        i18n: onlyoffice.editor.link.edit
+      url: editor
+      location: system.attachment
+      context: page
+      conditions:
+        - condition: has_attachment_permission
+          params:
+            permission: EDIT
+      weight: 9
+    - key: web-item-onlyoffice-view
+      name:
+        value: View in ONLYOFFICE
+        i18n: onlyoffice.editor.link.view
+      url: editor
+      location: system.attachment
+      context: page
+      conditions:
+        - condition: has_attachment_permission
+          params:
+            permission: VIEW
+        - condition: has_attachment_permission
+          invert: true
+          params:
+            permission: EDIT
+      weight: 10
+  confluence:configurePage:
+    - url: /configure
+      name:
+        value: ONLYOFFICE Configuration
+        i18n: onlyoffice.configuration.title
+      key: configure
+  confluence:translations:
+    - paths:
+        de-DE: /i18n/de_DE.json
+        es-ES: /i18n/es_ES.json
+        fr-FR: /i18n/fr_FR.json
+        ja-JP: /i18n/ja_JP.json
+        ru-RU: /i18n/ru_RU.json
+      key: connect-translations
+permissions:
+  scopes:
+    - read:connect-confluence
+    - write:connect-confluence
+    - act-as-user:connect-confluence
