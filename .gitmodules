@@ -1,4 +1,4 @@
-[submodule "public/assets/document-formats"]
-	path = public/assets/document-formats
+[submodule "remotes/connect/public/assets/document-formats"]
+	path = remotes/connect/public/assets/document-formats
 	url = https://github.com/ONLYOFFICE/document-formats
 	branch = master
