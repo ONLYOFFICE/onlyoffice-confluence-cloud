@@ -3,9 +3,9 @@ name: Lint
 on:
   workflow_dispatch:
   push:
-    branches: [master, main]
+    branches: [master]
   pull_request:
-    branches: [master, main, develop]
+    branches: [master, develop]
 
 jobs:
   lint:
@@ -13,12 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Code Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install NodeJS
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 18
 
       - name: Install Dependencies
         run: npm install

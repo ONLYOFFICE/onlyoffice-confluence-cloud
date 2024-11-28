@@ -1,5 +1,6 @@
 {
     "onlyoffice.editor.link.view": "Открыть в ONLYOFFICE",
     "onlyoffice.editor.link.edit": "Редактировать в ONLYOFFICE",
-    "onlyoffice.configuration.title": "Конфигурация ONLYOFFICE"
+    "onlyoffice.configuration.title": "Конфигурация ONLYOFFICE",
+    "onlyoffice.create.link": "Новый документ"
 }

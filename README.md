@@ -9,6 +9,22 @@ The app allows to:
 * View and edit text documents, spreadsheets, and presentations.
 * Co-edit documents in real-time using two co-editing modes (Fast and Strict), Track Changes, comments, built-in chat.
 
+Supported formats:
+
+**For viewing:**
+
+* **WORD**: DOC, DOCM, DOCX, DOT, DOTM, DOTX, EPUB, FB2, FODT, HTM, HTML, MHT, MHTML, ODT, OTT, RTF, STW, SXW, TXT, WPS, WPT, XML
+* **CELL**: CSV, ET, ETT, FODS, ODS, OTS, SXC, XLS, XLSB, XLSM, XLSX, XLT, XLTM, XLTX
+* **SLIDE**: DPS, DPT, FODP, ODP, OTP, POT, POTM, POTX, PPS, PPSM, PPSX, PPT, PPTM, PPTX, SXI
+* **PDF**: DJVU, DOCXF, OFORM, OXPS, PDF, XPS
+
+**For editing:**
+
+* **WORD**: DOCM, DOCX, DOTM, DOTX
+* **CELL**: XLSM, XLSX, XLTM, XLTX
+* **SLIDE**: POTM, POTX, PPSM, PPSX, PPTM, PPTX
+* **PDF**: PDF
+
 ## Installing ONLYOFFICE Docs
 
 To be able to edit documents in Confluence Cloud, you will need an instance of ONLYOFFICE Docs (Document Server). You can install free Community version or scalable Enterprise Edition.
@@ -103,12 +119,18 @@ The table below will help you make the right choice.
 | Font and paragraph formatting   | + | + |
 | Object insertion                | + | + |
 | Transitions                     | + | + |
+| Animations                      | + | + |
 | Presenter mode                  | + | + |
 | Notes                           | + | + |
 | **Form creator features** | **Community Edition** | **Enterprise Edition** |
 | Adding form fields           | + | + |
 | Form preview                    | + | + |
 | Saving as PDF                   | + | + |
+| **Working with PDF**      | **Community Edition** | **Enterprise Edition** |
+| Text annotations (highlight, underline, cross out) | + | + |
+| Comments                        | + | + |
+| Freehand drawings               | + | + |
+| Form filling                    | + | + |
 | | [Get it now](https://www.onlyoffice.com/download-docs.aspx?utm_source=github&utm_medium=cpc&utm_campaign=GitHubConfluenceCloud#docs-community)  | [Start Free Trial](https://www.onlyoffice.com/download-docs.aspx?utm_source=github&utm_medium=cpc&utm_campaign=GitHubConfluenceCloud#docs-enterprise)  |
 
 \* If supported by DMS.

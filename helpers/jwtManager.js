@@ -14,9 +14,9 @@
 * limitations under the License.
 */
 
-const jwt = require("atlassian-jwt");
+import { decodeSymmetric, encodeSymmetric, SymmetricAlgorithm } from "atlassian-jwt";
 
-async function getJwtSecret(addon, clientKey)  {
+export async function getJwtSecret(addon, clientKey)  {
     const clientProperties = await addon.settings.get("clientProperties", clientKey);
 
     if (clientProperties && clientProperties.jwtSecret) {
@@ -26,7 +26,7 @@ async function getJwtSecret(addon, clientKey)  {
     return addon.config.docServer().default.secret;
 }
 
-async function getJwtHeader(addon, clientKey) {
+export async function getJwtHeader(addon, clientKey) {
     const clientProperties = await addon.settings.get("clientProperties", clientKey);
 
     if (clientProperties && clientProperties.jwtHeader) {
@@ -36,10 +36,10 @@ async function getJwtHeader(addon, clientKey) {
     return  addon.config.docServer().default.authorizationHeader
 }
 
-async function createQueryToken(addon, clientKey, userAccountId, context) {
+export async function createQueryToken(addon, clientKey, userAccountId, context) {
     const settings = await addon.settings.get("clientInfo", clientKey);
 
-    return jwt.encodeSymmetric(
+    return encodeSymmetric(
         {
             clientKey: clientKey,
             userId: userAccountId,
@@ -51,13 +51,13 @@ async function createQueryToken(addon, clientKey, userAccountId, context) {
     );
 }
 
-async function verifyQueryToken(addon, token, operation) {
+export async function verifyQueryToken(addon, token, operation) {
 
-    const unverifiedContext = jwt.decodeSymmetric(token, "", jwt.SymmetricAlgorithm.HS256, true);
+    const unverifiedContext = decodeSymmetric(token, "", SymmetricAlgorithm.HS256, true);
 
     const settings = await addon.settings.get("clientInfo", unverifiedContext.clientKey);
 
-    const context = jwt.decodeSymmetric(token, settings.sharedSecret, jwt.SymmetricAlgorithm.HS256);
+    const context = decodeSymmetric(token, settings.sharedSecret, SymmetricAlgorithm.HS256);
 
     if (!context.pageId || !context.attachmentId || !context.operation) {
         return Promise.reject({
@@ -74,7 +74,7 @@ async function verifyQueryToken(addon, token, operation) {
     return context;
 }
 
-module.exports = {
+export default {
     getJwtSecret,
     getJwtHeader,
     createQueryToken,

@@ -9,5 +9,19 @@
     "ONLYOFFICE cannot be reached. Please contact admin.": "Приложение ONLYOFFICE недоступно. Пожалуйста, свяжитесь с администратором.",
     "ONLYOFFICE Docs Cloud": "ONLYOFFICE Docs Cloud",
     "Easily launch the editors in the cloud without downloading and installation": "Легко запускайте редакторы в облаке без скачивания и установки",
-    "Get Now": "Получить сейчас"
+    "Get Now": "Получить сейчас",
+    "You are not permitted to perform this operation.": "У вас нет разрешения на выполнение этой операции.",
+    "Attachment File Not Found": "Файл вложения не найден",
+    "Unknown error": "Неизвестная ошибка",
+    "creation.header": "Создать в ONLYOFFICE",
+    "creation.title.placeholder": "Новый документ",
+    "creation.label.title": "Заголовок",
+    "creation.label.word": "Документ",
+    "creation.label.cell": "Электронная таблица",
+    "creation.label.slide": "Презентация",
+    "creation.label.pdf": "PDF-форма",
+    "creating.error.message": "Ошибка создания нового документа",
+    "creating.error.already-exist.message": "Невозможно добавить новое вложение с тем же именем файла, что и у существующего вложения",
+    "label.create": "Создать",
+    "label.cancel": "Отмена"
 }

@@ -14,9 +14,9 @@
 * limitations under the License.
 */
 
-const axios = require("axios");
+import axios from "axios";
 
-function getAppProperty(httpClient, propertyKey) {
+export function getAppProperty(httpClient, propertyKey) {
     return new Promise((resolve, reject) => {
         httpClient.get({
             url: `/rest/atlassian-connect/1/addons/onlyoffice-confluence-cloud/properties/${encodeURIComponent(
@@ -43,7 +43,7 @@ function getAppProperty(httpClient, propertyKey) {
     });
 }
 
-function setAppProperty(httpClient, propertyKey, value) {
+export function setAppProperty(httpClient, propertyKey, value) {
     return new Promise((resolve, reject) => {
         httpClient.put({
             url: `/rest/atlassian-connect/1/addons/onlyoffice-confluence-cloud/properties/${encodeURIComponent(
@@ -66,7 +66,7 @@ function setAppProperty(httpClient, propertyKey, value) {
     });
 }
 
-function getAttachmentInfo(httpClient, userAccountId, attachmentId) {
+export function getAttachmentInfo(httpClient, userAccountId, attachmentId) {
     return new Promise((resolve, reject) => {
         if (userAccountId) {
             httpClient = httpClient.asUserByAccountId(userAccountId);
@@ -93,7 +93,34 @@ function getAttachmentInfo(httpClient, userAccountId, attachmentId) {
     });
 }
 
-function getUserInfo(httpClient, userAccountId) {
+export function getAttachmentsOnPage(httpClient, userAccountId, pageId, fileName) {
+    return new Promise((resolve, reject) => {
+        if (userAccountId) {
+            httpClient = httpClient.asUserByAccountId(userAccountId);
+        }
+
+        httpClient.get({
+            url: `/api/v2/pages/${encodeURIComponent(
+                pageId
+            )}/attachments?filename=${encodeURIComponent(fileName)}`,
+            json: true
+        }, function(err, response, body) {
+            if (response.statusCode == 200) {
+                resolve(body.results);
+            } else {
+                reject({
+                    method: "getAttachmentsOnPage",
+                    code: response.statusCode,
+                    type: response.statusMessage,
+                    message: "Error getting attachments on page.",
+                    description: body.message ? body.message : body
+                });
+            }
+        });
+    });
+}
+
+export function getUserInfo(httpClient, userAccountId) {
     return new Promise((resolve, reject) => {
         let url = userAccountId ? `/rest/api/user?accountId=${encodeURIComponent(userAccountId)}` : `/rest/api/user/anonymous`
 
@@ -116,7 +143,36 @@ function getUserInfo(httpClient, userAccountId) {
     });
 }
 
-function updateContent(httpClient, userAccountId, pageId, attachmentId, fileData) {
+export function createContent(httpClient, userAccountId, pageId, title, fileData) {
+    return new Promise((resolve, reject) => {
+        httpClient.asUserByAccountId(userAccountId).post({
+            headers: {
+                "X-Atlassian-Token": "no-check",
+                "Accept": "application/json"
+            },
+            multipartFormData: {
+                file: [fileData, { filename: title }],
+            },
+            url: `/rest/api/content/${encodeURIComponent(
+                pageId
+            )}/child/attachment`,
+            json: true
+        }, function(err, response, body) {
+            if (response.statusCode == 200) {
+                resolve(body);
+            } else {
+                reject({
+                    method: "createContent",
+                    code: response.statusCode,
+                    type: response.statusMessage,
+                    message: body.message ? body.message : body,
+                });
+            }
+        });
+    });
+}
+
+export function updateContent(httpClient, userAccountId, pageId, attachmentId, fileData) {
     return new Promise((resolve, reject) => {
         httpClient.asUserByAccountId(userAccountId).post({
             headers: {
@@ -146,7 +202,7 @@ function updateContent(httpClient, userAccountId, pageId, attachmentId, fileData
     });
 }
 
-function getUriDownloadAttachment(httpClient, userAccountId, pageId, attachmentId) {
+export function getUriDownloadAttachment(httpClient, userAccountId, pageId, attachmentId) {
     return new Promise((resolve, reject) => {
         if (userAccountId) {
             httpClient = httpClient.asUserByAccountId(userAccountId);
@@ -173,25 +229,18 @@ function getUriDownloadAttachment(httpClient, userAccountId, pageId, attachmentI
     });
 }
 
-function checkContentPermission(httpClient, userAccountId, attachmentId, operation) {
+export function getPermittedOperationsForContent(httpClient, accountId, contentType, contentId) {
     return new Promise((resolve, reject) => {
-        if (!/^[A-Z0-9-]+$/i.test(attachmentId)) {
+        if (!/^[A-Z0-9-]+$/i.test(contentId)) {
             reject(new Error("Invalid content ID"));
             return;
         }
-        httpClient.post({
-            url: `/rest/api/content/${encodeURIComponent(
-                attachmentId
-            )}/permission/check`,
+        httpClient.asUserByAccountId(accountId).get({
+            url: `/api/v2/${contentType}/${encodeURIComponent(
+                contentId
+            )}/operations`,
             headers: {
                 "X-Atlassian-Token": "no-check"
-            },
-            json: {
-                subject: {
-                    type: "user",
-                    identifier: userAccountId
-                },
-                operation
             }
         }, function(err, response, body) {
             if (err) {
@@ -199,18 +248,12 @@ function checkContentPermission(httpClient, userAccountId, attachmentId, operati
                 return;
             }
 
-            if (body.hasOwnProperty("hasPermission")) {
-                resolve(body.hasPermission);
-                return;
-            }
-
-            resolve(false);
-            }
-        );
+            resolve(JSON.parse(body));
+        });
     });
 }
 
-async function getFileDataFromUrl(url) {
+export async function getFileDataFromUrl(url) {
     const file = await axios({
         method: "get",
         responseType: "arraybuffer",
@@ -223,13 +266,41 @@ async function getFileDataFromUrl(url) {
     return file.data;
 }
 
-module.exports = {
+export async function getUsersByIds(httpClient, accountId, accountIds) {
+    return new Promise((resolve, reject) => {
+        var body = {
+            accountIds: accountIds
+        }
+
+        httpClient.asUserByAccountId(accountId).post({
+            url: "/api/v2/users-bulk",
+            headers: {
+                "X-Atlassian-Token": "no-check",
+                "Accept": "application/json"
+            },
+            body: body,
+            json: true
+        }, function(err, response, body) {
+            if (err) {
+                reject(err);
+                return;
+            }
+
+            resolve(body.results);
+        });
+    });
+}
+
+export default {
     getAppProperty,
     setAppProperty,
     getAttachmentInfo,
+    getAttachmentsOnPage,
     getUserInfo,
+    getUsersByIds,
+    createContent,
     updateContent,
     getUriDownloadAttachment,
-    checkContentPermission,
+    getPermittedOperationsForContent,
     getFileDataFromUrl
 };

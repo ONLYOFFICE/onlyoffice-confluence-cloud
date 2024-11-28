@@ -14,8 +14,8 @@
 * limitations under the License.
 */
 
-const _ = require("lodash");
-const util = require("util");
+import escape from "lodash/escape";
+import util from "util";
 
 function postInstallation (addon) {
     return function (req, res) {
@@ -61,7 +61,7 @@ function setClientInfo(addon, info, res) {
                 err
             });
             res.status(500).send(
-                _.escape(
+                escape(
                     `Could not lookup stored client data for ${info.clientKey}: ${err}`
                 )
             );
@@ -69,8 +69,7 @@ function setClientInfo(addon, info, res) {
     );
 }
 
-module.exports = {
+export default {
     postInstallation,
     postUninstallation
 };
-  

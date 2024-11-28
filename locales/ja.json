@@ -9,5 +9,19 @@
     "ONLYOFFICE cannot be reached. Please contact admin.": "ONLYOFFICEに接続できません。管理者に相談してください。",
     "ONLYOFFICE Docs Cloud": "ONLYOFFICE Docs Cloud",
     "Easily launch the editors in the cloud without downloading and installation": "ダウンロードやインストールをすることなく、クラウド上で簡単にエディタを起動することができます",
-    "Get Now": "今すぐ使ってみる"
+    "Get Now": "今すぐ使ってみる",
+    "You are not permitted to perform this operation.": "この操作は許可されていません。",
+    "Attachment File Not Found": "添付ファイルが見つかりません",
+    "Unknown error": "不明なエラー",
+    "creation.header": "ONLYOFFICEで作成する",
+    "creation.title.placeholder": "新しいドキュメント",
+    "creation.label.title": "タイトル",
+    "creation.label.word": "ドキュメント",
+    "creation.label.cell": "スプレッドシート",
+    "creation.label.slide": "プレゼンテーション",
+    "creation.label.pdf": "フォームのテンプレート",
+    "creating.error.message": "新規ドキュメント作成時のエラー",
+    "creating.error.already-exist.message": "既存の添付ファイルと同じファイル名の新しい添付ファイルを追加できません",
+    "label.create": "作成する",
+    "label.cancel": "キャンセル"
 }

@@ -15,25 +15,30 @@
 */
 
 import * as jwt from 'atlassian-jwt';
-const documentHelper = require("../helpers/documentHelper.js");
-const lifecycleManager = require("../helpers/lifecycleManager.js");
-const urlHelper = require("../helpers/urlHelper.js");
-const util = require("util");
-const _ = require("lodash");
+import documentHelper from "../helpers/documentHelper.js";
+import lifecycleManager from "../helpers/lifecycleManager.js";
+import urlHelper from "../helpers/urlHelper.js";
+import util from "util";
+import escape from "lodash/escape";
 
-const {
+import {
     getAttachmentInfo,
+    getAttachmentsOnPage,
     getUserInfo,
     updateContent,
     getUriDownloadAttachment,
-    getFileDataFromUrl
-} = require("../helpers/requestHelper.js");
+    getFileDataFromUrl,
+    createContent,
+    getUsersByIds
+} from "../helpers/requestHelper.js";
 
-const {
+import {
     getJwtSecret,
     getJwtHeader,
     verifyQueryToken
-} = require("../helpers/jwtManager.js");
+} from "../helpers/jwtManager.js";
+
+import i18n from "i18n";
 
 export default function routes(app, addon) {
     // Redirect root path to /atlassian-connect.json,
@@ -116,7 +121,7 @@ export default function routes(app, addon) {
                         err
                     });
                     res.status(500).send(
-                        _.escape(
+                        escape(
                             `Could not lookup stored client data for ${clientKey}: ${err}`
                         )
                     );
@@ -128,15 +133,82 @@ export default function routes(app, addon) {
         }
     });
 
+    app.get("/create", addon.authenticate(), async (req, res) => {
+        const creatableTypes = ["word", "cell", "slide", "pdf"];
+
+        const localBaseUrl = req.context.localBaseUrl;
+        const pageId = req.query.pageId;
+
+        const locales = {
+            "creation.header": i18n.__("creation.header"),
+            "creation.title.placeholder": i18n.__("creation.title.placeholder"),
+            "creation.label.title": i18n.__("creation.label.title"),
+            "creation.label.word": i18n.__("creation.label.word"),
+            "creation.label.cell": i18n.__("creation.label.cell"),
+            "creation.label.slide": i18n.__("creation.label.slide"),
+            "creation.label.pdf": i18n.__("creation.label.pdf"),
+            "creating.error.message": i18n.__("creating.error.message"),
+            "creating.error.already-exist.message": i18n.__("creating.error.already-exist.message"),
+            "label.create": i18n.__("label.create"),
+            "label.cancel": i18n.__("label.cancel")
+        };
+
+        res.render(
+            "create.jsx",
+            {
+                pageId: pageId,
+                creatableTypes: creatableTypes,
+                locales: locales,
+                localBaseUrl: localBaseUrl
+            }
+        );
+    });
+
+    app.post("/create/:contentId", addon.authenticate(true), async (req, res) => {
+        const httpClient = addon.httpClient(req);
+
+        const userAccountId = req.context.userAccountId;
+        const hostBaseUrl = req.context.hostBaseUrl;
+        const addonKey = req.context.addonKey;
+        const contentId = req.params.contentId;
+        const title = req.body.title;
+        const type = req.body.type;
+        const locale = req.body.locale;
+
+        const fileData = documentHelper.getBlankFile(
+            type,
+            new Intl.Locale(locale.replace("_", "-"))
+        ); 
+
+        createContent(
+            httpClient,
+            userAccountId,
+            contentId,
+            `${title}.${documentHelper.getDefaultExtensionByDocumentType(type)}`,
+            fileData
+        ).then((response) => {
+            const attachmentId = response.results[0].id;
+            res.json(
+                {
+                    editorUrl: urlHelper.getEditorUrl(hostBaseUrl, addonKey, contentId, attachmentId)
+                }
+            );
+        }).catch((e) => {
+            res.status(e.code || 500).json(e || "Undefined error.");
+        });
+    });
+
     app.get('/editor', addon.authenticate(), async (req, res) => {
 
         const userAccountId = req.context.userAccountId;
         const localBaseUrl = req.context.localBaseUrl;
         const hostBaseUrl = req.context.hostBaseUrl;
         const clientKey = req.context.clientKey;
+        const addonKey = req.context.addonKey;
 
         const pageId = req.query.pageId;
         const attachmentId = req.query.attachmentId;
+        const mode = req.query.mode;
 
         addon.logger.info(`Request to generate a configuration to open the editor:\n${util.inspect({
             clientKey: clientKey,
@@ -164,9 +236,9 @@ export default function routes(app, addon) {
             const attachmentInfo = await getAttachmentInfo(httpClient, userAccountId, attachmentId);
 
             const fileType = documentHelper.getFileExtension(attachmentInfo.title);
-            const documentType = documentHelper.getDocumentType(fileType);
+            const isViewable = documentHelper.isViewable(addon, fileType);
 
-            if (!documentType) {
+            if (!isViewable) {
                 addon.logger.warn(`Unsupported MediaType: this file format is not supported (${fileType})`);
                 res.status(415);
                 sendError(
@@ -188,6 +260,10 @@ export default function routes(app, addon) {
                 userInfo
             );
 
+            if (mode === "fillForms" && editorConfig.document.permissions.fillForms) {
+                editorConfig.document.permissions.edit = false;
+            }
+
             const jwtSecret = await getJwtSecret(addon, clientKey);
 
             if (jwtSecret && jwtSecret != "") {
@@ -196,11 +272,22 @@ export default function routes(app, addon) {
                 editorConfig.token = "";
             }
 
+            const locales = {
+                "You are not permitted to perform this operation.": i18n.__("You are not permitted to perform this operation."),
+                "Attachment File Not Found": i18n.__("Attachment File Not Found"),
+                "Unknown error": i18n.__("Unknown error"),
+                "ONLYOFFICE cannot be reached. Please contact admin.": i18n.__("ONLYOFFICE cannot be reached. Please contact admin.")
+            };
+
             res.render(
-                'editor.hbs',
+                'editor.jsx',
                 {
-                    editorConfig: JSON.stringify(editorConfig),
-                    docApiUrl: await urlHelper.getDocApiUrl(addon, clientKey)
+                    editorConfig: editorConfig,
+                    docApiUrl: await urlHelper.getDocApiUrl(addon, clientKey),
+                    pageId: pageId,
+                    editorUrl: urlHelper.getEditorUrl(hostBaseUrl, addonKey, pageId),
+                    localBaseUrl: localBaseUrl,
+                    locales
                 }
             );
         } catch (error) {
@@ -371,5 +458,96 @@ export default function routes(app, addon) {
         }
 
         res.json({ error: 0 });
+    });
+
+    app.post('/reference-data', addon.authenticate(true), async (req, res) => {
+
+        const userAccountId = req.context.userAccountId;
+        const clientKey = req.context.clientKey;
+        const localBaseUrl = req.context.localBaseUrl;
+        const pageId = req.query.pageId;
+
+        let attachmentId;
+        let referenceData;
+        if (req.body.referenceData) {
+            referenceData = req.body.referenceData;
+            if (referenceData.instanceId && referenceData.instanceId === clientKey) {
+                attachmentId = referenceData.fileKey;
+            }
+        }
+
+        const httpClient = addon.httpClient(req);
+
+        let attachmentInfo;
+        let error;
+        try {
+            attachmentInfo = await getAttachmentInfo(httpClient, userAccountId, attachmentId);
+        } catch (e) {
+            error = e;
+        }
+
+        try {
+            if (error && error.code === 404 || !attachmentInfo) {
+                if (pageId && pageId !== '') {
+                    const path = req.body.path;
+                    const attachments = await getAttachmentsOnPage(httpClient, userAccountId, pageId, path);
+                    if (attachments && attachments[0]) {
+                        attachmentInfo = attachments[0];
+                        referenceData.fileKey = attachmentInfo.id;
+                        referenceData.instanceId = clientKey;
+                    }
+                }
+            }
+
+            if (!attachmentInfo) {
+                addon.logger.warn(error);
+                res.status(error.code || 500).send(error.message || "Undefined error.");
+                return;
+            }
+
+            const result = {
+                key: documentHelper.getDocumentKey(attachmentInfo.id, attachmentInfo.version.createdAt),
+                fileType: documentHelper.getFileExtension(attachmentInfo.title),
+                path: attachmentInfo.title,
+                referenceData: referenceData,
+                url: await urlHelper.getFileUrl(addon, localBaseUrl, clientKey, userAccountId, attachmentInfo.pageId || attachmentInfo.blogPostId, attachmentInfo.id),
+            }
+
+            const jwtSecret = await getJwtSecret(addon, clientKey);
+            if (jwtSecret && jwtSecret != "") {
+                result.token = jwt.encodeSymmetric(result, jwtSecret);
+            } else {
+                result.token = "";
+            }
+
+            res.json(result);
+        } catch {
+            addon.logger.warn(error);
+            res.status(error.code || 500).send(error.message || "Undefined error.");
+        }
+    });
+
+    app.post('/users-info', addon.authenticate(true), async (req, res) => {
+        const userAccountId = req.context.userAccountId;
+        const hostBaseUrl = req.context.hostBaseUrl;
+        const ids = req.body.ids;
+
+        const httpClient = addon.httpClient(req);
+
+        const users = await getUsersByIds(httpClient, userAccountId, ids);
+
+        const result = {
+            users: []
+        };
+
+        users.forEach((user) => {
+            result.users.push({
+                id: user.accountId,
+                name: user.displayName,
+                image: urlHelper.getUserImageUrl(hostBaseUrl, user)
+            })
+        });
+
+        res.json(result);
     });
 }

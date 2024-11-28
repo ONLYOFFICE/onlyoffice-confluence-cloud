@@ -14,9 +14,7 @@
 * limitations under the License.
 */
 
-const {
-    createQueryToken
-} = require("../helpers/jwtManager.js");
+import { createQueryToken } from "../helpers/jwtManager.js";
 
 var urlHelper = {};
 
@@ -72,8 +70,21 @@ urlHelper.getDocApiUrl = async function (addon, clientKey) {
     return docApiUrl != "" ? appendSlash(docApiUrl) : docApiUrl;
 }
 
+urlHelper.getEditorUrl = function (hostBaseUrl, addonKey, pageId, attachmentId = "") {
+    hostBaseUrl = hostBaseUrl.endsWith("/") ? hostBaseUrl.slice(0, -1) : hostBaseUrl;
+    attachmentId = attachmentId.startsWith("att") ? attachmentId.slice(3) : attachmentId;
+
+    return `${hostBaseUrl}/plugins/servlet/ac/${addonKey}/editor?page.id=${pageId}&attachment.id=${attachmentId}`;
+}
+
+urlHelper.getUserImageUrl = function(hostBaseUrl, userInfo) {
+    const baseUrl = hostBaseUrl.endsWith('/wiki') ? hostBaseUrl.slice(0, -5) : hostBaseUrl;
+
+    return `${baseUrl}${userInfo.profilePicture.path}`
+}
+
 function appendSlash(url) {
     return url.replace(/\/$|$/, '/');
 }
 
-module.exports = urlHelper;
+export default urlHelper;

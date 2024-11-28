@@ -9,5 +9,19 @@
     "ONLYOFFICE cannot be reached. Please contact admin.": "ONLYOFFICE ne peut pas être atteint. Veuillez contacter l'administration.",
     "ONLYOFFICE Docs Cloud": "ONLYOFFICE Docs Cloud",
     "Easily launch the editors in the cloud without downloading and installation": "Lancez facilement les éditeurs dans le cloud sans téléchargement ni installation",
-    "Get Now": "Obtenir maintenant"
+    "Get Now": "Obtenir maintenant",
+    "You are not permitted to perform this operation.": "Vous n'êtes pas autorisé à effectuer cette opération.",
+    "Attachment File Not Found": "Fichier joint non trouvé",
+    "Unknown error": "Erreur inconnue",
+    "creation.header": "Créer avec ONLYOFFICE",
+    "creation.title.placeholder": "Nouveau document",
+    "creation.label.title": "Titre",
+    "creation.label.word": "Document",
+    "creation.label.cell": "Feuille de calcul",
+    "creation.label.slide": "Présentation",
+    "creation.label.pdf": "Formulaire PDF",
+    "creating.error.message": "Erreur lors de la création d'un nouveau document",
+    "creating.error.already-exist.message": "Impossible d'ajouter une nouvelle pièce jointe avec le même nom de fichier qu'une pièce jointe existante",
+    "label.create": "Créer",
+    "label.cancel": "Annuler"
 }

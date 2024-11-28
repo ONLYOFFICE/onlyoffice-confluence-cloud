@@ -9,5 +9,19 @@
     "ONLYOFFICE cannot be reached. Please contact admin.": "ONLYOFFICE non può essere raggiunto. Ti preghiamo di contattare l'amministratore.",
     "ONLYOFFICE Docs Cloud": "ONLYOFFICE Docs nel Cloud",
     "Easily launch the editors in the cloud without downloading and installation": "Avvia facilmente gli editor nel cloud senza scaricarli e installarli",
-    "Get Now": "Ottieni ora"
+    "Get Now": "Ottieni ora",
+    "You are not permitted to perform this operation.": "Non hai il permesso per svolgere quest’operazione.",
+    "Attachment File Not Found": "File allegato non trovato",
+    "Unknown error": "Errore sconosciuto",
+    "creation.header": "Creato con ONLYOFFICE",
+    "creation.title.placeholder": "Nuovo documento",
+    "creation.label.title": "Titolo",
+    "creation.label.word": "Documento",
+    "creation.label.cell": "Foglio elettronico di calcolo",
+    "creation.label.slide": "Presentazione",
+    "creation.label.pdf": "Modulo PDF",
+    "creating.error.message": "Errore nella creazione di Nuovo documento",
+    "creating.error.already-exist.message": "Non è possibile aggiungere un nuovo allegato con lo stesso nome di file di un allegato esistente",
+    "label.create": "Crea",
+    "label.cancel": "Annulla"
 }

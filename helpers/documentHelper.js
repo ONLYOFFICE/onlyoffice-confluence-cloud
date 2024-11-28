@@ -14,57 +14,12 @@
 * limitations under the License.
 */
 
-const urlHelper = require("./urlHelper.js");
-const requestHelper = require("./requestHelper.js");
+import urlHelper from "./urlHelper.js";
+import requestHelper from "./requestHelper.js";
+import path, { dirname } from "path";
+import fs from "fs";
 
 var documentHelper = {};
-
-const SUPPORTED_FORMATS = {
-    "djvu": {"type": "word"},
-    "doc": {"type": "word"},
-    "docm": {"type": "word"},
-    "docx": {"type": "word", "edit": true},
-    "dot": {"type": "word"},
-    "dotm": {"type": "word"},
-    "dotx": {"type": "word"},
-    "epub": {"type": "word"},
-    "fb2": {"type": "word"},
-    "fodt": {"type": "word"},
-    "html": {"type": "word"},
-    "mht": {"type": "word"},
-    "odt": {"type": "word"},
-    "ott": {"type": "word"},
-    "oxps": {"type": "word"},
-    "pdf": {"type": "word"},
-    "rtf": {"type": "word"},
-    "txt": {"type": "word"},
-    "xps": {"type": "word"},
-    "xml": {"type": "word"},
-
-    "csv": {"type": "cell"},
-    "fods": {"type": "cell"},
-    "ods": {"type": "cell"},
-    "ots": {"type": "cell"},
-    "xls": {"type": "cell"},
-    "xlsm": {"type": "cell"},
-    "xlsx": {"type": "cell", "edit": true},
-    "xlt": {"type": "cell"},
-    "xltm": {"type": "cell"},
-    "xltx": {"type": "cell"},
-
-    "fodp": {"type": "slide"},
-    "odp": {"type": "slide"},
-    "otp": {"type": "slide"},
-    "pot": {"type": "slide"},
-    "potm": {"type": "slide"},
-    "potx": {"type": "slide"},
-    "pps": {"type": "slide"},
-    "ppsm": {"type": "slide"},
-    "ppsx": {"type": "slide"},
-    "ppt": {"type": "slide"},
-    "pptm": {"type": "slide"},
-    "pptx": {"type": "slide", "edit": true}
-};
 
 documentHelper.getFileExtension = function (fileName) {
     var parts = fileName.toLowerCase().split(".");
@@ -72,16 +27,44 @@ documentHelper.getFileExtension = function (fileName) {
     return parts.pop();
 }
 
-documentHelper.getDocumentType = function (extension) {
-    if (SUPPORTED_FORMATS[extension] !== undefined) {
-        return SUPPORTED_FORMATS[extension]["type"];
+documentHelper.getDocumentType = function (addon, extension) {
+    const formats = addon.config.docServer().formats || [];
+
+    for (let i = 0; i < formats.length; i++) {
+        if (formats[i].name === extension) return formats[i].type;
     }
 
     return null;
 }
 
-documentHelper.isEditable = function (extension) {
-    return SUPPORTED_FORMATS[extension] !== undefined && SUPPORTED_FORMATS[extension]["edit"] === true;
+documentHelper.isEditable = function (addon, extension) {
+    const formats = addon.config.docServer().formats || [];
+
+    for (let i = 0; i < formats.length; i++) {
+        if (formats[i].name === extension) return formats[i].actions.includes('edit');
+    }
+
+    return false;
+}
+
+documentHelper.isFillable = function (addon, extension) {
+    const formats = addon.config.docServer().formats || [];
+
+    for (let i = 0; i < formats.length; i++) {
+        if (formats[i].name === extension) return formats[i].actions.includes('fill');
+    }
+
+    return false;
+}
+
+documentHelper.isViewable = function (addon, extension) {
+    const formats = addon.config.docServer().formats || [];
+
+    for (let i = 0; i < formats.length; i++) {
+        if (formats[i].name === extension) return formats[i].actions.includes('view');
+    }
+
+    return false;
 }
 
 documentHelper.getDocumentKey = function (attachmentId, updateTime) {
@@ -90,23 +73,35 @@ documentHelper.getDocumentKey = function (attachmentId, updateTime) {
 }
 
 documentHelper.getEditorConfig = async function (addon, httpClient, clientKey, localBaseUrl, hostBaseUrl, attachmentInfo, userInfo) {
-
     const fileType = documentHelper.getFileExtension(attachmentInfo.title);
-    let mode = "view";
+
     let callbackUrl = null;
 
-    let permissionEdit = await requestHelper.checkContentPermission(httpClient, userInfo.accountId, attachmentInfo.id, "update");
+    let permittedOperations = await requestHelper.getPermittedOperationsForContent(httpClient, userInfo.accountId, "pages", attachmentInfo.pageId);
 
-    if (permissionEdit && documentHelper.isEditable(fileType)) {
-        mode = "edit";
-        callbackUrl = await urlHelper.getCallbackUrl(addon, localBaseUrl, clientKey, userInfo.accountId, attachmentInfo.pageId || attachmentInfo.blogPostId, attachmentInfo.id);
+    let isEditable = documentHelper.isEditable(addon, fileType);
+    let isFillable = documentHelper.isFillable(addon, fileType);
+
+    const permissionEdit = permittedOperations.operations
+        .filter(operation => operation.targetType === "attachment" && operation.operation === "create")
+        .length > 0;
+
+    if (permissionEdit && (isEditable || isFillable)) {
+        callbackUrl = await urlHelper.getCallbackUrl(
+            addon,
+            localBaseUrl,
+            clientKey,
+            userInfo.accountId,
+            attachmentInfo.pageId || attachmentInfo.blogPostId,
+            attachmentInfo.id
+        );
     }
 
     return {
         type: "desktop",
         width: "100%",
         height: "100%",
-        documentType: documentHelper.getDocumentType(fileType),
+        documentType: documentHelper.getDocumentType(addon, fileType),
         document: {
             title: attachmentInfo.title,
             url: await urlHelper.getFileUrl(addon, localBaseUrl, clientKey, userInfo.accountId, attachmentInfo.pageId || attachmentInfo.blogPostId, attachmentInfo.id),
@@ -116,16 +111,22 @@ documentHelper.getEditorConfig = async function (addon, httpClient, clientKey, l
                 uploaded: attachmentInfo.version.createdAt
             },
             permissions: {
-                edit: permissionEdit,
+                edit: permissionEdit && isEditable,
+                fillForms: permissionEdit && isFillable
+            },
+            referenceData: {
+                fileKey: attachmentInfo.id,
+                instanceId: clientKey
             }
         },
         editorConfig: {
             callbackUrl: callbackUrl,
-            mode: mode,
+            mode: "edit",
             lang: "en",
             user: {
                 id: userInfo.accountId,
-                name: userInfo.displayName
+                name: userInfo.displayName,
+                image: urlHelper.getUserImageUrl(hostBaseUrl, userInfo)
             },
             customization: {
                 goback: {
@@ -136,4 +137,52 @@ documentHelper.getEditorConfig = async function (addon, httpClient, clientKey, l
     };
 }
 
-module.exports = documentHelper;
+documentHelper.getDefaultExtensionByDocumentType = function(type) {
+    if (type == null) {
+        return null;
+    }
+
+    switch (type) {
+        case "word":
+            return "docx";
+        case "cell":
+            return "xlsx";
+        case "slide":
+            return "pptx";
+        case "pdf":
+            return "pdf";
+        default:
+            return null;
+    }
+}
+
+documentHelper.getBlankFile = function(type, locale) {
+    const appRootScriptDir = dirname(process.argv[1]);
+    const extension = documentHelper.getDefaultExtensionByDocumentType(type);
+
+    var getFilePath = (folder, extension) => {
+        return path.join(
+            appRootScriptDir,
+            "resources",
+            "assets",
+            "document-templates",
+            folder,
+            `new.${extension}`
+        )
+    };
+
+    var filePath = getFilePath(locale.baseName, extension);
+    if (fs.existsSync(filePath)) {
+        return fs.readFileSync(filePath);
+    }
+
+    filePath = getFilePath(locale.language, extension);
+    if (fs.existsSync(filePath)) {
+        return fs.readFileSync(filePath);
+    }
+
+    filePath = getFilePath("default", extension);
+    return fs.readFileSync(filePath);
+}
+
+export default documentHelper;

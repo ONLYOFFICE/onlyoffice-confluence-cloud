@@ -15,10 +15,13 @@
 */
 
 import express from 'express';
+import { createRequire } from 'module';
 import path from "path";
 import React from 'react';
-import { renderToString } from 'react-dom/server';
+import ReactDomServer from 'react-dom/server';
 import { ServerStyleSheet } from 'styled-components'
+
+const nodeRequire = typeof require === 'function' ? require : createRequire(import.meta.url);
 
 export function addServerSideRendering(app, handlebarsEngine) {
   const devEnv = app.get('env') === 'development';
@@ -55,9 +58,9 @@ export function addServerSideRendering(app, handlebarsEngine) {
         sheet = new ServerStyleSheet();
         // Dynamically require the component file that was requested. Assume the root component is the default export.
         // Ensure we pick up the latest version if we're running in dev mode.
-        if (devEnv) delete require.cache[nodeViewPath];
-        const rootElement = React.createElement(require(nodeViewPath).default, props);
-        ssrOptions.body = renderToString(sheet.collectStyles(rootElement));
+        if (devEnv) delete nodeRequire.cache[nodeViewPath];
+        const rootElement = React.createElement(nodeRequire(nodeViewPath).default, props);
+        ssrOptions.body = ReactDomServer.renderToString(sheet.collectStyles(rootElement));
         ssrOptions.styleTags = sheet.getStyleTags();
       }
       const viewOptions = {
@@ -88,4 +91,3 @@ export function addServerSideRendering(app, handlebarsEngine) {
   app.engine('.js', ssrEngine);
   app.engine('.jsx', ssrEngine);
 }
-

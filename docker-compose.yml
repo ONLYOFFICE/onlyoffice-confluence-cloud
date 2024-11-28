@@ -20,7 +20,7 @@ services:
       - '${PORT}:${PORT}'
 
   postgresql:
-    image: postgres
+    image: postgres:16.2
     container_name: postgresql
     environment:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}

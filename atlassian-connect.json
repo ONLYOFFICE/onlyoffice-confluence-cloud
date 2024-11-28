@@ -1,8 +1,8 @@
 {
-    "key": "onlyoffice-confluence-cloud",
-    "name": "Confluence cloud ONLYOFFICE integration app",
+    "key": "onlyoffice.onlyoffice-confluence-plugin",
+    "name": "ONLYOFFICE Connector for Confluence Cloud",
     "description": "Confluence ONLYOFFICE integration app allows you to work on all kinds of office documents within Confluence using ONLYOFFICE Online Editors with the enhanced formatting toolset. View and co-edit the documents in real-time.",
-    "version": "1.0.0",
+    "version": "1.2.0",
     "baseUrl": "{{localBaseUrl}}",
     "vendor": {
         "name": "Ascensio System SIA",
@@ -39,10 +39,40 @@
                 "name": {
                     "value": "ONLYOFFICE Editor"
                 },
-                "url": "/editor?pageId={page.id}&attachmentId={attachment.id}&attachmentName={attachment.name}"
+                "url": "/editor?pageId={page.id}&attachmentId={attachment.id}&attachmentName={attachment.name}&mode={ac.mode}"
             }
         ],
         "webItems": [
+            {
+                "key": "web-item-onlyoffice-create",
+                "name": {
+                    "value": "New document",
+                    "i18n": "onlyoffice.create.link"
+                },
+                "location": "system.content.button",
+                "context": "page",
+                "url": "/create?pageId={page.id}",
+                "icon": {
+                    "width": 16,
+                    "height": 16,
+                    "url": "/image/onlyoffice-icon-16.svg"
+                  },
+                "target": {
+                    "type": "dialog",
+                    "options": {
+                        "chrome": false,
+                        "size": "x-large"
+                    }
+                },
+                "conditions": [
+                    {
+                        "condition": "has_page_permission",
+                        "params": {
+                            "permission": "EDIT"
+                        }
+                    }
+                ]
+            },
             {
                 "key": "web-item-onlyoffice-edit",
                 "name": {

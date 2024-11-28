@@ -7,5 +7,6 @@ credentials.json
 .cache
 views/*.js
 views/*.js.map
-views/node
+views/node/*
+!views/node/*.json
 *.vscode
