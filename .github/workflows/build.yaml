@@ -1,4 +1,4 @@
-name: Build confluence connector
+name: Build confluence app
 
 run-name: >
      Build confluence with version: ${{ github.event.inputs.version }}
@@ -35,7 +35,7 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      - name: Build connector
+      - name: Build app
         shell: bash
         env:
           PRODUCT_VERSION: ${{ github.event.inputs.version }}

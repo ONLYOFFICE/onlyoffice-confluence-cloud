@@ -62,7 +62,7 @@ stringData:
   DB_USER_NAME: confluencecloud
   DB_USER_PWD: confluence_secret_password
 
-## Deploying the connector
+## Deploying the app
 ##
 ---
 apiVersion: apps/v1

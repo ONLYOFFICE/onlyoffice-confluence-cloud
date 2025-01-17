@@ -1,6 +1,6 @@
-# ONLYOFFICE integration app for Confluence Cloud
+# ONLYOFFICE app for Confluence Cloud
 
-This integration app enables users to edit office documents in [Confluence Cloud](https://www.atlassian.com/software/confluence/premium) using ONLYOFFICE Docs.
+This app enables users to edit office documents in [Confluence Cloud](https://www.atlassian.com/software/confluence/premium) using ONLYOFFICE Docs.
 
 ## Features
 
@@ -35,9 +35,9 @@ To install Enterprise Edition, follow the instructions [here](https://helpcenter
 
 Community Edition vs Enterprise Edition comparison can be found [here](#onlyoffice-docs-editions).
 
-## Configuring the integration app
+## Configuring the app
 
-Administrators can configure ONLYOFFICE integration app via the Manage Apps section in Confluence Cloud (Apps -> Manage Apps -> Confluence cloud ONLYOFFICE integration app -> Configure). On the configuration page, set up:
+Administrators can configure ONLYOFFICE app via the Manage Apps section in Confluence Cloud (Apps -> Manage Apps -> ONLYOFFICE app for Confluence Cloud -> Configure). On the configuration page, set up:
 
 * **Document Editing Service Address**: The URL of the installed ONLYOFFICE Document Server.
 
@@ -45,7 +45,7 @@ Administrators can configure ONLYOFFICE integration app via the Manage Apps sect
 
 * **JWT Header**.
 
-## Using ONLYOFFICE integration app for Confluence Cloud
+## Using ONLYOFFICE app for Confluence Cloud
 
 In the Pages module, you can attach files to the created pages: open the right context menu, click on the Attachments item and upload a file from the device. 
 

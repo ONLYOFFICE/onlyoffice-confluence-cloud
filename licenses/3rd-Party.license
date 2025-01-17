@@ -1,4 +1,4 @@
-Confluence cloud ONLYOFFICE integration app uses code from the following 3rd party projects.
+ONLYOFFICE app for Confluence Cloud uses code from the following 3rd party projects.
 
 Atlaskit      - Atlassian's official UI library, built according to the Atlassian Design System. (https://bitbucket.org/atlassian/atlassian-frontend-mirror/src/master/LICENSE)
 License:        Apache 2.0
