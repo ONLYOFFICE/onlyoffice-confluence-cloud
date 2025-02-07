@@ -1,5 +1,8 @@
 # Change Log
 
+## Changed
+- sq-AL empty file templates
+- extended list of supported formats
 
 ## 1.2.0
 ## Added
