@@ -41,7 +41,7 @@ Administrators can configure ONLYOFFICE app via the Manage Apps section in Confl
 
 * **Document Editing Service Address**: The URL of the installed ONLYOFFICE Document Server.
 
-* **Secret key**: Enables JWT to protect your documents from unauthorized access (further information can be found [here](https://api.onlyoffice.com/editors/signature/)).
+* **Secret key**: Enables JWT to protect your documents from unauthorized access (further information can be found [here](https://api.onlyoffice.com/docs/docs-api/additional-api/signature/)).
 
 * **JWT Header**.
 
