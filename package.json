@@ -1,17 +1,21 @@
 {
   "name": "onlyoffice-confluence-cloud",
-  "description": "ONLYOFFICE app for Confluence Cloud allows you to work on all kinds of office documents within Confluence using ONLYOFFICE Online Editors with the enhanced formatting toolset. View and co-edit the documents in real-time.",
   "version": "1.2.0",
-  "author": "Ascensio System SIA",
+  "description": "ONLYOFFICE app for Confluence Cloud allows you to work on all kinds of office documents within Confluence using ONLYOFFICE Online Editors with the enhanced formatting toolset. View and co-edit the documents in real-time.",
   "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/ONLYOFFICE/onlyoffice-confluence-cloud/issues",
+    "email": "support@onlyoffice.com"
+  },
+  "homepage": "https://github.com/ONLYOFFICE/onlyoffice-confluence-cloud",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ONLYOFFICE/onlyoffice-confluence-cloud.git"
   },
-  "bugs": {
-    "url": "https://github.com/ONLYOFFICE/onlyoffice-confluence-cloud/issues"
-  },
-  "homepage": "https://github.com/ONLYOFFICE/onlyoffice-confluence-cloud",
+  "author": "Ascensio System SIA <integration@onlyoffice.com>",
+  "maintainers": [
+    "Ascensio System SIA <integration@onlyoffice.com> (https://www.onlyoffice.com)"
+  ],
   "externals": {
     "react": "React",
     "react-dom": "ReactDOM"
