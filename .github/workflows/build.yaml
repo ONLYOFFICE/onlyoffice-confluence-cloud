@@ -1,15 +1,18 @@
-name: Build confluence app
+name: "Build onlyoffice-confluence"
 
-run-name: >
-     Build confluence with version: ${{ github.event.inputs.version }}
+run-name: "Build onlyoffice-confluence: ${{ github.event.inputs.tag || github.run_number }}"
 
 on:
+  push:
+    branches:
+    - develop
+
   workflow_dispatch:
     inputs:
-      version:
+      tag:
         description: 'Set version that will be used for images tag'
         type: string
-        required: true
+        required: false
       node-env:
         description: 'Set custom node_env build arg if needed'
         type: string
@@ -21,33 +24,54 @@ on:
         required: false
         default: no-reg
 
+env:
+  DOCKER_HUB_IMAGE_NAME: confluence-cloud
+  DOCKER_HUB_NAMESPACE: onlyoffice
+
 jobs:
   build:
-    name: "Build tag: ${{ github.event.inputs.version }}"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
+      - name: Login to Container Registry
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      - name: Build app
-        shell: bash
-        env:
-          PRODUCT_VERSION: ${{ github.event.inputs.version }}
-          NODE_ENV:  ${{ github.event.inputs.node-env }}
-          AC_OPTS: ${{ github.event.inputs.ac-opts }}
-        run: |
-          docker compose --env-file ./.env.docker.example \
-                           build \
-                         --build-arg NODE_ENV=${NODE_ENV} \
-                         --build-arg AC_OPTS=${AC_OPTS}
-          docker compose push
+      - name: Setup QEMU
+        uses: docker/setup-qemu-action@v3
 
-          # Some service info about build
-          docker images
-          docker image inspect onlyoffice/confluence-cloud:${PRODUCT_VERSION}
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: handle-rc-tag
+        env:
+          EVENT: ${{ github.event_name }}
+          REF: ${{ github.ref_name }}
+          MANUAL_TAG: ${{ github.event.inputs.tag }}
+        run: |
+          echo "APP_VERSION=$(cat package.json | jq -r '.version')" >> "$GITHUB_ENV" # Should be set!
+          if [[ "$EVENT" == 'push' && "$REF" == 'develop' ]]; then
+           echo "RC_TAG=rc${{ github.run_number }}" >> "$GITHUB_ENV"
+          elif [[ "$EVENT" == 'workflow_dispatch' && -z "$TAG" ]]; then
+           echo "RC_TAG=rc${{ github.run_number }}" >> "$GITHUB_ENV"
+          fi
+
+      - name: Publish Image
+        uses: docker/build-push-action@v6
+        env:
+          DOCKER_BUILD_RECORD_UPLOAD: false
+          NODE_ENV: ${{ github.event.inputs.node-env || 'production' }}
+          AC_OPTS: ${{ github.event.inputs.ac-opts || 'no-reg' }}
+        with:
+          build-args: |
+                  NODE_ENV=${NODE_ENV}
+                  AC_OPTS=${AC_OPTS}
+          context: .
+          file: Dockerfile
+          push: true
+          platforms: linux/amd64
+          tags: ${{ env.DOCKER_HUB_NAMESPACE }}/confluence-cloud:${{ env.APP_VERSION }}-${{ github.event.inputs.tag || env.RC_TAG }}
