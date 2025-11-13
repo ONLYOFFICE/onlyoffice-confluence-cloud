@@ -1,5 +1,5 @@
 app:
-  id: ari:cloud:ecosystem::app/invalid-run-forge-register
+  id: ari:cloud:ecosystem::app/f8a806c4-dbce-447e-9fc5-5edd102f13aa
   connect:
     key: onlyoffice.onlyoffice-confluence-plugin
     remote: connect
