@@ -9,6 +9,22 @@ app:
 remotes:
   - key: connect
     baseUrl: https://confluence-cloud.onlyoffice.com
+
+modules:
+  confluence:fullPage:
+    - key: editor-page
+      resource: custom-ui
+      resolver:
+        function: resolver
+      title: editor-page
+      routePrefix: editor
+  function:
+    - key: resolver
+      handler: index.handler
+resources:
+  - key: custom-ui
+    path: static/onlyoffice-docs-confluence-cloud-custom-ui/build
+
 connectModules:
   confluence:lifecycle:
     - key: lifecycle-events
