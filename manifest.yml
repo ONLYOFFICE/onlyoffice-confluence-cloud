@@ -1,5 +1,5 @@
 app:
-  id: ari:cloud:ecosystem::app/f8a806c4-dbce-447e-9fc5-5edd102f13aa
+  id: ari:cloud:ecosystem::app/${FORGE_APP_ID}
   connect:
     key: onlyoffice.onlyoffice-confluence-plugin
     remote: connect
@@ -9,21 +9,38 @@ app:
 remotes:
   - key: connect
     baseUrl: https://confluence-cloud.onlyoffice.com
+  - key: onlyoffice-backend
+    baseUrl: "${FORGE_REMOTE_APP_URL}"
+    operations:
+      - compute
+    auth:
+      appSystemToken:
+        enabled: true
+      appUserToken:
+        enabled: true
 
 modules:
   confluence:fullPage:
     - key: editor-page
       resource: custom-ui
       resolver:
-        function: resolver
+        function: main-page-resolver
       title: editor-page
       routePrefix: editor
   function:
-    - key: resolver
-      handler: index.handler
+    - key: main-page-resolver
+      handler: index.mainPageResolver
+
 resources:
   - key: custom-ui
     path: static/onlyoffice-docs-confluence-cloud-custom-ui/build
+
+environment:
+  variables:
+    - key: FORGE_APP_ID
+      default: f8a806c4-dbce-447e-9fc5-5edd102f13aa
+    - key: FORGE_REMOTE_APP_URL
+      default: https://ef431b99d494.ngrok-free.app
 
 connectModules:
   confluence:lifecycle:
@@ -104,3 +121,11 @@ permissions:
     - read:connect-confluence
     - write:connect-confluence
     - act-as-user:connect-confluence
+    - storage:app
+    - read:confluence-user
+    - read:app-system-token
+    - read:app-user-token
+    - read:attachment:confluence
+  external:
+    frames:
+      - address: ${FORGE_REMOTE_APP_URL}/editor/confluence
