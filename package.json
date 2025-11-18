@@ -11,7 +11,11 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
-    "@forge/api": "^6.2.0",
-    "@forge/resolver": "1.7.1"
+    "@forge/api": "6.0.3",
+    "@forge/bridge": "5.2.0",
+    "@forge/kvs": "1.0.3",
+    "@forge/react": "11.2.6",
+    "@forge/resolver": "1.6.16",
+    "react": "^18.3.1"
   }
 }

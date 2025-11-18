@@ -29,6 +29,15 @@ remotes:
         enabled: true
 
 modules:
+  confluence:globalSettings:
+    - key: settings-page
+      title:
+        i18n: page.settings.title
+      render: native
+      useAsConfig: true
+      resource: settings-page
+      resolver:
+        function: settings-page-resolver
   confluence:fullPage:
     - key: editor-page
       resource: custom-ui
@@ -37,12 +46,18 @@ modules:
       title: editor-page
       routePrefix: editor
   function:
+    - key: settings-page-resolver
+      handler: index.settingsPageResolver
     - key: main-page-resolver
       handler: index.mainPageResolver
 
 resources:
+  - key: settings-page
+    path: src/frontend/settingsPage.tsx
   - key: custom-ui
     path: static/onlyoffice-docs-confluence-cloud-custom-ui/build
+  - key: assets
+    path: src/assets
 
 environment:
   variables:
@@ -111,12 +126,6 @@ connectModules:
           params:
             permission: EDIT
       weight: 10
-  confluence:configurePage:
-    - url: /configure
-      name:
-        value: ONLYOFFICE Configuration
-        i18n: onlyoffice.configuration.title
-      key: configure
   confluence:translations:
     - paths:
         de-DE: /i18n/de_DE.json
@@ -126,6 +135,11 @@ connectModules:
         ru-RU: /i18n/ru_RU.json
       key: connect-translations
 permissions:
+  content:
+    scripts:
+      - 'unsafe-inline'
+    styles:
+      - 'unsafe-inline'
   scopes:
     - read:connect-confluence
     - write:connect-confluence
