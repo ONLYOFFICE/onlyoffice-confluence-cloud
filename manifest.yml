@@ -6,6 +6,15 @@ app:
     authentication: jwt
   runtime:
     name: nodejs20.x
+
+translations:
+  resources:
+    - key: en-US
+      path: locales/en-US.json
+  
+  fallback:
+    default: en-US
+
 remotes:
   - key: connect
     baseUrl: https://confluence-cloud.onlyoffice.com

@@ -22,7 +22,7 @@ import Button from "@atlaskit/button/new";
 import EmptyState from "@atlaskit/empty-state";
 import RetryIcon from "@atlaskit/icon/core/retry";
 import { Box, xcss } from "@atlaskit/primitives";
-// import { i18n } from "@forge/bridge";
+import { i18n } from "@forge/bridge";
 
 import ErrorIcon from "../../../src/assets/images/error.svg";
 
@@ -46,7 +46,7 @@ export interface AppError {
 }
 
 export interface IAppContext {
-  // t: i18n.TranslationFunction;
+  t: i18n.TranslationFunction;
   appError: AppError | undefined;
   setAppError: (value: AppError | undefined) => void;
 }
@@ -58,27 +58,25 @@ type AppContextProps = {
 };
 
 export const AppContextProvider: React.FC<AppContextProps> = ({ children }) => {
-  // const [t, setT] = useState<i18n.TranslationFunction>();
+  const [t, setT] = useState<i18n.TranslationFunction>();
   const [appError, setAppError] = useState<AppError | undefined>();
 
   const appContextProviderValue = useMemo(() => {
     return {
-      // t,
+      t,
       appError,
       setAppError,
     } as IAppContext;
-  }, [
-    // t,
-     appError, setAppError]);
+  }, [t, appError, setAppError]);
 
-  // useEffect(() => {
-  //   const loadTranslator = async () => {
-  //     const t = await i18n.createTranslationFunction();
-  //     setT(() => t);
-  //   };
+  useEffect(() => {
+    const loadTranslator = async () => {
+      const t = await i18n.createTranslationFunction();
+      setT(() => t);
+    };
 
-  //   loadTranslator();
-  // }, [setT]);
+    loadTranslator();
+  }, [setT]);
 
   return (
     <>
@@ -104,9 +102,7 @@ export const AppContextProvider: React.FC<AppContextProps> = ({ children }) => {
           />
         </Box>
       )}
-      {!appError 
-      // && t 
-       && (
+      {!appError && t && (
         <AppContext.Provider value={appContextProviderValue}>
           {children}
         </AppContext.Provider>
