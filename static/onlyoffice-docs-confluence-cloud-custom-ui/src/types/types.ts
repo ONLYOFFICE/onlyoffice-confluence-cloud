@@ -16,18 +16,24 @@
  *
  */
 
-import Resolver, { Request } from "@forge/resolver";
+export interface RemoteAppAuthorization {
+  token: string;
+  remoteAppUrl: string;
+}
 
-import {
-  postRemoteAppAuthorization,
-} from "../../src/client";
+export interface User {
+  accountId: string;
+  displayName: string;
+  email: string;
+  profilePicture: Record<string, string>;
+}
 
-const mainPageResolver = new Resolver();
+export class ClientError extends Error {
+  status: number | null;
 
-mainPageResolver.define("authorizeRemoteApp", async (request: Request) => {
-  const { pageId, attachmentId } = request.payload;
-
-  return await postRemoteAppAuthorization(pageId, attachmentId);
-});
-
-export default mainPageResolver.getDefinitions();
+  constructor(message: string, status: number | null) {
+    super(message);
+    this.name = "ClientError";
+    this.status = status;
+  }
+}

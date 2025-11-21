@@ -64,7 +64,7 @@ environment:
     - key: FORGE_APP_ID
       default: f8a806c4-dbce-447e-9fc5-5edd102f13aa
     - key: FORGE_REMOTE_APP_URL
-      default: https://ef431b99d494.ngrok-free.app
+      default: https://3f5510d5e8c2.ngrok-free.app
 
 connectModules:
   confluence:lifecycle:
@@ -148,7 +148,9 @@ permissions:
     - read:confluence-user
     - read:app-system-token
     - read:app-user-token
+    - read:content-details:confluence
     - read:attachment:confluence
+    - write:confluence-file
   external:
     frames:
       - address: ${FORGE_REMOTE_APP_URL}/editor/confluence

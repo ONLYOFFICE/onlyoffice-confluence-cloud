@@ -21,7 +21,7 @@ import { APIResponse, invokeRemote } from "@forge/api";
 import { ClientError, RemoteAppAuthorization } from "../../src/types/types";
 
 export const postRemoteAppAuthorization = async (
-  issueId: string,
+  pageId: string,
   attachmentId: string,
 ): Promise<RemoteAppAuthorization> => {
   return await _executeRequest<RemoteAppAuthorization>(
@@ -33,7 +33,7 @@ export const postRemoteAppAuthorization = async (
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          parentId: issueId,
+          parentId: pageId,
           entityId: attachmentId,
         }),
       });

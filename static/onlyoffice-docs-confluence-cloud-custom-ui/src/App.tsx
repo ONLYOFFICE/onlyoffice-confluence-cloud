@@ -35,7 +35,9 @@ function App() {
 
   return (
     <>
-      <EditorPage context={context!} />
+      {context && context.moduleKey === 'editor-page' && (
+        <EditorPage context={context} />
+      )}
     </>
   );
 }
