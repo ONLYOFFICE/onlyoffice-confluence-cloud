@@ -35,7 +35,6 @@ import { FullContext } from "@forge/bridge/out/types";
 
 import { RemoteAppAuthorization } from "../../../src/types/types";
 import { AppContext } from "../../context/AppContext";
-import { getUsers } from "../../client";
 
 const styles = {
   mainContainer: xcss({
@@ -156,23 +155,15 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
   };
 
   const onRequestUsers = (c: string, ids: string[]) => {
-    getUsers(ids)
-      .then((values) => {
-        const users = values.map((user) => ({
-          id: user.accountId,
-          name: user.displayName,
-          email: user.email,
-          image: context.siteUrl + user.profilePicture["path"],
-        }));
+    const users = ids.map((id) => ({
+      id: id,
+      image: `${context.siteUrl}/wiki/aa-avatar/${id}`
+    }));
 
-        sendMessageToIframe("SET_USERS", {
-          c: c,
-          users: users,
-        });
-      })
-      .catch((error) => {
-        console.error("Error fetching users:", error);
-      });
+    sendMessageToIframe("SET_USERS", {
+      c: c,
+      users: users,
+    });
   };
 
   const sessionSuccessfullyExtended = () => {
