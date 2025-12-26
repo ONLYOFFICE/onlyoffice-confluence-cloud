@@ -67,9 +67,6 @@ const styles = {
   searchIcon: xcss({
     paddingLeft: "space.075",
   }),
-  filterContainer: xcss({
-    paddingInline: "space.075",
-  }),
   actionsContainer: xcss({
     textAlign: "center",
   }),
@@ -383,18 +380,22 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
   return (
     <>
       <Stack space="space.200">
-        <Inline space="space.100" xcss={styles.filterContainer}>
+        <Inline space="space.100">
           {showFilter && (
             <DropdownMenu<HTMLButtonElement>
               trigger={({ triggerRef, ...props }) => (
-                <IconButton
-                  {...props}
-                  label="Filter"
-                  icon={FilterIcon}
-                  ref={triggerRef}
-                  isDisabled={isLoading}
-                />
+                <Box xcss={xcss({ marginLeft: "space.075" })} ref={triggerRef}>
+                  <Box xcss={xcss({ marginLeft: "space.negative.075" })}>
+                    <IconButton
+                      {...props}
+                      label="Filter"
+                      icon={FilterIcon}
+                      isDisabled={isLoading}
+                    />
+                  </Box>
+                </Box>
               )}
+              shouldRenderToParent
             >
               <DropdownItemGroup>
                 {contentTypeOptions.map((option) => (
