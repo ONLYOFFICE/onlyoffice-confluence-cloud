@@ -18,24 +18,127 @@
 
 import { requestConfluence } from "@forge/bridge";
 
-import {
-  ClientError,
-  User,
-} from "../../src/types/types";
+import { ClientError, Content, SearchResponse } from "../../src/types/types";
 
-export const getUsers = async (ids: string[]): Promise<User[]> => {
-  return await _executeRequest<User[]>(
+export const getPagesInSpace = async (
+  id: string,
+  depth: "all" | "root",
+  title: string | null,
+  limit: number,
+  sort: string | null,
+): Promise<SearchResponse<Content>> => {
+  return await _executeRequest<SearchResponse<Content>>(
+    async () => {
+      const searchParams = [`depth=${depth}`, `limit=${limit}`];
+
+      if (title) {
+        searchParams.push(`title=${title}`);
+      }
+
+      if (sort) {
+        searchParams.push(`sort=${sort}`);
+      }
+
+      return await requestConfluence(
+        `/wiki/api/v2/spaces/${id}/pages?${searchParams.join("&")}`,
+      );
+    },
+    async (response: Response) => {
+      return await response.json();
+    },
+  );
+};
+
+export const getBlogsInSpace = async (
+  id: string,
+  title: string | null,
+  limit: number,
+  sort: string | null,
+): Promise<SearchResponse<Content>> => {
+  return await _executeRequest<SearchResponse<Content>>(
+    async () => {
+      const searchParams = [`limit=${limit}`];
+
+      if (title) {
+        searchParams.push(`title=${title}`);
+      }
+
+      if (sort) {
+        searchParams.push(`sort=${sort}`);
+      }
+
+      return await requestConfluence(
+        `/wiki/api/v2/spaces/${id}/blogposts?${searchParams.join("&")}`,
+      );
+    },
+    async (response: Response) => {
+      return await response.json();
+    },
+  );
+};
+
+export const findContentById = async (
+  id: string,
+): Promise<SearchResponse<Content>> => {
+  return await _executeRequest<SearchResponse<Content>>(
     async () => {
       return await requestConfluence(
-        `/wiki/rest/api/search/user?cql=user IN (${ids.map((id) => `"${id}"`).join(",")})`,
+        `/wiki/rest/api/content/search?cql=content="${id}"&expand=operations,version,ancestors`,
       );
+    },
+    async (response: Response) => {
+      return await response.json();
+    },
+  );
+};
+
+export const findContent = async (
+  spaceKey: string,
+  parentId: string,
+  title: string,
+  showOnlyFiles: boolean,
+  limit: number,
+  sort: { key: string; order: "ASC" | "DESC" },
+): Promise<SearchResponse<Content>> => {
+  return await _executeRequest<SearchResponse<Content>>(
+    async () => {
+      let cql = [
+        `space="${spaceKey}"`,
+        `(parent=${parentId} or container=${parentId})`,
+        `title~"${title}*"`,
+      ].join(" and ");
+
+      if (showOnlyFiles) {
+        cql = cql.concat(" and type=attachment");
+      } else {
+        cql = cql.concat(
+          " and type IN (page, blogpost, attachment, whiteboard, database, embed, folder)",
+        );
+      }
+
+      cql = cql.concat(` order by type DESC, ${sort.key} ${sort.order}`);
+
+      return await requestConfluence(
+        `/wiki/rest/api/content/search?cql=${cql}&expand=operations,version,ancestors&limit=${limit}`,
+      );
+    },
+    async (response: Response) => {
+      return await response.json();
+    },
+  );
+};
+
+export const findContentByLink = async (
+  link: string,
+): Promise<SearchResponse<Content>> => {
+  return await _executeRequest<SearchResponse<Content>>(
+    async () => {
+      return await requestConfluence(`/wiki${link}`);
     },
     async (response: Response) => {
       const data = await response.json();
 
-      return data.results.map((item: { user: User }) => {
-        return item.user;
-      });
+      return data;
     },
   );
 };

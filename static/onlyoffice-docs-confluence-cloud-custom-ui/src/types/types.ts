@@ -16,9 +16,48 @@
  *
  */
 
+export interface Format {
+  name: string;
+  type: string;
+  actions: string[];
+  convert: string[];
+  mime: string[];
+}
+
 export interface RemoteAppAuthorization {
   token: string;
   remoteAppUrl: string;
+}
+
+export interface SearchResponse<T> {
+  results: T[];
+  _links: {
+    next: string;
+    prev: string;
+  };
+}
+
+export interface Content {
+  id: string;
+  title: string;
+  type: string;
+  version: {
+    by: User;
+    number: number;
+    when: string;
+    createdAt?: string;
+    authorId: string;
+  };
+  extensions: {
+    fileSize: string;
+  };
+  ancestors: [
+    {
+      id: string;
+      title: string;
+      type: string;
+    },
+  ];
 }
 
 export interface User {
