@@ -18,7 +18,11 @@
 
 import { APIResponse, invokeRemote } from "@forge/api";
 
-import { ClientError, RemoteAppAuthorization } from "../../src/types/types";
+import {
+  ClientError,
+  Format,
+  RemoteAppAuthorization,
+} from "../../src/types/types";
 
 export const postRemoteAppAuthorization = async (
   pageId: string,
@@ -40,6 +44,26 @@ export const postRemoteAppAuthorization = async (
     },
     async (response: APIResponse) => {
       return await response.json();
+    },
+    1,
+  );
+};
+
+export const getRemoteFormats = async (): Promise<Format[]> => {
+  return await _executeRequest<Format[]>(
+    async () => {
+      return await invokeRemote("onlyoffice-backend", {
+        method: "GET",
+        path: "/api/v1/remote/formats",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    },
+    async (response: APIResponse) => {
+      const data = await response.json();
+
+      return data.formats || {};
     },
     1,
   );

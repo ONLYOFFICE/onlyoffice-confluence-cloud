@@ -18,9 +18,12 @@
 
 import Resolver, { Request } from "@forge/resolver";
 
-import {
-  postRemoteAppAuthorization,
-} from "../../src/client";
+import { getRemoteFormats, postRemoteAppAuthorization } from "../../src/client";
+import { Format } from "../types/types";
+
+const FORMATS_CACHE_TTL = 1000 * 60 * 60 * 24;
+let formatsLastFetched = 0;
+let formats: Format[] = [];
 
 const mainPageResolver = new Resolver();
 
@@ -28,6 +31,17 @@ mainPageResolver.define("authorizeRemoteApp", async (request: Request) => {
   const { pageId, attachmentId } = request.payload;
 
   return await postRemoteAppAuthorization(pageId, attachmentId);
+});
+
+mainPageResolver.define("getFormats", async () => {
+  const now = Date.now();
+
+  if (formats.length === 0 || now - formatsLastFetched > FORMATS_CACHE_TTL) {
+    formats = await getRemoteFormats();
+    formatsLastFetched = now;
+  }
+
+  return formats;
 });
 
 export default mainPageResolver.getDefinitions();
