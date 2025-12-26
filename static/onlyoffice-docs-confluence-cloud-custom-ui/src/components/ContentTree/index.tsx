@@ -77,6 +77,12 @@ const contentTypeOptions = [
   { label: "Blogs", value: "blogpost" },
 ];
 const countElementsOnPageOptions = [25, 50, 100];
+const createTypeOptions = [
+  { label: "Document", icon: <WordIcon />, value: "word" },
+  { label: "Spreadsheet", icon: <CellIcon />, value: "cell" },
+  { label: "Presentaion", icon: <SlideIcon />, value: "slide" },
+  { label: "PDF form", icon: <PdfIcon />, value: "pdf" },
+];
 
 export type ContentTreeProps = {
   space: {
@@ -258,15 +264,13 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
       case "folder":
         return <FolderClosedIcon label="Folder" />;
       case "attachment":
-        return getIconForAttachment(title || "");
+        return getIconDocumentType(getDocumentType(title || ""));
       default:
         return <PageIcon label="Page" />;
     }
   };
 
-  const getIconForAttachment = (title: string) => {
-    const documentType = getDocumentType(title);
-
+  const getIconDocumentType = (documentType: string | null) => {
     switch (documentType) {
       case "word":
         return <WordIcon />;
@@ -377,6 +381,41 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
     if (link) handleContentRequest(findContentByLink(link));
   };
 
+  const buildCreateRow = (documentType: string) => {
+    return {
+      key: "create",
+      cells: [
+        {
+          key: "title",
+          content: (
+            <Box>
+              <Inline space="space.075" alignBlock="center">
+                <Box>{getIconDocumentType(documentType)}</Box>
+                <Textfield className="small-input" />
+              </Inline>
+            </Box>
+          ),
+        },
+        {
+          key: "fileSize",
+          content: documentType,
+        },
+        {
+          key: "lastmodified",
+          content: "",
+        },
+        {
+          key: "actions",
+          content: "",
+        },
+      ],
+    };
+  };
+
+  const onCreate = (documentType: string) => {
+    setRows([buildCreateRow(documentType), ...rows]);
+  };
+
   return (
     <>
       <Stack space="space.200">
@@ -428,20 +467,48 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
             onChange={(event) =>
               setSearch((event.target as HTMLInputElement).value)
             }
-            className="search-input"
+            className="small-input"
             elemBeforeInput={
               <Box xcss={styles.searchIcon}>
                 <SearchIcon label="Search" />
               </Box>
             }
           />
-          <Button
-            isDisabled={isLoading}
-            iconBefore={AddIcon}
-            appearance="primary"
+          <DropdownMenu<HTMLButtonElement>
+            trigger={({ triggerRef, ...props }) => (
+              <Box xcss={xcss({ marginRight: "space.075" })} ref={triggerRef}>
+                <Box xcss={xcss({ marginRight: "space.negative.075" })}>
+                  <Button
+                    {...props}
+                    isDisabled={
+                      (currentEntity?.type !== "page" &&
+                        currentEntity?.type !== "blogpost") ||
+                      isLoading
+                    }
+                    iconBefore={AddIcon}
+                    appearance="primary"
+                  >
+                    Create
+                  </Button>
+                </Box>
+              </Box>
+            )}
+            shouldRenderToParent
           >
-            Create
-          </Button>
+            <DropdownItemGroup>
+              {createTypeOptions.map((option) => (
+                <DropdownItem
+                  key={option.value}
+                  onClick={() => onCreate(option.value)}
+                >
+                  <Inline space="space.100" alignBlock="center">
+                    {option.icon}
+                    <Box>{option.label}</Box>
+                  </Inline>
+                </DropdownItem>
+              ))}
+            </DropdownItemGroup>
+          </DropdownMenu>
         </Inline>
         {showBreadcrumbs && (
           <Breadcrumbs>
