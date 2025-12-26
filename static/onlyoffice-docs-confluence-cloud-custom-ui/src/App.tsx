@@ -22,6 +22,7 @@ import { view } from "@forge/bridge";
 import { FullContext } from "@forge/bridge";
 
 import EditorPage from "./pages/Editor";
+import MainPage from "./pages/Main";
 
 function App() {
   const [context, setContext] = useState<FullContext>();
@@ -35,9 +36,14 @@ function App() {
 
   return (
     <>
-      {context && context.moduleKey === 'editor-page' && (
+      {context && context.moduleKey === "editor-page" && (
         <EditorPage context={context} />
       )}
+      {context &&
+        (context.moduleKey === "main-page" ||
+          context.moduleKey === "main-page-action") && (
+          <MainPage context={context} />
+        )}
     </>
   );
 }
