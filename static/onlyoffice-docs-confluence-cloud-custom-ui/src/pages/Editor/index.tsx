@@ -157,7 +157,7 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
   const onRequestUsers = (c: string, ids: string[]) => {
     const users = ids.map((id) => ({
       id: id,
-      image: `${context.siteUrl}/wiki/aa-avatar/${id}`
+      image: `${context.siteUrl}/wiki/aa-avatar/${id}`,
     }));
 
     sendMessageToIframe("SET_USERS", {
