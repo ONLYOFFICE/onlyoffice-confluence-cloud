@@ -35,7 +35,7 @@ settingsPageResolver.define("saveSettings", async (request: Request) => {
     (await saveSettings({
       url: payload["url"] || "",
       "security.key": payload["security.key"] || "",
-      "security.header": payload["security.header"] || ""
+      "security.header": payload["security.header"] || "",
     })) || {};
 
   return settings;
