@@ -16,7 +16,7 @@
  *
  */
 
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 
 import Breadcrumbs, { BreadcrumbsItem } from "@atlaskit/breadcrumbs";
 import { ButtonGroup } from "@atlaskit/button";
@@ -29,9 +29,12 @@ import DropdownMenu, {
 } from "@atlaskit/dropdown-menu";
 import DynamicTable from "@atlaskit/dynamic-table";
 import { RowType } from "@atlaskit/dynamic-table/dist/types/types";
+import Form, { Field } from "@atlaskit/form";
 import AddIcon from "@atlaskit/icon/core/add";
+import CheckMarkIcon from "@atlaskit/icon/core/check-mark";
 import ChevronLeftIcon from "@atlaskit/icon/core/chevron-left";
 import ChevronRightIcon from "@atlaskit/icon/core/chevron-right";
+import CrossIcon from "@atlaskit/icon/core/cross";
 import DatabaseIcon from "@atlaskit/icon/core/database";
 import FilterIcon from "@atlaskit/icon/core/filter";
 import FolderClosedIcon from "@atlaskit/icon/core/folder-closed";
@@ -44,6 +47,7 @@ import SmartLinkEmbedIcon from "@atlaskit/icon/core/smart-link-embed";
 import WhiteboardIcon from "@atlaskit/icon/core/whiteboard";
 import { Box, Inline, Stack, xcss } from "@atlaskit/primitives";
 import Textfield from "@atlaskit/textfield";
+import VisuallyHidden from "@atlaskit/visually-hidden";
 import { invoke, router } from "@forge/bridge";
 import bytes from "bytes";
 
@@ -69,6 +73,13 @@ const styles = {
   }),
   actionsContainer: xcss({
     textAlign: "center",
+  }),
+  iconContainer: xcss({
+    display: "flex",
+    alignItems: "center",
+  }),
+  formFieldWraper: xcss({
+    marginBlockStart: "space.negative.100",
   }),
 };
 
@@ -305,7 +316,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
           content: (
             <Box onClick={() => onClickOnTitle(entity)}>
               <Inline space="space.075" alignBlock="center">
-                <Box>
+                <Box xcss={styles.iconContainer}>
                   {getIconByContentType(
                     contentType || entity.type,
                     entity.title,
@@ -389,10 +400,61 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
           key: "title",
           content: (
             <Box>
-              <Inline space="space.075" alignBlock="center">
-                <Box>{getIconDocumentType(documentType)}</Box>
-                <Textfield className="small-input" />
-              </Inline>
+              <Form<{ documentType: string; title: string }>
+                noValidate
+                onSubmit={(data) => {
+                  console.log(data);
+                }}
+              >
+                {({ formProps }) => (
+                  <form {...formProps} name="create">
+                    <Inline space="space.075" alignBlock="center">
+                      <Box xcss={styles.iconContainer}>
+                        {getIconDocumentType(documentType)}
+                      </Box>
+                      <Box xcss={styles.formFieldWraper}>
+                        <VisuallyHidden>
+                          <Field
+                            name="documentType"
+                            defaultValue={documentType}
+                          />
+                        </VisuallyHidden>
+                        <Field
+                          name="title"
+                          defaultValue=""
+                          isRequired
+                          validate={(value) => {
+                            if (!value) {
+                              return "A key is required";
+                            }
+                          }}
+                        >
+                          {({ fieldProps }) => {
+                            return (
+                              <Textfield
+                                className="small-input"
+                                {...fieldProps}
+                              />
+                            );
+                          }}
+                        </Field>
+                      </Box>
+                      <IconButton
+                        type="submit"
+                        label="Accept"
+                        icon={CheckMarkIcon}
+                        isDisabled={isLoading}
+                      />
+                      <IconButton
+                        label="Cross"
+                        icon={CrossIcon}
+                        isDisabled={isLoading}
+                        onClick={onCancelCreate}
+                      />
+                    </Inline>
+                  </form>
+                )}
+              </Form>
             </Box>
           ),
         },
@@ -413,7 +475,15 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
   };
 
   const onCreate = (documentType: string) => {
-    setRows([buildCreateRow(documentType), ...rows]);
+    const rowsWithotCreateRow = rows.filter((row) => row.key !== "create");
+
+    setRows([buildCreateRow(documentType), ...rowsWithotCreateRow]);
+  };
+
+  const onCancelCreate = () => {
+    const rowsWithotCreateRow = rows.filter((row) => row.key !== "create");
+
+    setRows([...rowsWithotCreateRow]);
   };
 
   return (
