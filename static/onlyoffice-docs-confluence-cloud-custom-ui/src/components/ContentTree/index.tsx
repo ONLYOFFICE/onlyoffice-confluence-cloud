@@ -16,32 +16,27 @@
  *
  */
 
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Breadcrumbs, { BreadcrumbsItem } from "@atlaskit/breadcrumbs";
 import { ButtonGroup } from "@atlaskit/button";
 import Button, { IconButton } from "@atlaskit/button/new";
 import DropdownMenu, {
   DropdownItem,
-  DropdownItemCheckbox,
-  DropdownItemCheckboxGroup,
   DropdownItemGroup,
 } from "@atlaskit/dropdown-menu";
 import DynamicTable from "@atlaskit/dynamic-table";
 import { RowType } from "@atlaskit/dynamic-table/dist/types/types";
 import Form, { Field } from "@atlaskit/form";
-import AddIcon from "@atlaskit/icon/core/add";
 import CheckMarkIcon from "@atlaskit/icon/core/check-mark";
 import ChevronLeftIcon from "@atlaskit/icon/core/chevron-left";
 import ChevronRightIcon from "@atlaskit/icon/core/chevron-right";
 import CrossIcon from "@atlaskit/icon/core/cross";
 import DatabaseIcon from "@atlaskit/icon/core/database";
-import FilterIcon from "@atlaskit/icon/core/filter";
 import FolderClosedIcon from "@atlaskit/icon/core/folder-closed";
 import HomeIcon from "@atlaskit/icon/core/home";
 import PageIcon from "@atlaskit/icon/core/page";
 import QuotationMarkIcon from "@atlaskit/icon/core/quotation-mark";
-import SearchIcon from "@atlaskit/icon/core/search";
 import ShowMoreIcon from "@atlaskit/icon/core/show-more-horizontal";
 import SmartLinkEmbedIcon from "@atlaskit/icon/core/smart-link-embed";
 import WhiteboardIcon from "@atlaskit/icon/core/whiteboard";
@@ -67,6 +62,8 @@ import {
 import { Content, Format, SearchResponse } from "../../types/types";
 import { useFormats } from "../../util/formats";
 
+import { ContentTreeToolbar } from "./components/ContentTreeToolbar";
+
 const styles = {
   searchIcon: xcss({
     paddingLeft: "space.075",
@@ -88,12 +85,6 @@ const contentTypeOptions = [
   { label: "Blogs", value: "blogpost" },
 ];
 const countElementsOnPageOptions = [25, 50, 100];
-const createTypeOptions = [
-  { label: "Document", icon: <WordIcon />, value: "word" },
-  { label: "Spreadsheet", icon: <CellIcon />, value: "cell" },
-  { label: "Presentaion", icon: <SlideIcon />, value: "slide" },
-  { label: "PDF form", icon: <PdfIcon />, value: "pdf" },
-];
 
 export type ContentTreeProps = {
   space: {
@@ -489,97 +480,33 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
   return (
     <>
       <Stack space="space.200">
-        <Inline space="space.100">
-          {showFilter && (
-            <DropdownMenu<HTMLButtonElement>
-              trigger={({ triggerRef, ...props }) => (
-                <Box xcss={xcss({ marginLeft: "space.075" })} ref={triggerRef}>
-                  <Box xcss={xcss({ marginLeft: "space.negative.075" })}>
-                    <IconButton
-                      {...props}
-                      label="Filter"
-                      icon={FilterIcon}
-                      isDisabled={isLoading}
-                    />
-                  </Box>
-                </Box>
-              )}
-              shouldRenderToParent
-            >
-              <DropdownItemGroup>
-                {contentTypeOptions.map((option) => (
-                  <DropdownItem
-                    key={option.value}
-                    isSelected={currentContentType === option.value}
-                    onClick={() => onChangeContentType(option)}
-                  >
-                    {option.label}
-                  </DropdownItem>
-                ))}
-              </DropdownItemGroup>
-              <DropdownItemCheckboxGroup id="contentType">
-                {(currentEntity?.type === "blogpost" ||
-                  currentEntity?.type === "page") && (
-                  <DropdownItemCheckbox
-                    id="show-only-files"
-                    onClick={() => setShowOnlyFiles(!showOnlyFiles)}
-                  >
-                    Show only files
-                  </DropdownItemCheckbox>
-                )}
-              </DropdownItemCheckboxGroup>
-            </DropdownMenu>
-          )}
-          <Textfield
-            placeholder="Search"
-            value={search}
-            isDisabled={isLoading}
-            onChange={(event) =>
-              setSearch((event.target as HTMLInputElement).value)
-            }
-            className="small-input"
-            elemBeforeInput={
-              <Box xcss={styles.searchIcon}>
-                <SearchIcon label="Search" />
-              </Box>
-            }
-          />
-          <DropdownMenu<HTMLButtonElement>
-            trigger={({ triggerRef, ...props }) => (
-              <Box xcss={xcss({ marginRight: "space.075" })} ref={triggerRef}>
-                <Box xcss={xcss({ marginRight: "space.negative.075" })}>
-                  <Button
-                    {...props}
-                    isDisabled={
-                      (currentEntity?.type !== "page" &&
-                        currentEntity?.type !== "blogpost") ||
-                      isLoading
-                    }
-                    iconBefore={AddIcon}
-                    appearance="primary"
-                  >
-                    Create
-                  </Button>
-                </Box>
-              </Box>
-            )}
-            shouldRenderToParent
-          >
-            <DropdownItemGroup>
-              {createTypeOptions.map((option) => (
-                <DropdownItem
-                  key={option.value}
-                  onClick={() => onCreate(option.value)}
-                >
-                  <Inline space="space.100" alignBlock="center">
-                    {option.icon}
-                    <Box>{option.label}</Box>
-                  </Inline>
-                </DropdownItem>
-              ))}
-            </DropdownItemGroup>
-          </DropdownMenu>
-        </Inline>
+        <ContentTreeToolbar
+          isLoading={isLoading}
+          contentType={currentContentType}
+          showFilter={showFilter}
+          customFilters={
+            currentEntity?.type === "blogpost" || currentEntity?.type === "page"
+              ? [
+                  {
+                    id: "show-only-files",
+                    label: "Show only files",
+                    value: showOnlyFiles,
+                    onChange: setShowOnlyFiles,
+                  },
+                ]
+              : undefined
+          }
+          search={search}
+          onChangeContentType={onChangeContentType}
+          onChangeSearch={setSearch}
+          onCreate={
+            (currentEntity?.type !== "page" &&
+              currentEntity?.type !== "blogpost") ||
+            isLoading
+              ? undefined
+              : onCreate
+          }
+        />
         {showBreadcrumbs && (
           <Breadcrumbs>
             <BreadcrumbsItem
