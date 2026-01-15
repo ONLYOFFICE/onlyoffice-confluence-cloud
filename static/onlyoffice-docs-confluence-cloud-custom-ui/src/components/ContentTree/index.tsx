@@ -18,7 +18,6 @@
 
 import React, { useEffect, useState } from "react";
 
-import Breadcrumbs, { BreadcrumbsItem } from "@atlaskit/breadcrumbs";
 import { ButtonGroup } from "@atlaskit/button";
 import Button, { IconButton } from "@atlaskit/button/new";
 import DropdownMenu, {
@@ -32,26 +31,13 @@ import CheckMarkIcon from "@atlaskit/icon/core/check-mark";
 import ChevronLeftIcon from "@atlaskit/icon/core/chevron-left";
 import ChevronRightIcon from "@atlaskit/icon/core/chevron-right";
 import CrossIcon from "@atlaskit/icon/core/cross";
-import DatabaseIcon from "@atlaskit/icon/core/database";
-import FolderClosedIcon from "@atlaskit/icon/core/folder-closed";
-import HomeIcon from "@atlaskit/icon/core/home";
-import PageIcon from "@atlaskit/icon/core/page";
-import QuotationMarkIcon from "@atlaskit/icon/core/quotation-mark";
 import ShowMoreIcon from "@atlaskit/icon/core/show-more-horizontal";
-import SmartLinkEmbedIcon from "@atlaskit/icon/core/smart-link-embed";
-import WhiteboardIcon from "@atlaskit/icon/core/whiteboard";
 import { Box, Inline, Stack, xcss } from "@atlaskit/primitives";
 import Textfield from "@atlaskit/textfield";
 import VisuallyHidden from "@atlaskit/visually-hidden";
 import { invoke, router } from "@forge/bridge";
 import bytes from "bytes";
 
-import { ReactComponent as CellIcon } from "../../assets/images/cell.svg";
-import { ReactComponent as DiagramIcon } from "../../assets/images/diagram.svg";
-import { ReactComponent as PdfIcon } from "../../assets/images/pdf.svg";
-import { ReactComponent as SlideIcon } from "../../assets/images/slide.svg";
-import { ReactComponent as UnknownIcon } from "../../assets/images/unknown.svg";
-import { ReactComponent as WordIcon } from "../../assets/images/word.svg";
 import {
   findContent,
   findContentById,
@@ -62,7 +48,9 @@ import {
 import { Content, Format, SearchResponse } from "../../types/types";
 import { useFormats } from "../../util/formats";
 
+import { ContentTreeBreadcrumbs } from "./components/ContentTreeBreadcrumbs";
 import { ContentTreeToolbar } from "./components/ContentTreeToolbar";
+import { getIconByContentType, getIconForDocumentType } from "./utils/iconUtil";
 
 const styles = {
   searchIcon: xcss({
@@ -80,10 +68,6 @@ const styles = {
   }),
 };
 
-const contentTypeOptions = [
-  { label: "Content", value: "content" },
-  { label: "Blogs", value: "blogpost" },
-];
 const countElementsOnPageOptions = [25, 50, 100];
 
 export type ContentTreeProps = {
@@ -251,44 +235,6 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
     return "";
   };
 
-  const getIconByContentType = (type: string, title?: string) => {
-    switch (type) {
-      case "page":
-        return <PageIcon label="Page" />;
-      case "blogpost":
-        return <QuotationMarkIcon label="Blog Post" />;
-      case "whiteboard":
-        return <WhiteboardIcon label="Whiteboard" />;
-      case "database":
-        return <DatabaseIcon label="Database" />;
-      case "embed":
-        return <SmartLinkEmbedIcon label="Embed" />;
-      case "folder":
-        return <FolderClosedIcon label="Folder" />;
-      case "attachment":
-        return getIconDocumentType(getDocumentType(title || ""));
-      default:
-        return <PageIcon label="Page" />;
-    }
-  };
-
-  const getIconDocumentType = (documentType: string | null) => {
-    switch (documentType) {
-      case "word":
-        return <WordIcon />;
-      case "cell":
-        return <CellIcon />;
-      case "slide":
-        return <SlideIcon />;
-      case "pdf":
-        return <PdfIcon />;
-      case "diagram":
-        return <DiagramIcon />;
-      default:
-        return <UnknownIcon />;
-    }
-  };
-
   const buildContentTreeRows = (
     entities: Content[],
     contentType?: string,
@@ -310,7 +256,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
                 <Box xcss={styles.iconContainer}>
                   {getIconByContentType(
                     contentType || entity.type,
-                    entity.title,
+                    getDocumentType(entity.title) || "",
                   )}
                 </Box>
                 <Box>{entity.title}</Box>
@@ -401,7 +347,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
                   <form {...formProps} name="create">
                     <Inline space="space.075" alignBlock="center">
                       <Box xcss={styles.iconContainer}>
-                        {getIconDocumentType(documentType)}
+                        {getIconForDocumentType(documentType)}
                       </Box>
                       <Box xcss={styles.formFieldWraper}>
                         <VisuallyHidden>
@@ -508,33 +454,22 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
           }
         />
         {showBreadcrumbs && (
-          <Breadcrumbs>
-            <BreadcrumbsItem
-              text={
-                contentTypeOptions.find(
-                  (option) => option.value === currentContentType,
-                )?.label || "Content"
-              }
-              iconBefore={<HomeIcon label="Home" />}
-              onClick={() => setCurrentParentId(null)}
-            />
-            {currentEntity &&
-              currentEntity?.ancestors.map((ancestor) => (
-                <BreadcrumbsItem
-                  key={ancestor.id}
-                  text={ancestor.title}
-                  iconBefore={getIconByContentType(ancestor.type)}
-                  onClick={() => setCurrentParentId(ancestor.id)}
-                />
-              ))}
-            {currentEntity && (
-              <BreadcrumbsItem
-                text={currentEntity.title}
-                iconBefore={getIconByContentType(currentEntity.type)}
-                onClick={() => setCurrentParentId(currentEntity.id)}
-              />
-            )}
-          </Breadcrumbs>
+          <ContentTreeBreadcrumbs
+            contentType={currentContentType}
+            items={[
+              ...(currentEntity ? currentEntity.ancestors : []),
+              ...(currentEntity ? [currentEntity] : []),
+            ]}
+            getIconForItem={(item) =>
+              getIconByContentType(
+                item.type,
+                item.type === "attachment"
+                  ? getDocumentType(item.title) || ""
+                  : undefined,
+              )
+            }
+            onClickItem={setCurrentParentId}
+          />
         )}
         <DynamicTable
           isFixedSize
