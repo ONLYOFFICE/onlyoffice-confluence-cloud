@@ -18,8 +18,7 @@
 
 import React, { useEffect, useState } from "react";
 
-import { ButtonGroup } from "@atlaskit/button";
-import Button, { IconButton } from "@atlaskit/button/new";
+import { IconButton } from "@atlaskit/button/new";
 import DropdownMenu, {
   DropdownItem,
   DropdownItemGroup,
@@ -28,8 +27,6 @@ import DynamicTable from "@atlaskit/dynamic-table";
 import { RowType } from "@atlaskit/dynamic-table/dist/types/types";
 import Form, { Field } from "@atlaskit/form";
 import CheckMarkIcon from "@atlaskit/icon/core/check-mark";
-import ChevronLeftIcon from "@atlaskit/icon/core/chevron-left";
-import ChevronRightIcon from "@atlaskit/icon/core/chevron-right";
 import CrossIcon from "@atlaskit/icon/core/cross";
 import ShowMoreIcon from "@atlaskit/icon/core/show-more-horizontal";
 import { Box, Inline, Stack, xcss } from "@atlaskit/primitives";
@@ -49,6 +46,7 @@ import { Content, Format, SearchResponse } from "../../types/types";
 import { useFormats } from "../../util/formats";
 
 import { ContentTreeBreadcrumbs } from "./components/ContentTreeBreadcrumbs";
+import { ContentTreePagination } from "./components/ContentTreePagination";
 import { ContentTreeToolbar } from "./components/ContentTreeToolbar";
 import { getIconByContentType, getIconForDocumentType } from "./utils/iconUtil";
 
@@ -67,8 +65,6 @@ const styles = {
     marginBlockStart: "space.negative.100",
   }),
 };
-
-const countElementsOnPageOptions = [25, 50, 100];
 
 export type ContentTreeProps = {
   space: {
@@ -481,40 +477,14 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
           onSort={onSort}
         />
         {(navigationLinks.prev || navigationLinks.next) && (
-          <Inline spread="space-between">
-            <ButtonGroup label="Default button group">
-              <Button
-                iconBefore={ChevronLeftIcon}
-                isDisabled={!navigationLinks.prev || isLoading}
-                onClick={() => onSwitchPage(navigationLinks.prev)}
-              >
-                Previous
-              </Button>
-              <Button
-                iconAfter={ChevronRightIcon}
-                isDisabled={!navigationLinks.next || isLoading}
-                onClick={() => onSwitchPage(navigationLinks.next)}
-              >
-                Next
-              </Button>
-            </ButtonGroup>
-            <DropdownMenu
-              trigger={String(countElementsOnPage)}
-              shouldRenderToParent
-            >
-              <DropdownItemGroup>
-                {countElementsOnPageOptions.map((option) => (
-                  <DropdownItem
-                    isSelected={true}
-                    key={option}
-                    onClick={() => setCountElementsOnPage(option)}
-                  >
-                    {option}
-                  </DropdownItem>
-                ))}
-              </DropdownItemGroup>
-            </DropdownMenu>
-          </Inline>
+          <ContentTreePagination
+            isLoading={isLoading}
+            countElementsOnPage={countElementsOnPage}
+            prevLink={navigationLinks.prev}
+            nextLink={navigationLinks.next}
+            onChangePage={onSwitchPage}
+            onChangeCountElementsOnPage={setCountElementsOnPage}
+          />
         )}
       </Stack>
     </>
