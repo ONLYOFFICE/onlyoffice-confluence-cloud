@@ -25,13 +25,8 @@ import DropdownMenu, {
 } from "@atlaskit/dropdown-menu";
 import DynamicTable from "@atlaskit/dynamic-table";
 import { RowType } from "@atlaskit/dynamic-table/dist/types/types";
-import Form, { Field } from "@atlaskit/form";
-import CheckMarkIcon from "@atlaskit/icon/core/check-mark";
-import CrossIcon from "@atlaskit/icon/core/cross";
 import ShowMoreIcon from "@atlaskit/icon/core/show-more-horizontal";
 import { Box, Inline, Stack, xcss } from "@atlaskit/primitives";
-import Textfield from "@atlaskit/textfield";
-import VisuallyHidden from "@atlaskit/visually-hidden";
 import { invoke, router } from "@forge/bridge";
 import bytes from "bytes";
 
@@ -48,7 +43,8 @@ import { useFormats } from "../../util/formats";
 import { ContentTreeBreadcrumbs } from "./components/ContentTreeBreadcrumbs";
 import { ContentTreePagination } from "./components/ContentTreePagination";
 import { ContentTreeToolbar } from "./components/ContentTreeToolbar";
-import { getIconByContentType, getIconForDocumentType } from "./utils/iconUtil";
+import { buildCreateRow } from "./utils/createRowUtils";
+import { getIconByContentType } from "./utils/iconUtils";
 
 const styles = {
   searchIcon: xcss({
@@ -325,92 +321,13 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
     if (link) handleContentRequest(findContentByLink(link));
   };
 
-  const buildCreateRow = (documentType: string) => {
-    return {
-      key: "create",
-      cells: [
-        {
-          key: "title",
-          content: (
-            <Box>
-              <Form<{ documentType: string; title: string }>
-                noValidate
-                onSubmit={(data) => {
-                  console.log(data);
-                }}
-              >
-                {({ formProps }) => (
-                  <form {...formProps} name="create">
-                    <Inline space="space.075" alignBlock="center">
-                      <Box xcss={styles.iconContainer}>
-                        {getIconForDocumentType(documentType)}
-                      </Box>
-                      <Box xcss={styles.formFieldWraper}>
-                        <VisuallyHidden>
-                          <Field
-                            name="documentType"
-                            defaultValue={documentType}
-                          />
-                        </VisuallyHidden>
-                        <Field
-                          name="title"
-                          defaultValue=""
-                          isRequired
-                          validate={(value) => {
-                            if (!value) {
-                              return "A key is required";
-                            }
-                          }}
-                        >
-                          {({ fieldProps }) => {
-                            return (
-                              <Textfield
-                                className="small-input"
-                                {...fieldProps}
-                              />
-                            );
-                          }}
-                        </Field>
-                      </Box>
-                      <IconButton
-                        type="submit"
-                        label="Accept"
-                        icon={CheckMarkIcon}
-                        isDisabled={isLoading}
-                      />
-                      <IconButton
-                        label="Cross"
-                        icon={CrossIcon}
-                        isDisabled={isLoading}
-                        onClick={onCancelCreate}
-                      />
-                    </Inline>
-                  </form>
-                )}
-              </Form>
-            </Box>
-          ),
-        },
-        {
-          key: "fileSize",
-          content: documentType,
-        },
-        {
-          key: "lastmodified",
-          content: "",
-        },
-        {
-          key: "actions",
-          content: "",
-        },
-      ],
-    };
-  };
-
   const onCreate = (documentType: string) => {
     const rowsWithotCreateRow = rows.filter((row) => row.key !== "create");
 
-    setRows([buildCreateRow(documentType), ...rowsWithotCreateRow]);
+    setRows([
+      buildCreateRow(documentType, isLoading, onCancelCreate),
+      ...rowsWithotCreateRow,
+    ]);
   };
 
   const onCancelCreate = () => {
