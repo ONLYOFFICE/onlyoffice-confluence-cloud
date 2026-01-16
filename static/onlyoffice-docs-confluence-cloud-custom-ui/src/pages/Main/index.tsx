@@ -16,7 +16,7 @@
  *
  */
 
-import React from "react";
+import React, { useState } from "react";
 
 import Heading from "@atlaskit/heading";
 import {
@@ -30,6 +30,7 @@ import { view } from "@forge/bridge";
 import { FullContext } from "@forge/bridge";
 
 import { ContentTree } from "../../components/ContentTree";
+import { ContentType } from "../../types/types";
 
 const styles = {
   pageBodyContainer: xcss({
@@ -47,13 +48,11 @@ export type MainPageProps = {
 const MainPage: React.FC<MainPageProps> = ({ context }) => {
   const type = context.extension.type;
   const space = context.extension.space;
-  const parentId = context.extension.content?.id || null;
-  const contentType = context.extension.content?.type || null;
+  const [parentId, setParentId] = useState<string | undefined>(
+    context.extension.content?.id,
+  );
+  const [contentType, setContentType] = useState<ContentType>("content");
   const locale = context.locale;
-
-  const onClose = () => {
-    view.close();
-  };
 
   const getContainer = (type: string, children: React.ReactNode) => {
     switch (type) {
@@ -73,7 +72,7 @@ const MainPage: React.FC<MainPageProps> = ({ context }) => {
         );
       case "confluence:contentAction":
         return (
-          <FullScreenModalDialog onClose={onClose}>
+          <FullScreenModalDialog onClose={() => view.close()}>
             <ModalHeader hasCloseButton>
               <ModalTitle>ONLYOFFICE Docs</ModalTitle>
             </ModalHeader>
@@ -94,6 +93,11 @@ const MainPage: React.FC<MainPageProps> = ({ context }) => {
       locale={locale}
       showBreadcrumbs={type === "confluence:spacePage"}
       showFilter={type === "confluence:spacePage"}
+      onChangeParentId={(value: string | undefined) => setParentId(value)}
+      onChangeContentType={(value: ContentType) => {
+        setParentId(undefined);
+        setContentType(value);
+      }}
     />,
   );
 };

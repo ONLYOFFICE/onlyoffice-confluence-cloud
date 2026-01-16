@@ -16,6 +16,10 @@
  *
  */
 
+import { CONTENT_TYPES } from "../constants";
+
+export type ContentType = (typeof CONTENT_TYPES)[number];
+
 export interface AppContext {
   appId: string;
   environmentId: string;

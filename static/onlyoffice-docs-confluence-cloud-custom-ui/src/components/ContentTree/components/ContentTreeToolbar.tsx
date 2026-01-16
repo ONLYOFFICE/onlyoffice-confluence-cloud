@@ -35,6 +35,8 @@ import { ReactComponent as CellIcon } from "../../../assets/images/cell.svg";
 import { ReactComponent as PdfIcon } from "../../../assets/images/pdf.svg";
 import { ReactComponent as SlideIcon } from "../../../assets/images/slide.svg";
 import { ReactComponent as WordIcon } from "../../../assets/images/word.svg";
+import { CONTENT_TYPES } from "../../../constants";
+import { ContentType } from "../../../types/types";
 
 const styles = {
   searchIcon: xcss({
@@ -55,15 +57,11 @@ type ContentTreeToolbarProps = {
     },
   ];
   search: string;
-  onChangeContentType: (selectedContentType: { value: string }) => void;
+  onChangeContentType: (value: ContentType) => void;
   onChangeSearch: (value: string) => void;
   onClickCreate?: (documentType: string) => void;
 };
 
-const contentTypeOptions = [
-  { label: "Content", value: "content" },
-  { label: "Blogs", value: "blogpost" },
-];
 const createTypeOptions = [
   { label: "Document", icon: <WordIcon />, value: "word" },
   { label: "Spreadsheet", icon: <CellIcon />, value: "cell" },
@@ -72,11 +70,11 @@ const createTypeOptions = [
 ];
 
 export const ContentTreeToolbar: React.FC<ContentTreeToolbarProps> = ({
-  isLoading,
   contentType,
+  search,
   showFilter,
   customFilters,
-  search,
+  isLoading,
   onChangeContentType,
   onChangeSearch,
   onClickCreate,
@@ -100,13 +98,13 @@ export const ContentTreeToolbar: React.FC<ContentTreeToolbarProps> = ({
           shouldRenderToParent
         >
           <DropdownItemGroup>
-            {contentTypeOptions.map((option) => (
+            {CONTENT_TYPES.map((value) => (
               <DropdownItem
-                key={option.value}
-                isSelected={contentType === option.value}
-                onClick={() => onChangeContentType(option)}
+                key={value}
+                isSelected={contentType === value}
+                onClick={() => onChangeContentType(value)}
               >
-                {option.label}
+                {value}
               </DropdownItem>
             ))}
           </DropdownItemGroup>

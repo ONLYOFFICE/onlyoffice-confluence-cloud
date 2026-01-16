@@ -44,8 +44,7 @@ const styles = {
 };
 
 export const buildContentTreeRows = (
-  currentParentId: string | null,
-  contentType: string | undefined,
+  parentId: string | undefined,
   entities: Content[],
   getDocumentType: (title: string) => string | null,
   onChangeParentId: (id: string) => void,
@@ -66,7 +65,7 @@ export const buildContentTreeRows = (
             <Inline space="space.075" alignBlock="center">
               <Box xcss={styles.iconContainer}>
                 {getIconByContentType(
-                  contentType || entity.type,
+                  entity.type || "blogpost",
                   getDocumentType(entity.title) || "",
                 )}
               </Box>
@@ -105,7 +104,7 @@ export const buildContentTreeRows = (
                 <DropdownItem
                   onClick={() =>
                     router.open(
-                      `/forge-apps/a/f8a806c4-dbce-447e-9fc5-5edd102f13aa/e/52727433-e0ce-4dca-996e-7c0d911165cf/r/editor?pageId=${currentParentId}&attachmentId=${entity.id}`,
+                      `/forge-apps/a/f8a806c4-dbce-447e-9fc5-5edd102f13aa/e/52727433-e0ce-4dca-996e-7c0d911165cf/r/editor?pageId=${parentId}&attachmentId=${entity.id}`,
                     )
                   }
                 >

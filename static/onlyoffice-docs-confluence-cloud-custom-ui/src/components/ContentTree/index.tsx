@@ -30,7 +30,13 @@ import {
   getBlogsInSpace,
   getPagesInSpace,
 } from "../../client";
-import { AppContext, Content, Format, SearchResponse } from "../../types/types";
+import {
+  AppContext,
+  Content,
+  ContentType,
+  Format,
+  SearchResponse,
+} from "../../types/types";
 import { useFormats } from "../../util/formats";
 import { getEditorPageUrl } from "../../util/routerUtils";
 
@@ -45,11 +51,13 @@ export type ContentTreeProps = {
     id: string;
     key: string;
   };
-  parentId: string | null;
-  contentType: string | null;
+  parentId?: string;
+  contentType: ContentType;
   locale: string;
   showBreadcrumbs?: boolean;
   showFilter?: boolean;
+  onChangeParentId: (id: string | undefined) => void;
+  onChangeContentType: (contentType: ContentType) => void;
 };
 
 export const ContentTree: React.FC<ContentTreeProps> = ({
@@ -59,19 +67,14 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
   locale,
   showBreadcrumbs = true,
   showFilter = true,
+  onChangeParentId,
+  onChangeContentType,
 }) => {
   const [appContext, setAppContext] = useState<AppContext | null>(null);
   const [formats, setFormats] = useState<Format[]>([]);
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [reloadFlag, setReloadFlag] = useState<boolean>(false);
-
-  const [currentParentId, setCurrentParentId] = useState<string | null>(
-    parentId,
-  );
-  const [currentContentType, setCurrentContentType] = useState<string | null>(
-    contentType || "content",
-  );
 
   const [currentEntity, setCurrentEntity] = useState<Content | null>(null);
   const [countElementsOnPage, setCountElementsOnPage] = useState<number>(25);
@@ -127,15 +130,15 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
   }, []);
 
   useEffect(() => {
-    if (currentParentId) {
-      findContentById(currentParentId).then((response) => {
+    if (parentId) {
+      findContentById(parentId).then((response) => {
         setCurrentEntity(response.results[0] || null);
       });
 
       handleContentRequest(
         findContent(
           space.key,
-          currentParentId,
+          parentId,
           search,
           showOnlyFiles,
           countElementsOnPage,
@@ -144,7 +147,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
       );
     } else {
       setCurrentEntity(null);
-      if (currentContentType === "blogpost") {
+      if (contentType === "blogpost") {
         handleContentRequest(
           getBlogsInSpace(
             space.id,
@@ -152,7 +155,6 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
             countElementsOnPage,
             adoptSortForTargetRequest(sort),
           ),
-          "blogpost",
         );
       } else {
         handleContentRequest(
@@ -163,13 +165,12 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
             countElementsOnPage,
             adoptSortForTargetRequest(sort),
           ),
-          "page",
         );
       }
     }
   }, [
-    currentParentId,
-    currentContentType,
+    parentId,
+    contentType,
     countElementsOnPage,
     search,
     showOnlyFiles,
@@ -179,18 +180,16 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
 
   const handleContentRequest = (
     contentRequest: Promise<SearchResponse<Content>>,
-    contentType?: string,
   ) => {
     setIsLoading(true);
 
     contentRequest
       .then((response) => {
         const rows = buildContentTreeRows(
-          currentParentId,
-          contentType,
+          parentId,
           response.results,
           getDocumentType,
-          setCurrentParentId,
+          onChangeParentId,
         );
 
         setNavigationLinks(response._links);
@@ -219,11 +218,6 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
     return "";
   };
 
-  const onChangeContentType = (selectedContentType: { value: string }) => {
-    setCurrentParentId(null);
-    setCurrentContentType(selectedContentType.value);
-  };
-
   const onSort = (data: { key: string; sortOrder: "ASC" | "DESC" }) => {
     setSort({
       key: data.key,
@@ -238,10 +232,10 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
   const onClickCreate = (documentType: string) => {
     const rowsWithotCreateRow = rows.filter((row) => row.key !== "create");
 
-    if (currentParentId) {
+    if (parentId) {
       setRows([
         buildCreateRow(
-          currentParentId,
+          parentId,
           documentType,
           locale,
           isLoading,
@@ -262,12 +256,12 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
   };
 
   const openEditorPage = (attachmentId: string) => {
-    if (appContext && currentParentId) {
+    if (appContext && parentId) {
       router.navigate(
         getEditorPageUrl(
           appContext.appId,
           appContext.environmentId,
-          currentParentId,
+          parentId,
           attachmentId,
         ),
       );
@@ -284,8 +278,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
     <>
       <Stack space="space.200">
         <ContentTreeToolbar
-          isLoading={isLoading}
-          contentType={currentContentType}
+          contentType={contentType}
           showFilter={showFilter}
           customFilters={
             currentEntity?.type === "blogpost" || currentEntity?.type === "page"
@@ -300,6 +293,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
               : undefined
           }
           search={search}
+          isLoading={isLoading}
           onChangeContentType={onChangeContentType}
           onChangeSearch={setSearch}
           onClickCreate={
@@ -312,12 +306,16 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
         />
         {showBreadcrumbs && (
           <ContentTreeBreadcrumbs
-            contentType={currentContentType}
             items={[
+              {
+                id: "root",
+                title: contentType,
+                type: contentType,
+              },
               ...(currentEntity ? currentEntity.ancestors : []),
               ...(currentEntity ? [currentEntity] : []),
             ]}
-            onClickItem={setCurrentParentId}
+            onClickItem={onChangeParentId}
           />
         )}
         <DynamicTable

@@ -23,42 +23,33 @@ import HomeIcon from "@atlaskit/icon/core/home";
 
 import { getIconByContentType } from "../utils/iconUtils";
 
-const contentTypeOptions = [
-  { label: "Content", value: "content" },
-  { label: "Blogs", value: "blogpost" },
-];
-
 type ContentTreeBreadcrumbsProps = {
-  contentType: string | null;
   items: Array<{
-    id: string;
+    id?: string;
     title: string;
     type: string;
   }>;
-  onClickItem: (id: string | null) => void;
+  onClickItem: (id: string | undefined) => void;
 };
 
 export const ContentTreeBreadcrumbs: React.FC<ContentTreeBreadcrumbsProps> = ({
-  contentType,
   items,
   onClickItem,
 }) => {
   return (
     <Breadcrumbs>
-      <BreadcrumbsItem
-        text={
-          contentTypeOptions.find((option) => option.value === contentType)
-            ?.label || "Content"
-        }
-        iconBefore={<HomeIcon label="Home" />}
-        onClick={() => onClickItem(null)}
-      />
       {items.map((item) => (
         <BreadcrumbsItem
           key={item.id}
           text={item.title}
-          iconBefore={getIconByContentType(item.type)}
-          onClick={() => onClickItem(item.id)}
+          iconBefore={
+            item.id === "root" ? (
+              <HomeIcon label="Home" />
+            ) : (
+              getIconByContentType(item.type)
+            )
+          }
+          onClick={() => onClickItem(item.id === "root" ? undefined : item.id)}
         />
       ))}
     </Breadcrumbs>
