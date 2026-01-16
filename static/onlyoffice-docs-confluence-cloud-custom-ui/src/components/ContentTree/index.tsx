@@ -38,7 +38,6 @@ import { ContentTreeBreadcrumbs } from "./components/ContentTreeBreadcrumbs";
 import { ContentTreePagination } from "./components/ContentTreePagination";
 import { ContentTreeToolbar } from "./components/ContentTreeToolbar";
 import { buildCreateRow } from "./utils/createRowUtils";
-import { getIconByContentType } from "./utils/iconUtils";
 import { buildContentTreeRows } from "./utils/rowUtils";
 
 export type ContentTreeProps = {
@@ -318,14 +317,6 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
               ...(currentEntity ? currentEntity.ancestors : []),
               ...(currentEntity ? [currentEntity] : []),
             ]}
-            getIconForItem={(item) =>
-              getIconByContentType(
-                item.type,
-                item.type === "attachment"
-                  ? getDocumentType(item.title) || ""
-                  : undefined,
-              )
-            }
             onClickItem={setCurrentParentId}
           />
         )}

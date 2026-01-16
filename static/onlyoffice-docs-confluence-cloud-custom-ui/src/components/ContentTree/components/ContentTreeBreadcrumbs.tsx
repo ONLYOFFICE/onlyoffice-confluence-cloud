@@ -16,10 +16,12 @@
  *
  */
 
-import React, { ReactChild } from "react";
+import React from "react";
 
 import Breadcrumbs, { BreadcrumbsItem } from "@atlaskit/breadcrumbs";
 import HomeIcon from "@atlaskit/icon/core/home";
+
+import { getIconByContentType } from "../utils/iconUtils";
 
 const contentTypeOptions = [
   { label: "Content", value: "content" },
@@ -33,18 +35,12 @@ type ContentTreeBreadcrumbsProps = {
     title: string;
     type: string;
   }>;
-  getIconForItem: (item: {
-    id: string;
-    title: string;
-    type: string;
-  }) => ReactChild | undefined;
   onClickItem: (id: string | null) => void;
 };
 
 export const ContentTreeBreadcrumbs: React.FC<ContentTreeBreadcrumbsProps> = ({
   contentType,
   items,
-  getIconForItem,
   onClickItem,
 }) => {
   return (
@@ -61,7 +57,7 @@ export const ContentTreeBreadcrumbs: React.FC<ContentTreeBreadcrumbsProps> = ({
         <BreadcrumbsItem
           key={item.id}
           text={item.title}
-          iconBefore={getIconForItem(item)}
+          iconBefore={getIconByContentType(item.type)}
           onClick={() => onClickItem(item.id)}
         />
       ))}
