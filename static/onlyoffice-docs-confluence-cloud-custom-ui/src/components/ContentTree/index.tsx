@@ -21,7 +21,7 @@ import React, { useEffect, useState } from "react";
 import DynamicTable from "@atlaskit/dynamic-table";
 import { RowType } from "@atlaskit/dynamic-table/dist/types/types";
 import { Stack } from "@atlaskit/primitives";
-import { invoke } from "@forge/bridge";
+import { invoke, router } from "@forge/bridge";
 
 import {
   findContent,
@@ -30,8 +30,9 @@ import {
   getBlogsInSpace,
   getPagesInSpace,
 } from "../../client";
-import { Content, Format, SearchResponse } from "../../types/types";
+import { AppContext, Content, Format, SearchResponse } from "../../types/types";
 import { useFormats } from "../../util/formats";
+import { getEditorPageUrl } from "../../util/routerUtils";
 
 import { ContentTreeBreadcrumbs } from "./components/ContentTreeBreadcrumbs";
 import { ContentTreePagination } from "./components/ContentTreePagination";
@@ -47,6 +48,7 @@ export type ContentTreeProps = {
   };
   parentId: string | null;
   contentType: string | null;
+  locale: string;
   showBreadcrumbs?: boolean;
   showFilter?: boolean;
 };
@@ -55,12 +57,15 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
   space,
   parentId,
   contentType,
+  locale,
   showBreadcrumbs = true,
   showFilter = true,
 }) => {
+  const [appContext, setAppContext] = useState<AppContext | null>(null);
   const [formats, setFormats] = useState<Format[]>([]);
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [reloadFlag, setReloadFlag] = useState<boolean>(false);
 
   const [currentParentId, setCurrentParentId] = useState<string | null>(
     parentId,
@@ -114,6 +119,9 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
   };
 
   useEffect(() => {
+    invoke<AppContext>("getAppContenxt").then((data) => {
+      setAppContext(data);
+    });
     invoke<Format[]>("getFormats").then((data) => {
       setFormats(data);
     });
@@ -167,6 +175,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
     search,
     showOnlyFiles,
     sort,
+    reloadFlag,
   ]);
 
   const handleContentRequest = (
@@ -227,13 +236,43 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
     if (link) handleContentRequest(findContentByLink(link));
   };
 
-  const onCreate = (documentType: string) => {
+  const onClickCreate = (documentType: string) => {
     const rowsWithotCreateRow = rows.filter((row) => row.key !== "create");
 
-    setRows([
-      buildCreateRow(documentType, isLoading, onCancelCreate),
-      ...rowsWithotCreateRow,
-    ]);
+    if (currentParentId) {
+      setRows([
+        buildCreateRow(
+          currentParentId,
+          documentType,
+          locale,
+          isLoading,
+          onCreateAttachment,
+          onCancelCreate,
+          setIsLoading,
+        ),
+        ...rowsWithotCreateRow,
+      ]);
+    }
+  };
+
+  const onCreateAttachment = (attachmentId: string) => {
+    setSearch("");
+    setSort({ key: "lastmodified", order: "DESC" });
+    setReloadFlag(!reloadFlag);
+    openEditorPage(attachmentId);
+  };
+
+  const openEditorPage = (attachmentId: string) => {
+    if (appContext && currentParentId) {
+      router.navigate(
+        getEditorPageUrl(
+          appContext.appId,
+          appContext.environmentId,
+          currentParentId,
+          attachmentId,
+        ),
+      );
+    }
   };
 
   const onCancelCreate = () => {
@@ -264,12 +303,12 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
           search={search}
           onChangeContentType={onChangeContentType}
           onChangeSearch={setSearch}
-          onCreate={
+          onClickCreate={
             (currentEntity?.type !== "page" &&
               currentEntity?.type !== "blogpost") ||
             isLoading
               ? undefined
-              : onCreate
+              : onClickCreate
           }
         />
         {showBreadcrumbs && (

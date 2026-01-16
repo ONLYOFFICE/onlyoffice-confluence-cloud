@@ -27,14 +27,6 @@ export interface RemoteSettings {
   demoEnd: number;
 }
 
-export interface Attachment {
-  filename: string;
-  id: string;
-  size: number;
-  author: User;
-  created: string;
-}
-
 export interface RemoteAppAuthorization {
   token: string;
   remoteAppUrl: string;

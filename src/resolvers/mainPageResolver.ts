@@ -16,9 +16,14 @@
  *
  */
 
+import { getAppContext } from "@forge/api";
 import Resolver, { Request } from "@forge/resolver";
 
-import { getRemoteFormats, postRemoteAppAuthorization } from "../../src/client";
+import {
+  getRemoteFormats,
+  postRemoteAppAuthorization,
+  postRemoteCreateAttachment,
+} from "../../src/client";
 import { Format } from "../types/types";
 
 const FORMATS_CACHE_TTL = 1000 * 60 * 60 * 24;
@@ -26,6 +31,12 @@ let formatsLastFetched = 0;
 let formats: Format[] = [];
 
 const mainPageResolver = new Resolver();
+
+mainPageResolver.define("getAppContenxt", () => {
+  const { appAri, environmentAri } = getAppContext();
+
+  return { appId: appAri.appId, environmentId: environmentAri.environmentId };
+});
 
 mainPageResolver.define("authorizeRemoteApp", async (request: Request) => {
   const { pageId, attachmentId } = request.payload;
@@ -42,6 +53,12 @@ mainPageResolver.define("getFormats", async () => {
   }
 
   return formats;
+});
+
+mainPageResolver.define("createAttachment", async (request: Request) => {
+  const { pageId, title, type, locale } = request.payload;
+
+  return await postRemoteCreateAttachment(pageId, title, type, locale);
 });
 
 export default mainPageResolver.getDefinitions();

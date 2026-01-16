@@ -24,7 +24,7 @@ import CheckMarkIcon from "@atlaskit/icon/core/check-mark";
 import CrossIcon from "@atlaskit/icon/core/cross";
 import { Box, Inline, xcss } from "@atlaskit/primitives";
 import Textfield from "@atlaskit/textfield";
-import VisuallyHidden from "@atlaskit/visually-hidden";
+import { invoke, showFlag } from "@forge/bridge";
 
 import { getIconForDocumentType } from "./iconUtils";
 
@@ -38,11 +38,64 @@ const styles = {
   }),
 };
 
+type FormData = {
+  title: string;
+};
+
+type CreateAttachmentResponse = {
+  id: string;
+  filename: string;
+};
+
 export const buildCreateRow = (
+  pageId: string,
   documentType: string,
+  locale: string,
   isLoading: boolean,
-  onCancelCreate: () => void,
+  onSuccess: (attachmentId: string) => void,
+  onCancel: () => void,
+  setLoading: (value: boolean) => void,
 ) => {
+  const onSubmit = (data: FormData) => {
+    const { title } = data;
+    setLoading(true);
+
+    return invoke<CreateAttachmentResponse>("createAttachment", {
+      pageId,
+      title,
+      type: documentType,
+      locale,
+    })
+      .then((response: CreateAttachmentResponse) => {
+        showFlag({
+          id: "create-attachment-success",
+          title: 'Attachment "{filename}" created successfully.'.replace(
+            "{filename}",
+            response.filename,
+          ),
+          type: "success",
+          appearance: "success",
+          isAutoDismiss: true,
+        });
+
+        onSuccess(response.id);
+      })
+      .catch((error) => {
+        console.error("Error creating attachment:", error);
+
+        showFlag({
+          id: "create-attachment-error",
+          title: "Failed to create attachment. Please try again.",
+          type: "error",
+          appearance: "error",
+          isAutoDismiss: true,
+        });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
   return {
     key: "create",
     cells: [
@@ -50,12 +103,7 @@ export const buildCreateRow = (
         key: "title",
         content: (
           <Box>
-            <Form<{ documentType: string; title: string }>
-              noValidate
-              onSubmit={(data) => {
-                console.log(data);
-              }}
-            >
+            <Form<FormData> noValidate onSubmit={onSubmit}>
               {({ formProps }) => (
                 <form {...formProps} name="create">
                   <Inline space="space.075" alignBlock="center">
@@ -63,12 +111,6 @@ export const buildCreateRow = (
                       {getIconForDocumentType(documentType)}
                     </Box>
                     <Box xcss={styles.formFieldWraper}>
-                      <VisuallyHidden>
-                        <Field
-                          name="documentType"
-                          defaultValue={documentType}
-                        />
-                      </VisuallyHidden>
                       <Field
                         name="title"
                         defaultValue=""
@@ -99,7 +141,7 @@ export const buildCreateRow = (
                       label="Cross"
                       icon={CrossIcon}
                       isDisabled={isLoading}
-                      onClick={onCancelCreate}
+                      onClick={onCancel}
                     />
                   </Inline>
                 </form>

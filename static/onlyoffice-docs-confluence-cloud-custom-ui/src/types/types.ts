@@ -16,6 +16,11 @@
  *
  */
 
+export interface AppContext {
+  appId: string;
+  environmentId: string;
+}
+
 export interface Format {
   name: string;
   type: string;

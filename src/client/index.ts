@@ -69,6 +69,35 @@ export const getRemoteFormats = async (): Promise<Format[]> => {
   );
 };
 
+export const postRemoteCreateAttachment = async (
+  pageId: string,
+  title: string,
+  type: string,
+  locale: string,
+): Promise<Record<string, object>> => {
+  return await _executeRequest<Record<string, object>>(
+    async () => {
+      return await invokeRemote("onlyoffice-backend", {
+        method: "POST",
+        path: "/api/v1/remote/create",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          parentId: pageId,
+          title: title,
+          documentType: type,
+          locale: locale,
+        }),
+      });
+    },
+    async (response: APIResponse) => {
+      return await response.json();
+    },
+    1,
+  );
+};
+
 async function _executeRequest<T>(
   onRequest: () => Promise<APIResponse>,
   onResponse: (response: APIResponse) => T | Promise<T>,

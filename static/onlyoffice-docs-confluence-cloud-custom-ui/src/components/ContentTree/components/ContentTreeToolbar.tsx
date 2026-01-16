@@ -57,7 +57,7 @@ type ContentTreeToolbarProps = {
   search: string;
   onChangeContentType: (selectedContentType: { value: string }) => void;
   onChangeSearch: (value: string) => void;
-  onCreate?: (documentType: string) => void;
+  onClickCreate?: (documentType: string) => void;
 };
 
 const contentTypeOptions = [
@@ -79,7 +79,7 @@ export const ContentTreeToolbar: React.FC<ContentTreeToolbarProps> = ({
   search,
   onChangeContentType,
   onChangeSearch,
-  onCreate,
+  onClickCreate,
 }) => {
   return (
     <Inline space="space.100">
@@ -146,7 +146,7 @@ export const ContentTreeToolbar: React.FC<ContentTreeToolbarProps> = ({
             <Box xcss={xcss({ marginRight: "space.negative.075" })}>
               <Button
                 {...props}
-                isDisabled={!onCreate}
+                isDisabled={!onClickCreate}
                 iconBefore={AddIcon}
                 appearance="primary"
               >
@@ -161,7 +161,7 @@ export const ContentTreeToolbar: React.FC<ContentTreeToolbarProps> = ({
           {createTypeOptions.map((option) => (
             <DropdownItem
               key={option.value}
-              onClick={() => onCreate?.(option.value)}
+              onClick={() => onClickCreate?.(option.value)}
             >
               <Inline space="space.100" alignBlock="center">
                 {option.icon}

@@ -49,6 +49,7 @@ const MainPage: React.FC<MainPageProps> = ({ context }) => {
   const space = context.extension.space;
   const parentId = context.extension.content?.id || null;
   const contentType = context.extension.content?.type || null;
+  const locale = context.locale;
 
   const onClose = () => {
     view.close();
@@ -90,6 +91,7 @@ const MainPage: React.FC<MainPageProps> = ({ context }) => {
       space={space}
       parentId={parentId}
       contentType={contentType}
+      locale={locale}
       showBreadcrumbs={type === "confluence:spacePage"}
       showFilter={type === "confluence:spacePage"}
     />,
