@@ -20,17 +20,25 @@ import React, { useEffect, useState } from "react";
 
 import { view } from "@forge/bridge";
 import { FullContext } from "@forge/bridge";
+import { History } from "history";
 
 import EditorPage from "./pages/Editor";
 import MainPage from "./pages/Main";
 
 function App() {
   const [context, setContext] = useState<FullContext>();
+  const [history, setHistory] = useState<History>();
 
   useEffect(() => {
     (async () => {
       const context = await view.getContext();
+
       setContext(context);
+
+      if (context.extension.type === "confluence:spacePage") {
+        const history = await view.createHistory();
+        setHistory(history);
+      }
     })();
   }, []);
 
@@ -42,7 +50,7 @@ function App() {
       {context &&
         (context.moduleKey === "main-page" ||
           context.moduleKey === "main-page-action") && (
-          <MainPage context={context} />
+          <MainPage context={context} history={history} />
         )}
     </>
   );

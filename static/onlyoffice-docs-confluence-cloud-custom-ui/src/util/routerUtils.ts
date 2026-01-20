@@ -16,6 +16,8 @@
  *
  */
 
+import { History } from "history";
+
 export const getEditorPageUrl = (
   appId: string,
   environmentId: string,
@@ -23,4 +25,21 @@ export const getEditorPageUrl = (
   attachmentId: string,
 ) => {
   return `/forge-apps/a/${appId}/e/${environmentId}/r/editor?pageId=${pageId}&attachmentId=${attachmentId}`;
+};
+
+export const updateHistory = (
+  history: History,
+  searchParams: Array<{ key: string; value?: string }>,
+) => {
+  const url = new URL("http://localhost" + history.location.search);
+
+  searchParams.forEach(({ key, value }) => {
+    if (value) {
+      url.searchParams.set(key, value);
+    } else {
+      url.searchParams.delete(key);
+    }
+  });
+
+  history.push({ search: url.search });
 };

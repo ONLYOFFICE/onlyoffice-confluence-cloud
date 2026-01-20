@@ -28,10 +28,12 @@ import {
 import { Box, Stack, Text, xcss } from "@atlaskit/primitives";
 import { view } from "@forge/bridge";
 import { FullContext } from "@forge/bridge";
+import { History } from "history";
 
 import { ContentTree } from "../../components/ContentTree";
 import { COUNT_ELEMENTS_ON_PAGE_OPTIONS } from "../../constants";
 import { ContentType, SortOrder } from "../../types/types";
+import { updateHistory } from "../../util/routerUtils";
 
 const styles = {
   pageBodyContainer: xcss({
@@ -44,9 +46,10 @@ const styles = {
 
 export type MainPageProps = {
   context: FullContext;
+  history?: History;
 };
 
-const MainPage: React.FC<MainPageProps> = ({ context }) => {
+const MainPage: React.FC<MainPageProps> = ({ context, history }) => {
   const type = context.extension.type;
   const location = new URL(
     type === "confluence:spacePage"
@@ -65,7 +68,9 @@ const MainPage: React.FC<MainPageProps> = ({ context }) => {
   const [showOnlyFiles, setShowOnlyFiles] = useState<boolean>(
     location.searchParams.get("filter")?.split(",").includes("files") || false,
   );
-  const [sort, setSort] = useState<{ key: string; order: SortOrder }>({
+  const [sort, setSort] = useState<
+    { key: string; order: SortOrder } | undefined
+  >({
     key: location.searchParams.get("sortKey") || "lastmodified",
     order:
       location.searchParams.get("sortOrder") === "ASC"
@@ -121,14 +126,57 @@ const MainPage: React.FC<MainPageProps> = ({ context }) => {
       locale={locale}
       showBreadcrumbs={type === "confluence:spacePage"}
       showFilter={type === "confluence:spacePage"}
-      onChangeParentId={(value: string | undefined) => setParentId(value)}
+      onChangeParentId={(value: string | undefined) => {
+        setParentId(value);
+        if (history) {
+          updateHistory(history, [{ key: "pageId", value }]);
+        }
+      }}
       onChangeContentType={(value: ContentType) => {
         setParentId(undefined);
+        setSearch("");
+        setShowOnlyFiles(false);
+        setSort(undefined);
         setContentType(value);
+        if (history) {
+          history.push({
+            search: value === "blogpost" ? "filter=blogpost" : undefined,
+          });
+        }
       }}
-      onChangeSearch={setSearch}
-      onChangeShowOnlyFiles={setShowOnlyFiles}
-      onChangeSort={setSort}
+      onChangeSearch={(value: string) => {
+        setSearch(value);
+        if (history) {
+          updateHistory(history, [{ key: "search", value }]);
+        }
+      }}
+      onChangeShowOnlyFiles={(value: boolean) => {
+        setShowOnlyFiles(value);
+
+        if (history) {
+          const url = new URL("http://localhost" + history.location.search);
+          const currentFilter =
+            url.searchParams.get("filter")?.split(",") || [];
+          updateHistory(history, [
+            {
+              key: "filter",
+              value: value
+                ? [...currentFilter, "files"].join(",")
+                : currentFilter.filter((f) => f !== "files").join(","),
+            },
+          ]);
+        }
+      }}
+      onChangeSort={(value: { key: string; order: SortOrder }) => {
+        setSort(value);
+
+        if (history) {
+          updateHistory(history, [
+            { key: "sortKey", value: value.key },
+            { key: "sortOrder", value: value.order },
+          ]);
+        }
+      }}
       onChangeCountElementsOnPage={setCountElementsOnPage}
     />,
   );
