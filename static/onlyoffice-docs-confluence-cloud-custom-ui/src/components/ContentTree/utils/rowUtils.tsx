@@ -43,6 +43,33 @@ const styles = {
   }),
 };
 
+export const head = {
+  cells: [
+    {
+      key: "title",
+      content: "Title",
+      isSortable: true,
+      width: 40,
+    },
+    {
+      key: "fileSize",
+      content: "Size",
+      isSortable: true,
+    },
+    {
+      key: "lastmodified",
+      content: "Modified",
+      isSortable: true,
+    },
+    {
+      key: "actions",
+      content: "",
+      isSortable: false,
+      width: 10,
+    },
+  ],
+};
+
 export const buildContentTreeRows = (
   parentId: string | undefined,
   entities: Content[],

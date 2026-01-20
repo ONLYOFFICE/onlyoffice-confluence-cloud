@@ -45,7 +45,7 @@ import { ContentTreeBreadcrumbs } from "./components/ContentTreeBreadcrumbs";
 import { ContentTreePagination } from "./components/ContentTreePagination";
 import { ContentTreeToolbar } from "./components/ContentTreeToolbar";
 import { buildCreateRow } from "./utils/createRowUtils";
-import { buildContentTreeRows } from "./utils/rowUtils";
+import { buildContentTreeRows, head } from "./utils/rowUtils";
 import { adoptSortForTargetRequest } from "./utils/sortUtils";
 
 export type ContentTreeProps = {
@@ -104,33 +104,6 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
   const [rows, setRows] = useState<Array<RowType>>([]);
 
   const { getDocumentType } = useFormats(formats);
-
-  const head = {
-    cells: [
-      {
-        key: "title",
-        content: "Title",
-        isSortable: true,
-        width: 40,
-      },
-      {
-        key: "fileSize",
-        content: "Size",
-        isSortable: true,
-      },
-      {
-        key: "lastmodified",
-        content: "Modified",
-        isSortable: true,
-      },
-      {
-        key: "actions",
-        content: "",
-        isSortable: false,
-        width: 10,
-      },
-    ],
-  };
 
   useEffect(() => {
     invoke<AppContext>("getAppContenxt").then((data) => {
