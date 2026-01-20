@@ -29,7 +29,8 @@ import { Box, Inline, xcss } from "@atlaskit/primitives";
 import { router } from "@forge/bridge";
 import bytes from "bytes";
 
-import { Content } from "../../../types/types";
+import { AppContext, Content } from "../../../types/types";
+import { getEditorPageUrl } from "../../../util/routerUtils";
 
 import { getIconByContentType } from "./iconUtils";
 
@@ -71,6 +72,7 @@ export const head = {
 };
 
 export const buildContentTreeRows = (
+  appContext: AppContext,
   parentId: string | undefined,
   entities: Content[],
   getDocumentType: (title: string) => string | null,
@@ -80,6 +82,27 @@ export const buildContentTreeRows = (
     if (entity.type !== "attachment") {
       onChangeParentId(entity.id);
     }
+  };
+
+  const onClickEdit = (entity: Content) => {
+    if (parentId) {
+      router.open(
+        getEditorPageUrl(
+          appContext.appId,
+          appContext.environmentId,
+          parentId,
+          entity.id,
+        ),
+      );
+    }
+  };
+
+  const onClickDownload = (entity: Content) => {
+    console.log("Download", entity);
+  };
+
+  const onClickDelete = (entity: Content) => {
+    console.log("Delete", entity);
   };
 
   return entities.map((entity) => ({
@@ -128,19 +151,17 @@ export const buildContentTreeRows = (
               shouldRenderToParent
             >
               <DropdownItemGroup>
-                <DropdownItem
-                  onClick={() =>
-                    router.open(
-                      `/forge-apps/a/f8a806c4-dbce-447e-9fc5-5edd102f13aa/e/52727433-e0ce-4dca-996e-7c0d911165cf/r/editor?pageId=${parentId}&attachmentId=${entity.id}`,
-                    )
-                  }
-                >
+                <DropdownItem onClick={() => onClickEdit(entity)}>
                   Edit
                 </DropdownItem>
-                <DropdownItem>Download</DropdownItem>
+                <DropdownItem onClick={() => onClickDownload(entity)}>
+                  Download
+                </DropdownItem>
               </DropdownItemGroup>
               <DropdownItemGroup hasSeparator>
-                <DropdownItem>Delete</DropdownItem>
+                <DropdownItem onClick={() => onClickDelete(entity)}>
+                  Delete
+                </DropdownItem>
               </DropdownItemGroup>
             </DropdownMenu>
           </Box>

@@ -91,15 +91,14 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
   const [appContext, setAppContext] = useState<AppContext | null>(null);
   const [formats, setFormats] = useState<Format[]>([]);
 
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [reloadFlag, setReloadFlag] = useState<boolean>(false);
-
   const [currentEntity, setCurrentEntity] = useState<Content | null>(null);
-
   const [navigationLinks, setNavigationLinks] = useState<{
     prev: string | null;
     next: string | null;
   }>({ prev: null, next: null });
+
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [reloadFlag, setReloadFlag] = useState<boolean>(false);
 
   const [rows, setRows] = useState<Array<RowType>>([]);
 
@@ -171,6 +170,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
     contentRequest
       .then((response) => {
         const rows = buildContentTreeRows(
+          appContext!,
           parentId,
           response.results,
           getDocumentType,
@@ -212,10 +212,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
     onChangeSearch("");
     onChangeSort({ key: "lastmodified", order: SortOrder.DESC });
     setReloadFlag(!reloadFlag);
-    openEditorPage(attachmentId);
-  };
 
-  const openEditorPage = (attachmentId: string) => {
     if (appContext && parentId) {
       router.navigate(
         getEditorPageUrl(
