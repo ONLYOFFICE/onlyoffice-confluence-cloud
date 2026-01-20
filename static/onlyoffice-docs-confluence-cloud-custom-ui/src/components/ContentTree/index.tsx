@@ -36,6 +36,7 @@ import {
   ContentType,
   Format,
   SearchResponse,
+  SortOrder,
 } from "../../types/types";
 import { useFormats } from "../../util/formats";
 import { getEditorPageUrl } from "../../util/routerUtils";
@@ -45,6 +46,7 @@ import { ContentTreePagination } from "./components/ContentTreePagination";
 import { ContentTreeToolbar } from "./components/ContentTreeToolbar";
 import { buildCreateRow } from "./utils/createRowUtils";
 import { buildContentTreeRows } from "./utils/rowUtils";
+import { adoptSortForTargetRequest } from "./utils/sortUtils";
 
 export type ContentTreeProps = {
   space: {
@@ -54,6 +56,7 @@ export type ContentTreeProps = {
   parentId?: string;
   contentType: ContentType;
   search?: string;
+  sort?: { key: string; order: SortOrder };
   countElementsOnPage: number;
   locale: string;
   showBreadcrumbs?: boolean;
@@ -61,6 +64,7 @@ export type ContentTreeProps = {
   onChangeParentId: (id: string | undefined) => void;
   onChangeContentType: (contentType: ContentType) => void;
   onChangeSearch: (search: string) => void;
+  onChangeSort: (sort: { key: string; order: SortOrder }) => void;
   onChangeCountElementsOnPage: (count: number) => void;
 };
 
@@ -69,6 +73,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
   parentId,
   contentType,
   search = "",
+  sort = { key: "lastmodified", order: SortOrder.DESC },
   countElementsOnPage,
   locale,
   showBreadcrumbs = true,
@@ -76,6 +81,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
   onChangeParentId,
   onChangeContentType,
   onChangeSearch,
+  onChangeSort,
   onChangeCountElementsOnPage,
 }) => {
   const [appContext, setAppContext] = useState<AppContext | null>(null);
@@ -85,10 +91,6 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
   const [reloadFlag, setReloadFlag] = useState<boolean>(false);
 
   const [currentEntity, setCurrentEntity] = useState<Content | null>(null);
-  const [sort, setSort] = useState<{ key: string; order: "ASC" | "DESC" }>({
-    key: "lastmodified",
-    order: "DESC",
-  });
   const [showOnlyFiles, setShowOnlyFiles] = useState<boolean>(false);
   const [navigationLinks, setNavigationLinks] = useState<{
     prev: string | null;
@@ -206,31 +208,6 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
       });
   };
 
-  const adoptSortForTargetRequest = (sort: {
-    key: string;
-    order: "ASC" | "DESC";
-  }) => {
-    const validValues = new Map([
-      ["title", "title"],
-      ["lastmodified", "modified-date"],
-    ]);
-
-    const value = validValues.get(sort.key);
-
-    if (value) {
-      return `${sort.order === "ASC" ? "" : "-"}${value}`;
-    }
-
-    return "";
-  };
-
-  const onSort = (data: { key: string; sortOrder: "ASC" | "DESC" }) => {
-    setSort({
-      key: data.key,
-      order: data.sortOrder,
-    });
-  };
-
   const onSwitchPage = (link: string | null) => {
     if (link) handleContentRequest(findContentByLink(link));
   };
@@ -256,7 +233,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
 
   const onCreateAttachment = (attachmentId: string) => {
     onChangeSearch("");
-    setSort({ key: "lastmodified", order: "DESC" });
+    onChangeSort({ key: "lastmodified", order: SortOrder.DESC });
     setReloadFlag(!reloadFlag);
     openEditorPage(attachmentId);
   };
@@ -331,7 +308,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
           rows={rows}
           sortKey={sort.key}
           sortOrder={sort.order}
-          onSort={onSort}
+          onSort={onChangeSort}
         />
         {(navigationLinks.prev || navigationLinks.next) && (
           <ContentTreePagination

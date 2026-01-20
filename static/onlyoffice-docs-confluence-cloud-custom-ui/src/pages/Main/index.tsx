@@ -31,7 +31,7 @@ import { FullContext } from "@forge/bridge";
 
 import { ContentTree } from "../../components/ContentTree";
 import { COUNT_ELEMENTS_ON_PAGE_OPTIONS } from "../../constants";
-import { ContentType } from "../../types/types";
+import { ContentType, SortOrder } from "../../types/types";
 
 const styles = {
   pageBodyContainer: xcss({
@@ -54,6 +54,7 @@ const MainPage: React.FC<MainPageProps> = ({ context }) => {
   );
   const [contentType, setContentType] = useState<ContentType>("content");
   const [search, setSearch] = useState<string>();
+  const [sort, setSort] = useState<{ key: string; order: SortOrder }>();
   const [countElementsOnPage, setCountElementsOnPage] = useState<number>(
     COUNT_ELEMENTS_ON_PAGE_OPTIONS[0],
   );
@@ -97,6 +98,7 @@ const MainPage: React.FC<MainPageProps> = ({ context }) => {
       parentId={parentId}
       contentType={contentType}
       search={search}
+      sort={sort}
       countElementsOnPage={countElementsOnPage}
       locale={locale}
       showBreadcrumbs={type === "confluence:spacePage"}
@@ -107,6 +109,7 @@ const MainPage: React.FC<MainPageProps> = ({ context }) => {
         setContentType(value);
       }}
       onChangeSearch={setSearch}
+      onChangeSort={setSort}
       onChangeCountElementsOnPage={setCountElementsOnPage}
     />,
   );
