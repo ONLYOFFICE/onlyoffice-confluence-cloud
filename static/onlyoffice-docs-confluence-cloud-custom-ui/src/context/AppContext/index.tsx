@@ -80,7 +80,7 @@ export const AppContextProvider: React.FC<AppContextProps> = ({ children }) => {
 
   return (
     <>
-      {appError && (
+      {appError && t && (
         <Box xcss={styles.emptyStateContainer}>
           <EmptyState
             imageUrl={ErrorIcon}
@@ -95,7 +95,7 @@ export const AppContextProvider: React.FC<AppContextProps> = ({ children }) => {
                   setAppError(undefined);
                 }}
               >
-                Reload App
+                {t("buttons.reload-app.title")}
               </Button>
             }
             secondaryAction={appError.secondaryAction}

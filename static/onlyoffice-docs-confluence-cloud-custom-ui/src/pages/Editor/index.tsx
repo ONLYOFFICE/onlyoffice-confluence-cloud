@@ -127,7 +127,9 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
         setAppError({
           title: t("error-state.common.title"),
           description: t("error-state.common.description"),
-          secondaryAction: <Button onClick={closeWindow}>Close</Button>,
+          secondaryAction: (
+            <Button onClick={closeWindow}>{t("buttons.close.title")}</Button>
+          ),
         });
       });
   }, []);
