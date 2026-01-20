@@ -48,14 +48,30 @@ export type MainPageProps = {
 
 const MainPage: React.FC<MainPageProps> = ({ context }) => {
   const type = context.extension.type;
+  const location = new URL(
+    type === "confluence:spacePage"
+      ? context.extension.location
+      : "http://localhost",
+  );
+
   const space = context.extension.space;
   const [parentId, setParentId] = useState<string | undefined>(
-    context.extension.content?.id,
+    location.searchParams.get("pageId") || context.extension.content?.id,
   );
   const [contentType, setContentType] = useState<ContentType>("content");
-  const [search, setSearch] = useState<string>();
-  const [showOnlyFiles, setShowOnlyFiles] = useState<boolean>(false);
-  const [sort, setSort] = useState<{ key: string; order: SortOrder }>();
+  const [search, setSearch] = useState<string>(
+    location.searchParams.get("search") || "",
+  );
+  const [showOnlyFiles, setShowOnlyFiles] = useState<boolean>(
+    location.searchParams.get("filter")?.split(",").includes("files") || false,
+  );
+  const [sort, setSort] = useState<{ key: string; order: SortOrder }>({
+    key: location.searchParams.get("sortKey") || "lastmodified",
+    order:
+      location.searchParams.get("sortOrder") === "ASC"
+        ? SortOrder.ASC
+        : SortOrder.DESC,
+  });
   const [countElementsOnPage, setCountElementsOnPage] = useState<number>(
     COUNT_ELEMENTS_ON_PAGE_OPTIONS[0],
   );

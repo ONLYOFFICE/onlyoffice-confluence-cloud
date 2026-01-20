@@ -48,6 +48,8 @@ import { buildCreateRow } from "./utils/createRowUtils";
 import { buildContentTreeRows, head } from "./utils/rowUtils";
 import { adoptSortForTargetRequest } from "./utils/sortUtils";
 
+const DEFAULT_SORT = { key: "lastmodified", order: SortOrder.DESC };
+
 export type ContentTreeProps = {
   space: {
     id: string;
@@ -76,7 +78,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
   contentType,
   search = "",
   showOnlyFiles = false,
-  sort = { key: "lastmodified", order: SortOrder.DESC },
+  sort = DEFAULT_SORT,
   countElementsOnPage,
   locale,
   showBreadcrumbs = true,
