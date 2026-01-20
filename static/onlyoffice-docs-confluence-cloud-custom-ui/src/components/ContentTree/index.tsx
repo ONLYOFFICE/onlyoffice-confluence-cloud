@@ -284,7 +284,9 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
           rows={rows}
           sortKey={sort.key}
           sortOrder={sort.order}
-          onSort={onChangeSort}
+          onSort={(value) =>
+            onChangeSort({ key: value.key, order: value.sortOrder })
+          }
         />
         {(navigationLinks.prev || navigationLinks.next) && (
           <ContentTreePagination
