@@ -56,6 +56,7 @@ export type ContentTreeProps = {
   parentId?: string;
   contentType: ContentType;
   search?: string;
+  showOnlyFiles?: boolean;
   sort?: { key: string; order: SortOrder };
   countElementsOnPage: number;
   locale: string;
@@ -64,6 +65,7 @@ export type ContentTreeProps = {
   onChangeParentId: (id: string | undefined) => void;
   onChangeContentType: (contentType: ContentType) => void;
   onChangeSearch: (search: string) => void;
+  onChangeShowOnlyFiles: (showOnlyFiles: boolean) => void;
   onChangeSort: (sort: { key: string; order: SortOrder }) => void;
   onChangeCountElementsOnPage: (count: number) => void;
 };
@@ -73,6 +75,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
   parentId,
   contentType,
   search = "",
+  showOnlyFiles = false,
   sort = { key: "lastmodified", order: SortOrder.DESC },
   countElementsOnPage,
   locale,
@@ -81,6 +84,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
   onChangeParentId,
   onChangeContentType,
   onChangeSearch,
+  onChangeShowOnlyFiles,
   onChangeSort,
   onChangeCountElementsOnPage,
 }) => {
@@ -91,7 +95,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
   const [reloadFlag, setReloadFlag] = useState<boolean>(false);
 
   const [currentEntity, setCurrentEntity] = useState<Content | null>(null);
-  const [showOnlyFiles, setShowOnlyFiles] = useState<boolean>(false);
+
   const [navigationLinks, setNavigationLinks] = useState<{
     prev: string | null;
     next: string | null;
@@ -270,7 +274,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
                     id: "show-only-files",
                     label: "Show only files",
                     value: showOnlyFiles,
-                    onChange: setShowOnlyFiles,
+                    onChange: onChangeShowOnlyFiles,
                   },
                 ]
               : undefined

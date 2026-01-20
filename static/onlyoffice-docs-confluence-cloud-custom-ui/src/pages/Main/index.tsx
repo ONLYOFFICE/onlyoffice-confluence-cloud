@@ -54,6 +54,7 @@ const MainPage: React.FC<MainPageProps> = ({ context }) => {
   );
   const [contentType, setContentType] = useState<ContentType>("content");
   const [search, setSearch] = useState<string>();
+  const [showOnlyFiles, setShowOnlyFiles] = useState<boolean>(false);
   const [sort, setSort] = useState<{ key: string; order: SortOrder }>();
   const [countElementsOnPage, setCountElementsOnPage] = useState<number>(
     COUNT_ELEMENTS_ON_PAGE_OPTIONS[0],
@@ -98,6 +99,7 @@ const MainPage: React.FC<MainPageProps> = ({ context }) => {
       parentId={parentId}
       contentType={contentType}
       search={search}
+      showOnlyFiles={showOnlyFiles}
       sort={sort}
       countElementsOnPage={countElementsOnPage}
       locale={locale}
@@ -109,6 +111,7 @@ const MainPage: React.FC<MainPageProps> = ({ context }) => {
         setContentType(value);
       }}
       onChangeSearch={setSearch}
+      onChangeShowOnlyFiles={setShowOnlyFiles}
       onChangeSort={setSort}
       onChangeCountElementsOnPage={setCountElementsOnPage}
     />,
