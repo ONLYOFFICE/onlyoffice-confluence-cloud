@@ -30,6 +30,7 @@ import { view } from "@forge/bridge";
 import { FullContext } from "@forge/bridge";
 
 import { ContentTree } from "../../components/ContentTree";
+import { COUNT_ELEMENTS_ON_PAGE_OPTIONS } from "../../constants";
 import { ContentType } from "../../types/types";
 
 const styles = {
@@ -52,6 +53,11 @@ const MainPage: React.FC<MainPageProps> = ({ context }) => {
     context.extension.content?.id,
   );
   const [contentType, setContentType] = useState<ContentType>("content");
+  const [search, setSearch] = useState<string>();
+  const [countElementsOnPage, setCountElementsOnPage] = useState<number>(
+    COUNT_ELEMENTS_ON_PAGE_OPTIONS[0],
+  );
+
   const locale = context.locale;
 
   const getContainer = (type: string, children: React.ReactNode) => {
@@ -90,6 +96,8 @@ const MainPage: React.FC<MainPageProps> = ({ context }) => {
       space={space}
       parentId={parentId}
       contentType={contentType}
+      search={search}
+      countElementsOnPage={countElementsOnPage}
       locale={locale}
       showBreadcrumbs={type === "confluence:spacePage"}
       showFilter={type === "confluence:spacePage"}
@@ -98,6 +106,8 @@ const MainPage: React.FC<MainPageProps> = ({ context }) => {
         setParentId(undefined);
         setContentType(value);
       }}
+      onChangeSearch={setSearch}
+      onChangeCountElementsOnPage={setCountElementsOnPage}
     />,
   );
 };

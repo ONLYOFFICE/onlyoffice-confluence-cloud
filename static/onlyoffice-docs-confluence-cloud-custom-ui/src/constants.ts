@@ -17,3 +17,4 @@
  */
 
 export const CONTENT_TYPES = ["content", "blogpost"] as const;
+export const COUNT_ELEMENTS_ON_PAGE_OPTIONS = [25, 50, 100];

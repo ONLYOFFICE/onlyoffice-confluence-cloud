@@ -53,22 +53,30 @@ export type ContentTreeProps = {
   };
   parentId?: string;
   contentType: ContentType;
+  search?: string;
+  countElementsOnPage: number;
   locale: string;
   showBreadcrumbs?: boolean;
   showFilter?: boolean;
   onChangeParentId: (id: string | undefined) => void;
   onChangeContentType: (contentType: ContentType) => void;
+  onChangeSearch: (search: string) => void;
+  onChangeCountElementsOnPage: (count: number) => void;
 };
 
 export const ContentTree: React.FC<ContentTreeProps> = ({
   space,
   parentId,
   contentType,
+  search = "",
+  countElementsOnPage,
   locale,
   showBreadcrumbs = true,
   showFilter = true,
   onChangeParentId,
   onChangeContentType,
+  onChangeSearch,
+  onChangeCountElementsOnPage,
 }) => {
   const [appContext, setAppContext] = useState<AppContext | null>(null);
   const [formats, setFormats] = useState<Format[]>([]);
@@ -77,8 +85,6 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
   const [reloadFlag, setReloadFlag] = useState<boolean>(false);
 
   const [currentEntity, setCurrentEntity] = useState<Content | null>(null);
-  const [countElementsOnPage, setCountElementsOnPage] = useState<number>(25);
-  const [search, setSearch] = useState<string>("");
   const [sort, setSort] = useState<{ key: string; order: "ASC" | "DESC" }>({
     key: "lastmodified",
     order: "DESC",
@@ -249,7 +255,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
   };
 
   const onCreateAttachment = (attachmentId: string) => {
-    setSearch("");
+    onChangeSearch("");
     setSort({ key: "lastmodified", order: "DESC" });
     setReloadFlag(!reloadFlag);
     openEditorPage(attachmentId);
@@ -295,7 +301,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
           search={search}
           isLoading={isLoading}
           onChangeContentType={onChangeContentType}
-          onChangeSearch={setSearch}
+          onChangeSearch={onChangeSearch}
           onClickCreate={
             (currentEntity?.type !== "page" &&
               currentEntity?.type !== "blogpost") ||
@@ -334,7 +340,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
             prevLink={navigationLinks.prev}
             nextLink={navigationLinks.next}
             onChangePage={onSwitchPage}
-            onChangeCountElementsOnPage={setCountElementsOnPage}
+            onChangeCountElementsOnPage={onChangeCountElementsOnPage}
           />
         )}
       </Stack>

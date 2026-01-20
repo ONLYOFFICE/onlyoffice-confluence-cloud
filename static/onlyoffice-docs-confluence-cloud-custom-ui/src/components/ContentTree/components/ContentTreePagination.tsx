@@ -28,7 +28,7 @@ import ChevronLeftIcon from "@atlaskit/icon/core/chevron-left";
 import ChevronRightIcon from "@atlaskit/icon/core/chevron-right";
 import { Inline } from "@atlaskit/primitives";
 
-const countElementsOnPageOptions = [25, 50, 100];
+import { COUNT_ELEMENTS_ON_PAGE_OPTIONS } from "../../../constants";
 
 type ContentTreePaginationProps = {
   isLoading: boolean;
@@ -67,7 +67,7 @@ export const ContentTreePagination: React.FC<ContentTreePaginationProps> = ({
       </ButtonGroup>
       <DropdownMenu trigger={String(countElementsOnPage)} shouldRenderToParent>
         <DropdownItemGroup>
-          {countElementsOnPageOptions.map((option) => (
+          {COUNT_ELEMENTS_ON_PAGE_OPTIONS.map((option) => (
             <DropdownItem
               isSelected={true}
               key={option}
