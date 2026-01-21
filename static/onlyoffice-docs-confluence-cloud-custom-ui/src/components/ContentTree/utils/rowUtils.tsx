@@ -29,7 +29,8 @@ import { Box, Inline, xcss } from "@atlaskit/primitives";
 import { router } from "@forge/bridge";
 import bytes from "bytes";
 
-import { AppContext, Content } from "../../../types/types";
+import { AppContext, Content, Format } from "../../../types/types";
+import { useFormats } from "../../../util/formatsUtils";
 import { getEditorPageUrl } from "../../../util/routerUtils";
 
 import { getIconByContentType } from "./iconUtils";
@@ -75,9 +76,11 @@ export const buildContentTreeRows = (
   appContext: AppContext,
   parentId: string | undefined,
   entities: Content[],
-  getDocumentType: (title: string) => string | null,
+  formats: Format[],
   onChangeParentId: (id: string) => void,
 ): RowType[] => {
+  const { getDocumentType, isEditable, isViewable } = useFormats(formats);
+
   const onClickOnTitle = (entity: Content) => {
     if (entity.type !== "attachment") {
       onChangeParentId(entity.id);
@@ -103,6 +106,60 @@ export const buildContentTreeRows = (
 
   const onClickDelete = (entity: Content) => {
     console.log("Delete", entity);
+  };
+
+  const editCondition = (entity: Content) => {
+    if (entity.type !== "attachment") {
+      return false;
+    }
+
+    const editPermission = entity.operations.some((value) => {
+      return value.operation === "update" && value.targetType === "attachment";
+    });
+
+    console.log(entity.title + isEditable(entity.title));
+
+    return editPermission && isEditable(entity.title);
+  };
+
+  const viewCondition = (entity: Content) => {
+    if (entity.type !== "attachment") {
+      return false;
+    }
+
+    const viewPermission = entity.operations.some((value) => {
+      return value.operation === "read" && value.targetType === "attachment";
+    });
+
+    const editPermission = entity.operations.some((value) => {
+      return value.operation === "update" && value.targetType === "attachment";
+    });
+
+    return viewPermission && !editPermission && isViewable(entity.title);
+  };
+
+  const downloadCondition = (entity: Content) => {
+    if (entity.type !== "attachment") {
+      return false;
+    }
+
+    const viewPermission = entity.operations.some((value) => {
+      return value.operation === "read" && value.targetType === "attachment";
+    });
+
+    return viewPermission;
+  };
+
+  const deleteCondition = (entity: Content) => {
+    if (entity.type !== "attachment") {
+      return false;
+    }
+
+    const deletePermission = entity.operations.some((value) => {
+      return value.operation === "delete" && value.targetType === "attachment";
+    });
+
+    return deletePermission;
   };
 
   return entities.map((entity) => ({
@@ -151,17 +208,28 @@ export const buildContentTreeRows = (
               shouldRenderToParent
             >
               <DropdownItemGroup>
-                <DropdownItem onClick={() => onClickEdit(entity)}>
-                  Edit
-                </DropdownItem>
-                <DropdownItem onClick={() => onClickDownload(entity)}>
-                  Download
-                </DropdownItem>
+                {editCondition(entity) && (
+                  <DropdownItem onClick={() => onClickEdit(entity)}>
+                    Edit
+                  </DropdownItem>
+                )}
+                {viewCondition(entity) && (
+                  <DropdownItem onClick={() => onClickEdit(entity)}>
+                    View
+                  </DropdownItem>
+                )}
+                {downloadCondition(entity) && (
+                  <DropdownItem onClick={() => onClickDownload(entity)}>
+                    Download
+                  </DropdownItem>
+                )}
               </DropdownItemGroup>
               <DropdownItemGroup hasSeparator>
-                <DropdownItem onClick={() => onClickDelete(entity)}>
-                  Delete
-                </DropdownItem>
+                {deleteCondition(entity) && (
+                  <DropdownItem onClick={() => onClickDelete(entity)}>
+                    Delete
+                  </DropdownItem>
+                )}
               </DropdownItemGroup>
             </DropdownMenu>
           </Box>

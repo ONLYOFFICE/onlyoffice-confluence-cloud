@@ -16,7 +16,7 @@
  *
  */
 
-import { Format } from "../../types/types";
+import { Format } from "../types/types";
 
 export const useFormats = (formats: Format[]) => {
   const getDocumentType = (fileName: string) => {
@@ -52,9 +52,26 @@ export const useFormats = (formats: Format[]) => {
     return format.actions.includes("edit");
   };
 
+  const isViewable = (fileName: string): boolean => {
+    const fileExtension = getExtension(fileName);
+
+    if (fileExtension === null) {
+      return false;
+    }
+
+    const format = formats.find((format) => format.name === fileExtension);
+
+    if (!format) {
+      return false;
+    }
+
+    return format.actions.includes("view");
+  };
+
   return {
     getDocumentType,
     getExtension,
     isEditable,
+    isViewable,
   };
 };

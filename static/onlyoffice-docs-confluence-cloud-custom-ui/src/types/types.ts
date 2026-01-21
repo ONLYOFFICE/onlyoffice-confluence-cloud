@@ -72,6 +72,10 @@ export interface Content {
       type: string;
     },
   ];
+  operations: Array<{
+    operation: string;
+    targetType: string;
+  }>;
 }
 
 export interface User {

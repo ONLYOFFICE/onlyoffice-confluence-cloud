@@ -38,7 +38,6 @@ import {
   SearchResponse,
   SortOrder,
 } from "../../types/types";
-import { useFormats } from "../../util/formats";
 import { getEditorPageUrl } from "../../util/routerUtils";
 
 import { ContentTreeBreadcrumbs } from "./components/ContentTreeBreadcrumbs";
@@ -103,8 +102,6 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
   const [reloadFlag, setReloadFlag] = useState<boolean>(false);
 
   const [rows, setRows] = useState<Array<RowType>>([]);
-
-  const { getDocumentType } = useFormats(formats);
 
   useEffect(() => {
     invoke<AppContext>("getAppContenxt").then((data) => {
@@ -175,7 +172,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
           appContext!,
           parentId,
           response.results,
-          getDocumentType,
+          formats,
           onChangeParentId,
         );
 
