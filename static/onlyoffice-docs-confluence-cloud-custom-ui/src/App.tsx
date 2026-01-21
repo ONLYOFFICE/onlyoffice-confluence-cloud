@@ -20,25 +20,32 @@ import React, { useEffect, useState } from "react";
 
 import { view } from "@forge/bridge";
 import { FullContext } from "@forge/bridge";
-import { History } from "history";
+import { History, Location } from "history";
 
 import EditorPage from "./pages/Editor";
 import MainPage from "./pages/Main";
 
 function App() {
   const [context, setContext] = useState<FullContext>();
+  const [search, setSearch] = useState<string>("");
   const [history, setHistory] = useState<History>();
 
   useEffect(() => {
     (async () => {
       const context = await view.getContext();
 
-      setContext(context);
-
       if (context.extension.type === "confluence:spacePage") {
         const history = await view.createHistory();
+
+        history.listen((location: Location) => {
+          setSearch(location.search);
+        });
+
         setHistory(history);
+        setSearch(history.location.search);
       }
+
+      setContext(context);
     })();
   }, []);
 
@@ -50,7 +57,17 @@ function App() {
       {context &&
         (context.moduleKey === "main-page" ||
           context.moduleKey === "main-page-action") && (
-          <MainPage context={context} history={history} />
+          <MainPage
+            context={context}
+            searchParams={new URLSearchParams(search)}
+            onChangSearchParams={(searchParams: URLSearchParams) => {
+              if (history) {
+                history.push({ search: searchParams.toString() });
+              } else {
+                setSearch(searchParams.toString());
+              }
+            }}
+          />
         )}
     </>
   );

@@ -28,12 +28,10 @@ import {
 import { Box, Stack, Text, xcss } from "@atlaskit/primitives";
 import { view } from "@forge/bridge";
 import { FullContext } from "@forge/bridge";
-import { History } from "history";
 
 import { ContentTree } from "../../components/ContentTree";
 import { COUNT_ELEMENTS_ON_PAGE_OPTIONS } from "../../constants";
 import { ContentType, SortOrder } from "../../types/types";
-import { updateHistory } from "../../util/routerUtils";
 
 const styles = {
   pageBodyContainer: xcss({
@@ -46,37 +44,35 @@ const styles = {
 
 export type MainPageProps = {
   context: FullContext;
-  history?: History;
+  searchParams: URLSearchParams;
+  onChangSearchParams: (searchParams: URLSearchParams) => void;
 };
 
-const MainPage: React.FC<MainPageProps> = ({ context, history }) => {
+const MainPage: React.FC<MainPageProps> = ({
+  context,
+  searchParams,
+  onChangSearchParams,
+}) => {
   const type = context.extension.type;
-  const location = new URL(
-    type === "confluence:spacePage"
-      ? context.extension.location
-      : "http://localhost",
-  );
 
   const space = context.extension.space;
-  const [parentId, setParentId] = useState<string | undefined>(
-    location.searchParams.get("pageId") || context.extension.content?.id,
-  );
-  const [contentType, setContentType] = useState<ContentType>("content");
-  const [search, setSearch] = useState<string>(
-    location.searchParams.get("search") || "",
-  );
-  const [showOnlyFiles, setShowOnlyFiles] = useState<boolean>(
-    location.searchParams.get("filter")?.split(",").includes("files") || false,
-  );
-  const [sort, setSort] = useState<
-    { key: string; order: SortOrder } | undefined
-  >({
-    key: location.searchParams.get("sortKey") || "lastmodified",
+  const parentId = searchParams.get("pageId") || context.extension.content?.id;
+  const contentType = searchParams
+    .get("filter")
+    ?.split(",")
+    .includes("blogpost")
+    ? "blogpost"
+    : "content";
+  const search = searchParams.get("search") || "";
+  const showOnlyFiles = searchParams
+    .get("filter")
+    ?.split(",")
+    .includes("files");
+  const sort = {
+    key: searchParams.get("sortKey") || "lastmodified",
     order:
-      location.searchParams.get("sortOrder") === "ASC"
-        ? SortOrder.ASC
-        : SortOrder.DESC,
-  });
+      searchParams.get("sortOrder") === "ASC" ? SortOrder.ASC : SortOrder.DESC,
+  };
   const [countElementsOnPage, setCountElementsOnPage] = useState<number>(
     COUNT_ELEMENTS_ON_PAGE_OPTIONS[0],
   );
@@ -127,55 +123,44 @@ const MainPage: React.FC<MainPageProps> = ({ context, history }) => {
       showBreadcrumbs={type === "confluence:spacePage"}
       showFilter={type === "confluence:spacePage"}
       onChangeParentId={(value: string | undefined) => {
-        setParentId(value);
-        if (history) {
-          updateHistory(history, [{ key: "pageId", value }]);
+        if (value) {
+          searchParams.set("pageId", value);
+        } else {
+          searchParams.delete("pageId");
         }
+        onChangSearchParams(searchParams);
       }}
       onChangeContentType={(value: ContentType) => {
-        setParentId(undefined);
-        setSearch("");
-        setShowOnlyFiles(false);
-        setSort(undefined);
-        setContentType(value);
-        if (history) {
-          history.push({
-            search: value === "blogpost" ? "filter=blogpost" : undefined,
-          });
+        if (value === "blogpost") {
+          onChangSearchParams(new URLSearchParams("filter=blogpost"));
+        } else {
+          onChangSearchParams(new URLSearchParams());
         }
       }}
       onChangeSearch={(value: string) => {
-        setSearch(value);
-        if (history) {
-          updateHistory(history, [{ key: "search", value }]);
+        if (value) {
+          searchParams.set("search", value);
+        } else {
+          searchParams.delete("search");
         }
+        onChangSearchParams(searchParams);
       }}
       onChangeShowOnlyFiles={(value: boolean) => {
-        setShowOnlyFiles(value);
-
-        if (history) {
-          const url = new URL("http://localhost" + history.location.search);
-          const currentFilter =
-            url.searchParams.get("filter")?.split(",") || [];
-          updateHistory(history, [
-            {
-              key: "filter",
-              value: value
-                ? [...currentFilter, "files"].join(",")
-                : currentFilter.filter((f) => f !== "files").join(","),
-            },
-          ]);
+        const currentFilter = searchParams.get("filter")?.split(",") || [];
+        if (value) {
+          searchParams.set("filter", [...currentFilter, "files"].join(","));
+        } else {
+          searchParams.set(
+            "filter",
+            currentFilter.filter((f) => f !== "files").join(","),
+          );
         }
+        onChangSearchParams(searchParams);
       }}
       onChangeSort={(value: { key: string; order: SortOrder }) => {
-        setSort(value);
-
-        if (history) {
-          updateHistory(history, [
-            { key: "sortKey", value: value.key },
-            { key: "sortOrder", value: value.order },
-          ]);
-        }
+        searchParams.set("sortKey", value.key);
+        searchParams.set("sortOrder", value.order);
+        onChangSearchParams(searchParams);
       }}
       onChangeCountElementsOnPage={setCountElementsOnPage}
     />,
