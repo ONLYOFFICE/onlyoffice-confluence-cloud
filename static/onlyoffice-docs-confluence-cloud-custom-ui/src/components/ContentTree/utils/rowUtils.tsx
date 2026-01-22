@@ -101,7 +101,7 @@ export const buildContentTreeRows = (
   };
 
   const onClickDownload = (entity: Content) => {
-    console.log("Download", entity);
+    router.open(`/wiki${entity._links.download}`);
   };
 
   const onClickDelete = (entity: Content) => {
@@ -116,8 +116,6 @@ export const buildContentTreeRows = (
     const editPermission = entity.operations.some((value) => {
       return value.operation === "update" && value.targetType === "attachment";
     });
-
-    console.log(entity.title + isEditable(entity.title));
 
     return editPermission && isEditable(entity.title);
   };

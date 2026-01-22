@@ -76,6 +76,9 @@ export interface Content {
     operation: string;
     targetType: string;
   }>;
+  _links: {
+    download: string;
+  };
 }
 
 export interface User {
