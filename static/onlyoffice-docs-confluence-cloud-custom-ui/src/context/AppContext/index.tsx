@@ -25,6 +25,11 @@ import { Box, xcss } from "@atlaskit/primitives";
 import { i18n } from "@forge/bridge";
 
 import ErrorIcon from "../../../src/assets/images/error.svg";
+import {
+  ConfirmDialog,
+  ConfirmDialogProps,
+} from "../../components/ConfirmDialog";
+import { confirmDialogService } from "../../services/confirmDialogService";
 
 const styles = {
   emptyStateContainer: xcss({
@@ -60,6 +65,8 @@ type AppContextProps = {
 export const AppContextProvider: React.FC<AppContextProps> = ({ children }) => {
   const [t, setT] = useState<i18n.TranslationFunction>();
   const [appError, setAppError] = useState<AppError | undefined>();
+  const [confirmDialogProps, setConfirmDialogProps] =
+    useState<ConfirmDialogProps>();
 
   const appContextProviderValue = useMemo(() => {
     return {
@@ -77,6 +84,14 @@ export const AppContextProvider: React.FC<AppContextProps> = ({ children }) => {
 
     loadTranslator();
   }, [setT]);
+
+  useEffect(() => {
+    confirmDialogService.register(setConfirmDialogProps, confirmDialogProps);
+
+    return () => {
+      confirmDialogService.unregister();
+    };
+  }, []);
 
   return (
     <>
@@ -105,6 +120,15 @@ export const AppContextProvider: React.FC<AppContextProps> = ({ children }) => {
       {!appError && t && (
         <AppContext.Provider value={appContextProviderValue}>
           {children}
+          {confirmDialogProps && (
+            <ConfirmDialog
+              title={confirmDialogProps.title}
+              description={confirmDialogProps.description}
+              appearance={confirmDialogProps.appearance}
+              isLoading={confirmDialogProps.isLoading}
+              buttons={confirmDialogProps.buttons}
+            />
+          )}
         </AppContext.Provider>
       )}
     </>
