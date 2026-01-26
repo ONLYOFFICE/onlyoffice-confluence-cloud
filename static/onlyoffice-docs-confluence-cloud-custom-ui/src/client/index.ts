@@ -44,7 +44,14 @@ export const getPagesInSpace = async (
       );
     },
     async (response: Response) => {
-      return await response.json();
+      const data = await response.json();
+      return {
+        ...data,
+        results: data.results.map((item: Content) => ({
+          ...item,
+          type: "page",
+        })),
+      };
     },
   );
 };
@@ -72,7 +79,14 @@ export const getBlogsInSpace = async (
       );
     },
     async (response: Response) => {
-      return await response.json();
+      const data = await response.json();
+      return {
+        ...data,
+        results: data.results.map((item: Content) => ({
+          ...item,
+          type: "blogpost",
+        })),
+      };
     },
   );
 };
