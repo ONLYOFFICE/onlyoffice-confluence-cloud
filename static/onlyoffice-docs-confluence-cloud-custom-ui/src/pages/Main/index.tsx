@@ -150,10 +150,12 @@ const MainPage: React.FC<MainPageProps> = ({
         if (value) {
           searchParams.set("filter", [...currentFilter, "files"].join(","));
         } else {
-          searchParams.set(
-            "filter",
-            currentFilter.filter((f) => f !== "files").join(","),
-          );
+          const newValue = currentFilter.filter((f) => f !== "files").join(",");
+          if (newValue) {
+            searchParams.set("filter", newValue);
+          } else {
+            searchParams.delete("filter");
+          }
         }
         onChangSearchParams(searchParams);
       }}
