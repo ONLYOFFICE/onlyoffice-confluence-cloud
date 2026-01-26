@@ -90,7 +90,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
   onChangeCountElementsOnPage,
 }) => {
   const [appContext, setAppContext] = useState<AppContext | null>(null);
-  const [formats, setFormats] = useState<Format[]>([]);
+  const [formats, setFormats] = useState<Format[] | null>(null);
 
   const [currentEntity, setCurrentEntity] = useState<Content | null>(null);
   const [navigationLinks, setNavigationLinks] = useState<{
@@ -104,53 +104,47 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
   const [rows, setRows] = useState<Array<RowType>>([]);
 
   useEffect(() => {
-    invoke<AppContext>("getAppContenxt").then((data) => {
-      setAppContext(data);
-    });
-    invoke<Format[]>("getFormats").then((data) => {
-      setFormats(data);
-    });
-  }, []);
-
-  useEffect(() => {
-    if (parentId) {
-      findContentById(parentId).then((response) => {
-        setCurrentEntity(response.results[0] || null);
+    setIsLoading(true);
+    Promise.all([
+      requestAppContext(appContext),
+      requestFormats(formats),
+      requestCurrentEntity(parentId, currentEntity),
+      requestContent(
+        space,
+        parentId,
+        contentType,
+        search,
+        showOnlyFiles,
+        countElementsOnPage,
+        sort,
+      ),
+    ])
+      .then(
+        ([
+          appContextResponse,
+          formatsResponse,
+          currentEntityResponse,
+          contentResponse,
+        ]) => {
+          setAppContext(appContextResponse);
+          setFormats(formatsResponse);
+          setCurrentEntity(currentEntityResponse?.results[0] || null);
+          setRows(
+            buildContentTreeRows(
+              appContextResponse,
+              parentId,
+              contentResponse.results,
+              formatsResponse,
+              onChangeParentId,
+              onDeleteAttachment,
+            ),
+          );
+          setNavigationLinks(contentResponse._links);
+        },
+      )
+      .finally(() => {
+        setIsLoading(false);
       });
-
-      handleContentRequest(
-        findContent(
-          space.key,
-          parentId,
-          search,
-          showOnlyFiles,
-          countElementsOnPage,
-          sort,
-        ),
-      );
-    } else {
-      setCurrentEntity(null);
-      if (contentType === "blogpost") {
-        handleContentRequest(
-          getBlogsInSpace(
-            space.id,
-            search,
-            countElementsOnPage,
-            adoptSortForTargetRequest(sort),
-          ),
-        );
-      } else {
-        handleContentRequest(
-          getPagesInSpace(
-            space.id,
-            "root",
-            search,
-            countElementsOnPage,
-            adoptSortForTargetRequest(sort),
-          ),
-        );
-      }
-    }
   }, [
     parentId,
     contentType,
@@ -161,32 +155,107 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
     reloadFlag,
   ]);
 
-  const handleContentRequest = (
-    contentRequest: Promise<SearchResponse<Content>>,
-  ) => {
-    setIsLoading(true);
-
-    contentRequest
-      .then((response) => {
-        const rows = buildContentTreeRows(
-          appContext!,
-          parentId,
-          response.results,
-          formats,
-          onChangeParentId,
-          onDeleteAttachment,
-        );
-
-        setNavigationLinks(response._links);
-        setRows(rows);
-      })
-      .finally(() => {
-        setIsLoading(false);
+  const requestAppContext = (
+    currentAppContext: AppContext | null,
+  ): Promise<AppContext> => {
+    if (!currentAppContext) {
+      return invoke<AppContext>("getAppContenxt");
+    } else {
+      return new Promise((resolve) => {
+        resolve(currentAppContext);
       });
+    }
+  };
+
+  const requestFormats = (
+    currentFormats: Format[] | null,
+  ): Promise<Format[]> => {
+    if (!currentFormats) {
+      return invoke<Format[]>("getFormats");
+    } else {
+      return new Promise((resolve) => {
+        resolve(currentFormats);
+      });
+    }
+  };
+
+  const requestCurrentEntity = (
+    parentId: string | undefined,
+    currentEntity: Content | null,
+  ): Promise<SearchResponse<Content> | null> => {
+    if (parentId) {
+      if (parentId === currentEntity?.id) {
+        return new Promise((resolve) => {
+          resolve({ results: [currentEntity] } as SearchResponse<Content>);
+        });
+      } else {
+        return findContentById(parentId);
+      }
+    } else {
+      return new Promise((resolve) => {
+        resolve(null);
+      });
+    }
+  };
+
+  const requestContent = (
+    space: {
+      id: string;
+      key: string;
+    },
+    parentId: string | undefined,
+    contentType: ContentType,
+    search: string,
+    showOnlyFiles: boolean,
+    countElementsOnPage: number,
+    sort: { key: string; order: SortOrder },
+  ) => {
+    if (parentId) {
+      return findContent(
+        space.key,
+        parentId,
+        search,
+        showOnlyFiles,
+        countElementsOnPage,
+        sort,
+      );
+    } else {
+      if (contentType === "blogpost") {
+        return getBlogsInSpace(
+          space.id,
+          search,
+          countElementsOnPage,
+          adoptSortForTargetRequest(sort),
+        );
+      } else {
+        return getPagesInSpace(
+          space.id,
+          "root",
+          search,
+          countElementsOnPage,
+          adoptSortForTargetRequest(sort),
+        );
+      }
+    }
   };
 
   const onSwitchPage = (link: string | null) => {
-    if (link) handleContentRequest(findContentByLink(link));
+    if (link && appContext && formats) {
+      setIsLoading(true);
+      findContentByLink(link).then((contentResponse) => {
+        setRows(
+          buildContentTreeRows(
+            appContext,
+            parentId,
+            contentResponse.results,
+            formats,
+            onChangeParentId,
+            onDeleteAttachment,
+          ),
+        );
+        setNavigationLinks(contentResponse._links);
+      });
+    }
   };
 
   const onClickCreate = (documentType: string) => {
