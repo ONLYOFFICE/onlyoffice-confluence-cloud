@@ -16,7 +16,7 @@
  *
  */
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import Button, { IconButton } from "@atlaskit/button/new";
 import DropdownMenu, {
@@ -69,6 +69,8 @@ const createTypeOptions = [
   { label: "PDF form", icon: <PdfIcon />, value: "pdf" },
 ];
 
+const SEARCH_DEBOUNCE_MS = 1000;
+
 export const ContentTreeToolbar: React.FC<ContentTreeToolbarProps> = ({
   contentType,
   search,
@@ -79,6 +81,25 @@ export const ContentTreeToolbar: React.FC<ContentTreeToolbarProps> = ({
   onChangeSearch,
   onClickCreate,
 }) => {
+  const [localSearch, setLocalSearch] = useState(search);
+
+  useEffect(() => {
+    setLocalSearch(search);
+  }, [search]);
+
+  useEffect(() => {
+    if (localSearch === "") {
+      onChangeSearch(localSearch);
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      onChangeSearch(localSearch);
+    }, SEARCH_DEBOUNCE_MS);
+
+    return () => clearTimeout(timer);
+  }, [localSearch, onChangeSearch]);
+
   return (
     <Inline space="space.100">
       {showFilter && (
@@ -126,10 +147,10 @@ export const ContentTreeToolbar: React.FC<ContentTreeToolbarProps> = ({
       )}
       <Textfield
         placeholder="Search"
-        value={search}
+        value={localSearch}
         isDisabled={isLoading}
         onChange={(event) =>
-          onChangeSearch((event.target as HTMLInputElement).value)
+          setLocalSearch((event.target as HTMLInputElement).value)
         }
         className="small-input"
         elemBeforeInput={
