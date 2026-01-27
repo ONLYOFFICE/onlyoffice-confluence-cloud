@@ -250,21 +250,25 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
   const onSwitchPage = (link: string | null) => {
     if (link && appContext && formats) {
       setIsLoading(true);
-      findContentByLink(link).then((contentResponse) => {
-        setRows(
-          buildContentTreeRows(
-            appContext,
-            parentId,
-            contentResponse.results,
-            formats,
-            locale,
-            timeZone,
-            onChangeParentId,
-            onDeleteAttachment,
-          ),
-        );
-        setNavigationLinks(contentResponse._links);
-      });
+      findContentByLink(link)
+        .then((contentResponse) => {
+          setRows(
+            buildContentTreeRows(
+              appContext,
+              parentId,
+              contentResponse.results,
+              formats,
+              locale,
+              timeZone,
+              onChangeParentId,
+              onDeleteAttachment,
+            ),
+          );
+          setNavigationLinks(contentResponse._links);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
     }
   };
 
