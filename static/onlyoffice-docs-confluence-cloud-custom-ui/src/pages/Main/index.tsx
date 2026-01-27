@@ -128,6 +128,7 @@ const MainPage: React.FC<MainPageProps> = ({
         } else {
           searchParams.delete("pageId");
         }
+        searchParams.delete("search");
         onChangSearchParams(searchParams);
       }}
       onChangeContentType={(value: ContentType) => {
