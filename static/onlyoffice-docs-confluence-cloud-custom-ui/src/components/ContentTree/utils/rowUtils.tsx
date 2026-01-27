@@ -51,7 +51,7 @@ export const head = {
   cells: [
     {
       key: "title",
-      content: "Title",
+      content: <Box paddingInlineStart="space.100">Title</Box>,
       isSortable: true,
       width: 40,
     },
@@ -214,7 +214,10 @@ export const buildContentTreeRows = (
       {
         key: "title",
         content: (
-          <Box onClick={() => onClickOnTitle(entity)}>
+          <Box
+            paddingInlineStart="space.100"
+            onClick={() => onClickOnTitle(entity)}
+          >
             <Inline space="space.075" alignBlock="center">
               <Box xcss={styles.iconContainer}>
                 {getIconByContentType(
