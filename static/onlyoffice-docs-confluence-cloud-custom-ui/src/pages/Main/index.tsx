@@ -78,6 +78,7 @@ const MainPage: React.FC<MainPageProps> = ({
   );
 
   const locale = context.locale;
+  const timeZone = context.timezone;
 
   const getContainer = (type: string, children: React.ReactNode) => {
     switch (type) {
@@ -120,6 +121,7 @@ const MainPage: React.FC<MainPageProps> = ({
       sort={sort}
       countElementsOnPage={countElementsOnPage}
       locale={locale}
+      timeZone={timeZone}
       showBreadcrumbs={type === "confluence:spacePage"}
       showFilter={type === "confluence:spacePage"}
       onChangeParentId={(value: string | undefined) => {

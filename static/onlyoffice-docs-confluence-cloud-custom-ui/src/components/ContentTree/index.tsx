@@ -61,6 +61,7 @@ export type ContentTreeProps = {
   sort?: { key: string; order: SortOrder };
   countElementsOnPage: number;
   locale: string;
+  timeZone: string;
   showBreadcrumbs?: boolean;
   showFilter?: boolean;
   onChangeParentId: (id: string | undefined) => void;
@@ -80,6 +81,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
   sort = DEFAULT_SORT,
   countElementsOnPage,
   locale,
+  timeZone,
   showBreadcrumbs = true,
   showFilter = true,
   onChangeParentId,
@@ -135,6 +137,8 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
               parentId,
               contentResponse.results,
               formatsResponse,
+              locale,
+              timeZone,
               onChangeParentId,
               onDeleteAttachment,
             ),
@@ -249,6 +253,8 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
             parentId,
             contentResponse.results,
             formats,
+            locale,
+            timeZone,
             onChangeParentId,
             onDeleteAttachment,
           ),

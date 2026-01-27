@@ -74,11 +74,33 @@ export const head = {
   ],
 };
 
+const getFormatedDate = (
+  dateString: string,
+  locale: string,
+  timeZone: string,
+) => {
+  const options: Intl.DateTimeFormatOptions = {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+    timeZone: timeZone,
+  };
+
+  const date = new Date(dateString);
+
+  return new Intl.DateTimeFormat(locale, options).format(date);
+};
+
 export const buildContentTreeRows = (
   appContext: AppContext,
   parentId: string | undefined,
   entities: Content[],
   formats: Format[],
+  locale: string,
+  timeZone: string,
   onChangeParentId: (id: string) => void,
   onDeleteAttachment: () => void,
 ): RowType[] => {
@@ -238,7 +260,11 @@ export const buildContentTreeRows = (
       },
       {
         key: "lastmodified",
-        content: entity.version.createdAt || entity.version.when,
+        content: getFormatedDate(
+          entity.version.createdAt || entity.version.when,
+          locale,
+          timeZone,
+        ),
       },
       {
         key: "actions",
