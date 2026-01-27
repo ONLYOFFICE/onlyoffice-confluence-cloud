@@ -24,6 +24,7 @@ import DropdownMenu, {
   DropdownItem,
   DropdownItemGroup,
 } from "@atlaskit/dropdown-menu";
+import ChevronDownIcon from "@atlaskit/icon/core/chevron-down";
 import ChevronLeftIcon from "@atlaskit/icon/core/chevron-left";
 import ChevronRightIcon from "@atlaskit/icon/core/chevron-right";
 import { Box, Inline } from "@atlaskit/primitives";
@@ -72,8 +73,19 @@ export const ContentTreePagination: React.FC<ContentTreePaginationProps> = ({
         )}
       </Box>
       {countElementsOnPage && (
-        <DropdownMenu
-          trigger={String(countElementsOnPage)}
+        <DropdownMenu<HTMLButtonElement>
+          trigger={({ triggerRef, ...props }) => (
+            <Button
+              {...props}
+              ref={triggerRef}
+              iconAfter={(iconProps) => (
+                <ChevronDownIcon {...iconProps} size="small" />
+              )}
+              isDisabled={isLoading}
+            >
+              {countElementsOnPage}
+            </Button>
+          )}
           shouldRenderToParent
         >
           <DropdownItemGroup>
