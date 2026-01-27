@@ -41,7 +41,11 @@ import {
 import { getEditorPageUrl } from "../../util/routerUtils";
 
 import { ContentTreeBreadcrumbs } from "./components/ContentTreeBreadcrumbs";
-import { ContentTreePagination } from "./components/ContentTreePagination";
+import {
+  ContentTreePagination,
+  COUNT_ELEMENTS_ON_PAGE_OPTIONS,
+  CountElementsOnPage,
+} from "./components/ContentTreePagination";
 import { ContentTreeToolbar } from "./components/ContentTreeToolbar";
 import { buildCreateRow } from "./utils/createRowUtils";
 import { buildContentTreeRows, head } from "./utils/rowUtils";
@@ -59,7 +63,7 @@ export type ContentTreeProps = {
   search?: string;
   showOnlyFiles?: boolean;
   sort?: { key: string; order: SortOrder };
-  countElementsOnPage: number;
+  countElementsOnPage: CountElementsOnPage;
   locale: string;
   timeZone: string;
   showBreadcrumbs?: boolean;
@@ -69,7 +73,7 @@ export type ContentTreeProps = {
   onChangeSearch: (search: string) => void;
   onChangeShowOnlyFiles: (showOnlyFiles: boolean) => void;
   onChangeSort: (sort: { key: string; order: SortOrder }) => void;
-  onChangeCountElementsOnPage: (count: number) => void;
+  onChangeCountElementsOnPage: (count: CountElementsOnPage) => void;
 };
 
 export const ContentTree: React.FC<ContentTreeProps> = ({
@@ -365,16 +369,20 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
             onChangeSort({ key: value.key, order: value.sortOrder })
           }
         />
-        {(navigationLinks.prev || navigationLinks.next) && (
-          <ContentTreePagination
-            isLoading={isLoading}
-            countElementsOnPage={countElementsOnPage}
-            prevLink={navigationLinks.prev}
-            nextLink={navigationLinks.next}
-            onChangePage={onSwitchPage}
-            onChangeCountElementsOnPage={onChangeCountElementsOnPage}
-          />
-        )}
+        <ContentTreePagination
+          isLoading={isLoading}
+          countElementsOnPage={
+            rows.length > COUNT_ELEMENTS_ON_PAGE_OPTIONS[0] ||
+            navigationLinks.prev ||
+            navigationLinks.next
+              ? countElementsOnPage
+              : undefined
+          }
+          prevLink={navigationLinks.prev}
+          nextLink={navigationLinks.next}
+          onChangePage={onSwitchPage}
+          onChangeCountElementsOnPage={onChangeCountElementsOnPage}
+        />
       </Stack>
     </>
   );

@@ -30,7 +30,10 @@ import { view } from "@forge/bridge";
 import { FullContext } from "@forge/bridge";
 
 import { ContentTree } from "../../components/ContentTree";
-import { COUNT_ELEMENTS_ON_PAGE_OPTIONS } from "../../constants";
+import {
+  COUNT_ELEMENTS_ON_PAGE_OPTIONS,
+  CountElementsOnPage,
+} from "../../components/ContentTree/components/ContentTreePagination";
 import { ContentType, SortOrder } from "../../types/types";
 
 const styles = {
@@ -73,9 +76,8 @@ const MainPage: React.FC<MainPageProps> = ({
     order:
       searchParams.get("sortOrder") === "ASC" ? SortOrder.ASC : SortOrder.DESC,
   };
-  const [countElementsOnPage, setCountElementsOnPage] = useState<number>(
-    COUNT_ELEMENTS_ON_PAGE_OPTIONS[0],
-  );
+  const [countElementsOnPage, setCountElementsOnPage] =
+    useState<CountElementsOnPage>(COUNT_ELEMENTS_ON_PAGE_OPTIONS[0]);
 
   const locale = context.locale;
   const timeZone = context.timezone;

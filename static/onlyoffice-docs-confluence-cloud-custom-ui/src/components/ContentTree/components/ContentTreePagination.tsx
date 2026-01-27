@@ -26,17 +26,19 @@ import DropdownMenu, {
 } from "@atlaskit/dropdown-menu";
 import ChevronLeftIcon from "@atlaskit/icon/core/chevron-left";
 import ChevronRightIcon from "@atlaskit/icon/core/chevron-right";
-import { Inline } from "@atlaskit/primitives";
+import { Box, Inline } from "@atlaskit/primitives";
 
-import { COUNT_ELEMENTS_ON_PAGE_OPTIONS } from "../../../constants";
+export const COUNT_ELEMENTS_ON_PAGE_OPTIONS = [25, 50, 100] as const;
+export type CountElementsOnPage =
+  (typeof COUNT_ELEMENTS_ON_PAGE_OPTIONS)[number];
 
 type ContentTreePaginationProps = {
   isLoading: boolean;
-  countElementsOnPage: number;
+  countElementsOnPage?: CountElementsOnPage;
   prevLink: string | null;
   nextLink: string | null;
   onChangePage: (url: string | null) => void;
-  onChangeCountElementsOnPage: (count: number) => void;
+  onChangeCountElementsOnPage: (count: CountElementsOnPage) => void;
 };
 
 export const ContentTreePagination: React.FC<ContentTreePaginationProps> = ({
@@ -49,35 +51,44 @@ export const ContentTreePagination: React.FC<ContentTreePaginationProps> = ({
 }) => {
   return (
     <Inline spread="space-between">
-      <ButtonGroup label="Default button group">
-        <Button
-          iconBefore={ChevronLeftIcon}
-          isDisabled={!prevLink || isLoading}
-          onClick={() => onChangePage(prevLink)}
-        >
-          Previous
-        </Button>
-        <Button
-          iconAfter={ChevronRightIcon}
-          isDisabled={!nextLink || isLoading}
-          onClick={() => onChangePage(nextLink)}
-        >
-          Next
-        </Button>
-      </ButtonGroup>
-      <DropdownMenu trigger={String(countElementsOnPage)} shouldRenderToParent>
-        <DropdownItemGroup>
-          {COUNT_ELEMENTS_ON_PAGE_OPTIONS.map((option) => (
-            <DropdownItem
-              isSelected={true}
-              key={option}
-              onClick={() => onChangeCountElementsOnPage(option)}
+      <Box>
+        {(prevLink || nextLink) && (
+          <ButtonGroup label="Default button group">
+            <Button
+              iconBefore={ChevronLeftIcon}
+              isDisabled={!prevLink || isLoading}
+              onClick={() => onChangePage(prevLink)}
             >
-              {option}
-            </DropdownItem>
-          ))}
-        </DropdownItemGroup>
-      </DropdownMenu>
+              Previous
+            </Button>
+            <Button
+              iconAfter={ChevronRightIcon}
+              isDisabled={!nextLink || isLoading}
+              onClick={() => onChangePage(nextLink)}
+            >
+              Next
+            </Button>
+          </ButtonGroup>
+        )}
+      </Box>
+      {countElementsOnPage && (
+        <DropdownMenu
+          trigger={String(countElementsOnPage)}
+          shouldRenderToParent
+        >
+          <DropdownItemGroup>
+            {COUNT_ELEMENTS_ON_PAGE_OPTIONS.map((option) => (
+              <DropdownItem
+                isSelected={option === countElementsOnPage}
+                key={option}
+                onClick={() => onChangeCountElementsOnPage(option)}
+              >
+                {option}
+              </DropdownItem>
+            ))}
+          </DropdownItemGroup>
+        </DropdownMenu>
+      )}
     </Inline>
   );
 };
