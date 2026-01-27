@@ -48,7 +48,7 @@ type CreateAttachmentResponse = {
 };
 
 export const buildCreateRow = (
-  pageId: string,
+  parentId: string,
   documentType: string,
   locale: string,
   isLoading: boolean,
@@ -61,7 +61,7 @@ export const buildCreateRow = (
     setLoading(true);
 
     return invoke<CreateAttachmentResponse>("createAttachment", {
-      pageId,
+      parentId,
       title,
       type: documentType,
       locale,

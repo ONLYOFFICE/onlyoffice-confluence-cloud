@@ -59,7 +59,8 @@ const MainPage: React.FC<MainPageProps> = ({
   const type = context.extension.type;
 
   const space = context.extension.space;
-  const parentId = searchParams.get("pageId") || context.extension.content?.id;
+  const parentId =
+    searchParams.get("parentId") || context.extension.content?.id;
   const contentType = searchParams
     .get("filter")
     ?.split(",")
@@ -128,9 +129,9 @@ const MainPage: React.FC<MainPageProps> = ({
       showFilter={type === "confluence:spacePage"}
       onChangeParentId={(value: string | undefined) => {
         if (value) {
-          searchParams.set("pageId", value);
+          searchParams.set("parentId", value);
         } else {
-          searchParams.delete("pageId");
+          searchParams.delete("parentId");
         }
         searchParams.delete("search");
         onChangSearchParams(searchParams);
