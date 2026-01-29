@@ -32,7 +32,7 @@ let formats: Format[] = [];
 
 const mainPageResolver = new Resolver();
 
-mainPageResolver.define("getAppContenxt", () => {
+mainPageResolver.define("getAppContext", () => {
   const { appAri, environmentAri } = getAppContext();
 
   return { appId: appAri.appId, environmentId: environmentAri.environmentId };

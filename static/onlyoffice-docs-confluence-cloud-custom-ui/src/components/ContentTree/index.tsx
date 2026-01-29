@@ -111,7 +111,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
 
   useEffect(() => {
     Promise.all([
-      invoke<AppContext>("getAppContenxt"),
+      invoke<AppContext>("getAppContext"),
       invoke<Format[]>("getFormats"),
     ]).then(([appContextResponse, formatsResponse]) => {
       setAppContext(appContextResponse);
