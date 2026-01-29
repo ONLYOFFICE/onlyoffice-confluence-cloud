@@ -134,6 +134,13 @@ const MainPage: React.FC<MainPageProps> = ({
           searchParams.delete("parentId");
         }
         searchParams.delete("search");
+        const currentFilter = searchParams.get("filter")?.split(",") || [];
+        const newFilter = currentFilter.filter((f) => f !== "files").join(",");
+        if (newFilter) {
+          searchParams.set("filter", newFilter);
+        } else {
+          searchParams.delete("filter");
+        }
         onChangSearchParams(searchParams);
       }}
       onChangeContentType={(value: ContentType) => {
