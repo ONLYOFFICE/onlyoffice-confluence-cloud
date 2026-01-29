@@ -39,6 +39,7 @@ import {
 import { getEditorPageUrl } from "../../util/routerUtils";
 
 import { ContentTreeBreadcrumbs } from "./components/ContentTreeBreadcrumbs";
+import { ContentTreeEmptyState } from "./components/ContentTreeEmptyState";
 import {
   ContentTreePagination,
   COUNT_ELEMENTS_ON_PAGE_OPTIONS,
@@ -321,6 +322,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
           rows={rows}
           sortKey={sort.key}
           sortOrder={sort.order}
+          emptyView={<ContentTreeEmptyState isSearchActive={!!search} />}
           onSort={(value) =>
             onChangeSort({ key: value.key, order: value.sortOrder })
           }
