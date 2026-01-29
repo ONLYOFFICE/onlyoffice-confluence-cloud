@@ -26,9 +26,11 @@ import DropdownMenu, {
 import { RowType } from "@atlaskit/dynamic-table/dist/types/types";
 import ShowMoreIcon from "@atlaskit/icon/core/show-more-horizontal";
 import { Box, Inline, xcss } from "@atlaskit/primitives";
-import { router } from "@forge/bridge";
+import { router, showFlag } from "@forge/bridge";
 import bytes from "bytes";
 
+import { deleteAttachment } from "../../../client";
+import { confirmDialogService } from "../../../services/confirmDialogService";
 import { AppContext, Content, Format } from "../../../types/types";
 import { useFormats } from "../../../util/formatsUtils";
 import { getEditorPageUrl } from "../../../util/routerUtils";
@@ -78,6 +80,7 @@ export const buildContentTreeRows = (
   entities: Content[],
   formats: Format[],
   onChangeParentId: (id: string) => void,
+  onDeleteAttachment: () => void,
 ): RowType[] => {
   const { getDocumentType, isEditable, isViewable } = useFormats(formats);
 
@@ -105,7 +108,52 @@ export const buildContentTreeRows = (
   };
 
   const onClickDelete = (entity: Content) => {
-    console.log("Delete", entity);
+    confirmDialogService.show({
+      title: "Delete attachments",
+      description: "You want delete" + entity.title + "?",
+      appearance: "danger",
+      buttons: {
+        submit: {
+          title: "Delete",
+          onClick: () => {
+            confirmDialogService.setLoading(true);
+            deleteAttachment(entity.id)
+              .then(() => {
+                showFlag({
+                  id: "delete-attachment-success",
+                  title:
+                    'Attachment "{filename}" deleted successfully.'.replace(
+                      "{filename}",
+                      entity.title,
+                    ),
+                  type: "success",
+                  appearance: "success",
+                  isAutoDismiss: true,
+                });
+                onDeleteAttachment();
+              })
+              .catch(() => {
+                showFlag({
+                  id: "delete-attachment-error",
+                  title: "Failed to delete attachment. Please try again.",
+                  type: "error",
+                  appearance: "error",
+                  isAutoDismiss: true,
+                });
+              })
+              .finally(() => {
+                confirmDialogService.close();
+              });
+          },
+        },
+        cancel: {
+          title: "Cancel",
+          onClick: () => {
+            confirmDialogService.close();
+          },
+        },
+      },
+    });
   };
 
   const editCondition = (entity: Content) => {

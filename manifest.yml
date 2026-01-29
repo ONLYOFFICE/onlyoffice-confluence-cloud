@@ -166,6 +166,7 @@ permissions:
     - read:attachment:confluence
     - read:page:confluence
     - write:confluence-file
+    - delete:attachment:confluence
   external:
     frames:
       - address: ${FORGE_REMOTE_APP_URL}/editor/confluence

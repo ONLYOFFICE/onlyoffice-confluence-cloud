@@ -143,6 +143,19 @@ export const findContentByLink = async (
   );
 };
 
+export const deleteAttachment = async (id: string): Promise<void> => {
+  return await _executeRequest<void>(
+    async () => {
+      return await requestConfluence(`/wiki/api/v2/attachments/${id}`, {
+        method: "DELETE",
+      });
+    },
+    async (response: Response) => {
+      await response;
+    },
+  );
+};
+
 async function _executeRequest<T>(
   onRequest: () => Promise<Response>,
   onResponse: (response: Response) => T | Promise<T>,

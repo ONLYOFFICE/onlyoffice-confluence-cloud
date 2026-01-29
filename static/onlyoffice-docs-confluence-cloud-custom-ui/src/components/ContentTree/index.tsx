@@ -174,6 +174,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
           response.results,
           formats,
           onChangeParentId,
+          onDeleteAttachment,
         );
 
         setNavigationLinks(response._links);
@@ -228,6 +229,10 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
     const rowsWithotCreateRow = rows.filter((row) => row.key !== "create");
 
     setRows([...rowsWithotCreateRow]);
+  };
+
+  const onDeleteAttachment = () => {
+    setReloadFlag(!reloadFlag);
   };
 
   return (
