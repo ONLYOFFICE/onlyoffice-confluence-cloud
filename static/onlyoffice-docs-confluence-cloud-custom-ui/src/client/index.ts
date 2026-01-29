@@ -20,8 +20,9 @@ import { requestConfluence } from "@forge/bridge";
 
 import { ClientError, Content, SearchResponse } from "../../src/types/types";
 
-export const getPagesInSpace = async (
+export const getContentInSpace = async (
   id: string,
+  type: "page" | "blogpost",
   depth: "all" | "root",
   title: string | null,
   limit: number,
@@ -40,7 +41,7 @@ export const getPagesInSpace = async (
       }
 
       return await requestConfluence(
-        `/wiki/api/v2/spaces/${id}/pages?${searchParams.join("&")}`,
+        `/wiki/api/v2/spaces/${id}/${type}s?${searchParams.join("&")}`,
       );
     },
     async (response: Response) => {
@@ -49,42 +50,7 @@ export const getPagesInSpace = async (
         ...data,
         results: data.results.map((item: Content) => ({
           ...item,
-          type: "page",
-        })),
-      };
-    },
-  );
-};
-
-export const getBlogsInSpace = async (
-  id: string,
-  title: string | null,
-  limit: number,
-  sort: string | null,
-): Promise<SearchResponse<Content>> => {
-  return await _executeRequest<SearchResponse<Content>>(
-    async () => {
-      const searchParams = [`limit=${limit}`];
-
-      if (title) {
-        searchParams.push(`title=${title}`);
-      }
-
-      if (sort) {
-        searchParams.push(`sort=${sort}`);
-      }
-
-      return await requestConfluence(
-        `/wiki/api/v2/spaces/${id}/blogposts?${searchParams.join("&")}`,
-      );
-    },
-    async (response: Response) => {
-      const data = await response.json();
-      return {
-        ...data,
-        results: data.results.map((item: Content) => ({
-          ...item,
-          type: "blogpost",
+          type,
         })),
       };
     },

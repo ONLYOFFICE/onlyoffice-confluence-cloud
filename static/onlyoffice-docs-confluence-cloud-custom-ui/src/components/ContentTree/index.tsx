@@ -27,8 +27,7 @@ import {
   findContent,
   findContentById,
   findContentByLink,
-  getBlogsInSpace,
-  getPagesInSpace,
+  getContentInSpace,
 } from "../../client";
 import {
   AppContext,
@@ -135,12 +134,13 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
     } else {
       const contentType = section === "blogs" ? "blogpost" : "page";
 
-      requestContent = requestContentInSpace(
-        space,
+      requestContent = getContentInSpace(
+        space.id,
         contentType,
+        "root",
         search,
         countElementsOnPage,
-        sort,
+        adoptSortForTargetRequest(sort),
       );
     }
 
@@ -176,8 +176,8 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
           onDeleteAttachment,
         ),
       );
+      setIsLoading(false);
     }
-    setIsLoading(false);
   }, [appContext, formats, childEntities]);
 
   const requestCurrentEntity = (
@@ -196,34 +196,6 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
       return new Promise((resolve) => {
         resolve(null);
       });
-    }
-  };
-
-  const requestContentInSpace = (
-    space: {
-      id: string;
-      key: string;
-    },
-    contentType: "page" | "blogpost",
-    search: string,
-    countElementsOnPage: number,
-    sort: { key: string; order: SortOrder },
-  ) => {
-    if (contentType === "blogpost") {
-      return getBlogsInSpace(
-        space.id,
-        search,
-        countElementsOnPage,
-        adoptSortForTargetRequest(sort),
-      );
-    } else {
-      return getPagesInSpace(
-        space.id,
-        "root",
-        search,
-        countElementsOnPage,
-        adoptSortForTargetRequest(sort),
-      );
     }
   };
 
