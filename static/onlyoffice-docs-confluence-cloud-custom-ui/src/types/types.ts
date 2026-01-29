@@ -74,6 +74,7 @@ export interface Content {
   }>;
   _links: {
     download: string;
+    webui: string;
   };
 }
 

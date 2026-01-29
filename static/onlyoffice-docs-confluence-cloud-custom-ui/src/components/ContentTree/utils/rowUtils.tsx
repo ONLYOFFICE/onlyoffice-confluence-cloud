@@ -178,6 +178,10 @@ export const buildContentTreeRows = (
     });
   };
 
+  const onClickNavigate = (entity: Content) => {
+    router.navigate(`/wiki${entity._links.webui}`);
+  };
+
   const editCondition = (entity: Content) => {
     if (entity.type !== "attachment") {
       return false;
@@ -228,6 +232,10 @@ export const buildContentTreeRows = (
     });
 
     return deletePermission;
+  };
+
+  const navigateCondition = (entity: Content) => {
+    return entity.type !== "attachment";
   };
 
   return entities.map((entity) => ({
@@ -298,14 +306,19 @@ export const buildContentTreeRows = (
                     Download
                   </DropdownItem>
                 )}
-              </DropdownItemGroup>
-              <DropdownItemGroup hasSeparator>
-                {deleteCondition(entity) && (
-                  <DropdownItem onClick={() => onClickDelete(entity)}>
-                    Delete
+                {navigateCondition(entity) && (
+                  <DropdownItem onClick={() => onClickNavigate(entity)}>
+                    Navigate to
                   </DropdownItem>
                 )}
               </DropdownItemGroup>
+              {deleteCondition(entity) && (
+                <DropdownItemGroup hasSeparator>
+                  <DropdownItem onClick={() => onClickDelete(entity)}>
+                    Delete
+                  </DropdownItem>
+                </DropdownItemGroup>
+              )}
             </DropdownMenu>
           </Box>
         ),
