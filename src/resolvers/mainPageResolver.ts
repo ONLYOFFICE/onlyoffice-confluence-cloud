@@ -56,9 +56,9 @@ mainPageResolver.define("getFormats", async () => {
 });
 
 mainPageResolver.define("createAttachment", async (request: Request) => {
-  const { pageId, title, type, locale } = request.payload;
+  const { parentId, title, type, locale } = request.payload;
 
-  return await postRemoteCreateAttachment(pageId, title, type, locale);
+  return await postRemoteCreateAttachment(parentId, title, type, locale);
 });
 
 export default mainPageResolver.getDefinitions();

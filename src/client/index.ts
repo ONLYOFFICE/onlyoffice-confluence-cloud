@@ -70,7 +70,7 @@ export const getRemoteFormats = async (): Promise<Format[]> => {
 };
 
 export const postRemoteCreateAttachment = async (
-  pageId: string,
+  parentId: string,
   title: string,
   type: string,
   locale: string,
@@ -84,7 +84,7 @@ export const postRemoteCreateAttachment = async (
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          parentId: pageId,
+          parentId: parentId,
           title: title,
           documentType: type,
           locale: locale,
