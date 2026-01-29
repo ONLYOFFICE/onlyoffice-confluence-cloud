@@ -99,6 +99,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
   const [formats, setFormats] = useState<Format[] | null>(null);
 
   const [currentEntity, setCurrentEntity] = useState<Content | null>(null);
+  const [childEntities, setChildEntities] = useState<Array<Content>>();
   const [navigationLinks, setNavigationLinks] = useState<{
     prev: string | null;
     next: string | null;
@@ -110,10 +111,18 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
   const [rows, setRows] = useState<Array<RowType>>([]);
 
   useEffect(() => {
+    Promise.all([
+      invoke<AppContext>("getAppContenxt"),
+      invoke<Format[]>("getFormats"),
+    ]).then(([appContextResponse, formatsResponse]) => {
+      setAppContext(appContextResponse);
+      setFormats(formatsResponse);
+    });
+  }, []);
+
+  useEffect(() => {
     setIsLoading(true);
     Promise.all([
-      requestAppContext(appContext),
-      requestFormats(formats),
       requestCurrentEntity(parentId, currentEntity),
       requestContent(
         space,
@@ -124,35 +133,11 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
         countElementsOnPage,
         sort,
       ),
-    ])
-      .then(
-        ([
-          appContextResponse,
-          formatsResponse,
-          currentEntityResponse,
-          contentResponse,
-        ]) => {
-          setAppContext(appContextResponse);
-          setFormats(formatsResponse);
-          setCurrentEntity(currentEntityResponse?.results[0] || null);
-          setRows(
-            buildContentTreeRows(
-              appContextResponse,
-              parentId,
-              contentResponse.results,
-              formatsResponse,
-              locale,
-              timeZone,
-              onChangeParentId,
-              onDeleteAttachment,
-            ),
-          );
-          setNavigationLinks(contentResponse._links);
-        },
-      )
-      .finally(() => {
-        setIsLoading(false);
-      });
+    ]).then(([currentEntityResponse, contentResponse]) => {
+      setCurrentEntity(currentEntityResponse?.results[0] || null);
+      setChildEntities(contentResponse.results);
+      setNavigationLinks(contentResponse._links);
+    });
   }, [
     parentId,
     contentType,
@@ -163,29 +148,23 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
     reloadFlag,
   ]);
 
-  const requestAppContext = (
-    currentAppContext: AppContext | null,
-  ): Promise<AppContext> => {
-    if (!currentAppContext) {
-      return invoke<AppContext>("getAppContenxt");
-    } else {
-      return new Promise((resolve) => {
-        resolve(currentAppContext);
-      });
+  useEffect(() => {
+    if (appContext && formats && childEntities) {
+      setRows(
+        buildContentTreeRows(
+          appContext,
+          parentId,
+          childEntities,
+          formats,
+          locale,
+          timeZone,
+          onChangeParentId,
+          onDeleteAttachment,
+        ),
+      );
     }
-  };
-
-  const requestFormats = (
-    currentFormats: Format[] | null,
-  ): Promise<Format[]> => {
-    if (!currentFormats) {
-      return invoke<Format[]>("getFormats");
-    } else {
-      return new Promise((resolve) => {
-        resolve(currentFormats);
-      });
-    }
-  };
+    setIsLoading(false);
+  }, [appContext, formats, childEntities]);
 
   const requestCurrentEntity = (
     parentId: string | undefined,
