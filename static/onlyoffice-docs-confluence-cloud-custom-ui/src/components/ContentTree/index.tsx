@@ -16,7 +16,7 @@
  *
  */
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import DynamicTable from "@atlaskit/dynamic-table";
 import { RowType } from "@atlaskit/dynamic-table/dist/types/types";
@@ -29,8 +29,9 @@ import {
   findContentByLink,
   getContentInSpace,
 } from "../../client";
+import { AppContext } from "../../context/AppContext";
 import {
-  AppContext,
+  AppContext as AC,
   Content,
   Format,
   SearchResponse,
@@ -94,7 +95,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
   onChangeSort,
   onChangeCountElementsOnPage,
 }) => {
-  const [appContext, setAppContext] = useState<AppContext | null>(null);
+  const [appContext, setAppContext] = useState<AC | null>(null);
   const [formats, setFormats] = useState<Format[] | null>(null);
 
   const [currentEntity, setCurrentEntity] = useState<Content | null>(null);
@@ -109,14 +110,21 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
 
   const [rows, setRows] = useState<Array<RowType>>([]);
 
+  const { setAppError } = useContext(AppContext);
+
   useEffect(() => {
-    Promise.all([
-      invoke<AppContext>("getAppContext"),
-      invoke<Format[]>("getFormats"),
-    ]).then(([appContextResponse, formatsResponse]) => {
-      setAppContext(appContextResponse);
-      setFormats(formatsResponse);
-    });
+    Promise.all([invoke<AC>("getAppContext"), invoke<Format[]>("getFormats")])
+      .then(([appContextResponse, formatsResponse]) => {
+        setAppContext(appContextResponse);
+        setFormats(formatsResponse);
+      })
+      .catch(() => {
+        setAppError({
+          title: "App loading error",
+          description:
+            "An unexpected error occurred while loading the application. Please reload it to continue.",
+        });
+      });
   }, []);
 
   useEffect(() => {
