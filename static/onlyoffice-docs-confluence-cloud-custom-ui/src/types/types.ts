@@ -16,10 +16,6 @@
  *
  */
 
-import { CONTENT_TYPES } from "../constants";
-
-export type ContentType = (typeof CONTENT_TYPES)[number];
-
 export enum SortOrder {
   ASC = "ASC",
   DESC = "DESC",

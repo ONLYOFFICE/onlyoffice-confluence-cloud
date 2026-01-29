@@ -35,8 +35,9 @@ import { ReactComponent as CellIcon } from "../../../assets/images/cell.svg";
 import { ReactComponent as PdfIcon } from "../../../assets/images/pdf.svg";
 import { ReactComponent as SlideIcon } from "../../../assets/images/slide.svg";
 import { ReactComponent as WordIcon } from "../../../assets/images/word.svg";
-import { CONTENT_TYPES } from "../../../constants";
-import { ContentType } from "../../../types/types";
+
+export const SECTIONS = ["content", "blogs"] as const;
+export type Section = (typeof SECTIONS)[number];
 
 const styles = {
   searchIcon: xcss({
@@ -46,7 +47,7 @@ const styles = {
 
 type ContentTreeToolbarProps = {
   isLoading: boolean;
-  contentType: string | null;
+  section: Section;
   showFilter: boolean;
   customFilters?: [
     {
@@ -57,7 +58,7 @@ type ContentTreeToolbarProps = {
     },
   ];
   search: string;
-  onChangeContentType: (value: ContentType) => void;
+  onChangeSection: (value: Section) => void;
   onChangeSearch: (value: string) => void;
   onClickCreate?: (documentType: string) => void;
 };
@@ -72,12 +73,12 @@ const createTypeOptions = [
 const SEARCH_DEBOUNCE_MS = 1000;
 
 export const ContentTreeToolbar: React.FC<ContentTreeToolbarProps> = ({
-  contentType,
+  section,
   search,
   showFilter,
   customFilters,
   isLoading,
-  onChangeContentType,
+  onChangeSection,
   onChangeSearch,
   onClickCreate,
 }) => {
@@ -119,11 +120,11 @@ export const ContentTreeToolbar: React.FC<ContentTreeToolbarProps> = ({
           shouldRenderToParent
         >
           <DropdownItemGroup>
-            {CONTENT_TYPES.map((value) => (
+            {SECTIONS.map((value) => (
               <DropdownItem
                 key={value}
-                isSelected={contentType === value}
-                onClick={() => onChangeContentType(value)}
+                isSelected={section === value}
+                onClick={() => onChangeSection(value)}
               >
                 {value}
               </DropdownItem>

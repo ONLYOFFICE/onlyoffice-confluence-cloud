@@ -33,7 +33,6 @@ import {
 import {
   AppContext,
   Content,
-  ContentType,
   Format,
   SearchResponse,
   SortOrder,
@@ -46,7 +45,7 @@ import {
   COUNT_ELEMENTS_ON_PAGE_OPTIONS,
   CountElementsOnPage,
 } from "./components/ContentTreePagination";
-import { ContentTreeToolbar } from "./components/ContentTreeToolbar";
+import { ContentTreeToolbar, Section } from "./components/ContentTreeToolbar";
 import { buildCreateRow } from "./utils/createRowUtils";
 import { buildContentTreeRows, head } from "./utils/rowUtils";
 import { adoptSortForTargetRequest } from "./utils/sortUtils";
@@ -59,7 +58,7 @@ export type ContentTreeProps = {
     key: string;
   };
   parentId?: string;
-  contentType: ContentType;
+  section: Section;
   search?: string;
   showOnlyFiles?: boolean;
   sort?: { key: string; order: SortOrder };
@@ -69,7 +68,7 @@ export type ContentTreeProps = {
   showBreadcrumbs?: boolean;
   showFilter?: boolean;
   onChangeParentId: (id: string | undefined) => void;
-  onChangeContentType: (contentType: ContentType) => void;
+  onChangeSection: (section: Section) => void;
   onChangeSearch: (search: string) => void;
   onChangeShowOnlyFiles: (showOnlyFiles: boolean) => void;
   onChangeSort: (sort: { key: string; order: SortOrder }) => void;
@@ -79,7 +78,7 @@ export type ContentTreeProps = {
 export const ContentTree: React.FC<ContentTreeProps> = ({
   space,
   parentId,
-  contentType,
+  section,
   search = "",
   showOnlyFiles = false,
   sort = DEFAULT_SORT,
@@ -89,7 +88,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
   showBreadcrumbs = true,
   showFilter = true,
   onChangeParentId,
-  onChangeContentType,
+  onChangeSection,
   onChangeSearch,
   onChangeShowOnlyFiles,
   onChangeSort,
@@ -122,17 +121,32 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
 
   useEffect(() => {
     setIsLoading(true);
-    Promise.all([
-      requestCurrentEntity(parentId, currentEntity),
-      requestContent(
-        space,
+
+    let requestContent;
+    if (parentId) {
+      requestContent = findContent(
+        space.key,
         parentId,
-        contentType,
         search,
         showOnlyFiles,
         countElementsOnPage,
         sort,
-      ),
+      );
+    } else {
+      const contentType = section === "blogs" ? "blogpost" : "page";
+
+      requestContent = requestContentInSpace(
+        space,
+        contentType,
+        search,
+        countElementsOnPage,
+        sort,
+      );
+    }
+
+    Promise.all([
+      requestCurrentEntity(parentId, currentEntity),
+      requestContent,
     ]).then(([currentEntityResponse, contentResponse]) => {
       setCurrentEntity(currentEntityResponse?.results[0] || null);
       setChildEntities(contentResponse.results);
@@ -140,7 +154,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
     });
   }, [
     parentId,
-    contentType,
+    section,
     countElementsOnPage,
     search,
     showOnlyFiles,
@@ -185,44 +199,31 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
     }
   };
 
-  const requestContent = (
+  const requestContentInSpace = (
     space: {
       id: string;
       key: string;
     },
-    parentId: string | undefined,
-    contentType: ContentType,
+    contentType: "page" | "blogpost",
     search: string,
-    showOnlyFiles: boolean,
     countElementsOnPage: number,
     sort: { key: string; order: SortOrder },
   ) => {
-    if (parentId) {
-      return findContent(
-        space.key,
-        parentId,
+    if (contentType === "blogpost") {
+      return getBlogsInSpace(
+        space.id,
         search,
-        showOnlyFiles,
         countElementsOnPage,
-        sort,
+        adoptSortForTargetRequest(sort),
       );
     } else {
-      if (contentType === "blogpost") {
-        return getBlogsInSpace(
-          space.id,
-          search,
-          countElementsOnPage,
-          adoptSortForTargetRequest(sort),
-        );
-      } else {
-        return getPagesInSpace(
-          space.id,
-          "root",
-          search,
-          countElementsOnPage,
-          adoptSortForTargetRequest(sort),
-        );
-      }
+      return getPagesInSpace(
+        space.id,
+        "root",
+        search,
+        countElementsOnPage,
+        adoptSortForTargetRequest(sort),
+      );
     }
   };
 
@@ -301,7 +302,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
     <>
       <Stack space="space.200">
         <ContentTreeToolbar
-          contentType={contentType}
+          section={section}
           showFilter={showFilter}
           customFilters={
             currentEntity?.type === "blogpost" || currentEntity?.type === "page"
@@ -317,7 +318,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
           }
           search={search}
           isLoading={isLoading}
-          onChangeContentType={onChangeContentType}
+          onChangeSection={onChangeSection}
           onChangeSearch={onChangeSearch}
           onClickCreate={
             (currentEntity?.type !== "page" &&
@@ -332,8 +333,8 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
             items={[
               {
                 id: "root",
-                title: contentType,
-                type: contentType,
+                title: section,
+                type: section,
               },
               ...(currentEntity ? currentEntity.ancestors : []),
               ...(currentEntity ? [currentEntity] : []),

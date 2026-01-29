@@ -34,7 +34,8 @@ import {
   COUNT_ELEMENTS_ON_PAGE_OPTIONS,
   CountElementsOnPage,
 } from "../../components/ContentTree/components/ContentTreePagination";
-import { ContentType, SortOrder } from "../../types/types";
+import { Section } from "../../components/ContentTree/components/ContentTreeToolbar";
+import { SortOrder } from "../../types/types";
 
 const styles = {
   pageBodyContainer: xcss({
@@ -61,11 +62,8 @@ const MainPage: React.FC<MainPageProps> = ({
   const space = context.extension.space;
   const parentId =
     searchParams.get("parentId") || context.extension.content?.id;
-  const contentType = searchParams
-    .get("filter")
-    ?.split(",")
-    .includes("blogpost")
-    ? "blogpost"
+  const section = searchParams.get("filter")?.split(",").includes("blogs")
+    ? "blogs"
     : "content";
   const search = searchParams.get("search") || "";
   const showOnlyFiles = searchParams
@@ -118,7 +116,7 @@ const MainPage: React.FC<MainPageProps> = ({
     <ContentTree
       space={space}
       parentId={parentId}
-      contentType={contentType}
+      section={section}
       search={search}
       showOnlyFiles={showOnlyFiles}
       sort={sort}
@@ -143,9 +141,9 @@ const MainPage: React.FC<MainPageProps> = ({
         }
         onChangSearchParams(searchParams);
       }}
-      onChangeContentType={(value: ContentType) => {
-        if (value === "blogpost") {
-          onChangSearchParams(new URLSearchParams("filter=blogpost"));
+      onChangeSection={(value: Section) => {
+        if (value === "blogs") {
+          onChangSearchParams(new URLSearchParams("filter=blogs"));
         } else {
           onChangSearchParams(new URLSearchParams());
         }
