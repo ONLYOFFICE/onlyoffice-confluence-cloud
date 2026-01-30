@@ -45,6 +45,12 @@ const styles = {
     display: "flex",
     alignItems: "center",
   }),
+  title: xcss({
+    ":hover": {
+      textDecoration: "underline",
+      cursor: "pointer",
+    },
+  }),
 };
 
 export const head = {
@@ -245,6 +251,7 @@ export const buildContentTreeRows = (
         key: "title",
         content: (
           <Box
+            xcss={styles.title}
             paddingInlineStart="space.100"
             onClick={() => onClickOnTitle(entity)}
           >
