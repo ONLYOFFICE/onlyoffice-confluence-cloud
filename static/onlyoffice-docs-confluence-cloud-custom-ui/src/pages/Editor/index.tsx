@@ -216,7 +216,7 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
           title: t("labels.warning"),
           description: `${t("page.editor.messages.session-expired")}
             ${t("page.editor.messages.update-session-failed")} ${t("page.editor.messages.please-save-changes")}
-            ${t("page.editor.messages.editin-will-stop").replace("{time}", String(prev ? prev.time - 1 : defaultSessionExpiredFlagData.time))}`,
+            ${t("page.editor.messages.editing-will-stop").replace("{time}", String(prev ? prev.time - 1 : defaultSessionExpiredFlagData.time))}`,
         };
       });
     }, 1000);

@@ -16,12 +16,13 @@
  *
  */
 
-import React from "react";
+import React, { useContext } from "react";
 
 import EmptyState from "@atlaskit/empty-state";
 
 import EmptyListIcon from "../../../assets/images/empty-list.svg";
 import EmptySearchIcon from "../../../assets/images/empty-search.svg";
+import { AppContext } from "../../../context/AppContext";
 
 type ContentTreeEmptyStateProps = {
   isSearchActive: boolean;
@@ -30,11 +31,13 @@ type ContentTreeEmptyStateProps = {
 export const ContentTreeEmptyState: React.FC<ContentTreeEmptyStateProps> = ({
   isSearchActive,
 }) => {
+  const { t } = useContext(AppContext);
+
   if (isSearchActive) {
     return (
       <EmptyState
-        header="Nothing found"
-        description="We couldn’t find any content with that title"
+        header={t("component.content-tree.empty-state.search.title")}
+        description={t("component.content-tree.empty-state.search.description")}
         imageUrl={EmptySearchIcon}
       />
     );
@@ -42,8 +45,8 @@ export const ContentTreeEmptyState: React.FC<ContentTreeEmptyStateProps> = ({
 
   return (
     <EmptyState
-      header="No docs here yet"
-      description="Create a new document by clicking Create button"
+      header={t("component.content-tree.empty-state.list.title")}
+      description={t("component.content-tree.empty-state.list.description")}
       imageUrl={EmptyListIcon}
     />
   );

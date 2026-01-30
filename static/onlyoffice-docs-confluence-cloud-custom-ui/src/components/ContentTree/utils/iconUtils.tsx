@@ -32,24 +32,28 @@ import { ReactComponent as SlideIcon } from "../../../assets/images/slide.svg";
 import { ReactComponent as UnknownIcon } from "../../../assets/images/unknown.svg";
 import { ReactComponent as WordIcon } from "../../../assets/images/word.svg";
 
-export const getIconByContentType = (type: string, documentType?: string) => {
+export const getIconByContentType = (
+  type: string,
+  label: string,
+  documentType?: string,
+) => {
   switch (type) {
     case "page":
-      return <PageIcon label="Page" />;
+      return <PageIcon label={label} />;
     case "blogpost":
-      return <QuotationMarkIcon label="Blog Post" />;
+      return <QuotationMarkIcon label={label} />;
     case "whiteboard":
-      return <WhiteboardIcon label="Whiteboard" />;
+      return <WhiteboardIcon label={label} />;
     case "database":
-      return <DatabaseIcon label="Database" />;
+      return <DatabaseIcon label={label} />;
     case "embed":
-      return <SmartLinkEmbedIcon label="Embed" />;
+      return <SmartLinkEmbedIcon label={label} />;
     case "folder":
-      return <FolderClosedIcon label="Folder" />;
+      return <FolderClosedIcon label={label} />;
     case "attachment":
       return getIconForDocumentType(documentType);
     default:
-      return <PageIcon label="Page" />;
+      return <PageIcon label="unknown" />;
   }
 };
 

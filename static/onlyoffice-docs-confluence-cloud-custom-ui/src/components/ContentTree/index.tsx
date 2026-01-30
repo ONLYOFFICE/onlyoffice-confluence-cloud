@@ -49,7 +49,7 @@ import {
 } from "./components/ContentTreePagination";
 import { ContentTreeToolbar, Section } from "./components/ContentTreeToolbar";
 import { buildCreateRow } from "./utils/createRowUtils";
-import { buildContentTreeRows, head } from "./utils/rowUtils";
+import { buildContentTreeRows, getHead } from "./utils/rowUtils";
 import { adoptSortForTargetRequest } from "./utils/sortUtils";
 
 const DEFAULT_SORT = { key: "lastmodified", order: SortOrder.DESC };
@@ -111,7 +111,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
 
   const [rows, setRows] = useState<Array<RowType>>([]);
 
-  const { setAppError } = useContext(AppContext);
+  const { t, setAppError } = useContext(AppContext);
 
   useEffect(() => {
     Promise.all([invoke<AC>("getAppContext"), invoke<Format[]>("getFormats")])
@@ -121,9 +121,8 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
       })
       .catch(() => {
         setAppError({
-          title: "App loading error",
-          description:
-            "An unexpected error occurred while loading the application. Please reload it to continue.",
+          title: t("error-state.common.title"),
+          description: t("error-state.common.description"),
         });
       });
   }, []);
@@ -162,9 +161,8 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
       })
       .catch(() => {
         setAppError({
-          title: "App loading error",
-          description:
-            "An unexpected error occurred while loading the application. Please reload it to continue.",
+          title: t("error-state.common.title"),
+          description: t("error-state.common.description"),
         });
       });
   }, [
@@ -189,6 +187,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
           timeZone,
           onChangeParentId,
           onDeleteAttachment,
+          t,
         ),
       );
       setIsLoading(false);
@@ -203,9 +202,8 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
 
       if (contentResponse.results.length <= 0) {
         setAppError({
-          title: "We couldn't find what you're looking for",
-          description:
-            "It may have been deleted, the URL could have a typo in it, or you may need to log in to view it.",
+          title: t("error-state.not-found.title"),
+          description: t("error-state.not-found.description"),
           imageUrl: NotFoundIcon,
         });
       }
@@ -228,9 +226,8 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
         })
         .catch(() => {
           setAppError({
-            title: "App loading error",
-            description:
-              "An unexpected error occurred while loading the application. Please reload it to continue.",
+            title: t("error-state.common.title"),
+            description: t("error-state.common.description"),
           });
         });
     }
@@ -249,6 +246,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
           onCreateAttachment,
           onCancelCreate,
           setIsLoading,
+          t,
         ),
         ...rowsWithotCreateRow,
       ]);
@@ -293,7 +291,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
               ? [
                   {
                     id: "show-only-files",
-                    label: "Show only files",
+                    label: t("component.content-tree.actions.show-only-files"),
                     value: showOnlyFiles,
                     onChange: onChangeShowOnlyFiles,
                   },
@@ -317,8 +315,8 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
             items={[
               {
                 id: "root",
-                title: section,
-                type: section,
+                title: t("component.content-tree.section." + section),
+                type: "",
               },
               ...(currentEntity ? currentEntity.ancestors : []),
               ...(currentEntity ? [currentEntity] : []),
@@ -329,7 +327,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
         <DynamicTable
           isFixedSize
           isLoading={isLoading}
-          head={head}
+          head={getHead(t)}
           rows={rows}
           sortKey={sort.key}
           sortOrder={sort.order}

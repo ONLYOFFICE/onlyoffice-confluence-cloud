@@ -2,6 +2,130 @@
   "page": {
     "settings": {
       "title": "ONLYOFFICE Docs Configuration"
+    },
+    "main": {
+      "title": "Welcome to ONLYOFFICE!",
+      "description": "Create and open attachments from your space. All files from Content and Blogs will appear here. To create a new file, click to any page and press Create button.",
+      "modal-title": "ONLYOFFICE Docs"
+    },
+    "editor": {
+      "messages": {
+        "session-expired": "The current session has expired.",
+        "please-save-changes": "Please make sure to save any changes to prevent data loss.",
+        "editor-will-be-reloaded": "The editor will be reloaded to continue working in ({time}).",
+        "editing-will-stop": "Editing will stop in ({time}).",
+        "stop-editing-by-cause-session-expired": "Editing of this document has been stopped because the current session has expired.",
+        "update-session-failed": "Unfortunately, it was not possible to extend the session.",
+        "you-using-demo-server": "You are using the public demo server of ONLYOFFICE Docs. Please avoid storing any private or sensitive data."
+      }
     }
+  },
+  "buttons": {
+    "filter": {
+      "title": "Filter"
+    },
+    "reload-app": {
+      "title": "Reload"
+    },
+    "close": {
+      "title": "Close"
+    },
+    "previous": {
+      "title": "Previous"
+    },
+    "next": {
+      "title": "Next"
+    },
+    "create": {
+      "title": "Create"
+    },
+    "delete": {
+      "title": "Delete"
+    },
+    "cancel": {
+      "title": "Cancel"
+    }
+  },
+  "labels": {
+    "loading": "Loading",
+    "warning": "Warning",
+    "search": "Search",
+    "more": "More actions"
+  },
+  "error-state": {
+    "common": {
+      "title": "App loading error",
+      "description": "An unexpected error occurred while loading the application. Please reload it to continue."
+    },
+    "not-found": {
+      "title": "We couldn't find what you're looking for",
+      "description": "It may have been deleted, the URL could have a typo in it, or you may need to log in to view it."
+    },
+    "docs-api-undefined": {
+      "title": "Document Server Error",
+      "description": "Failed to connect to the ONLYOFFICE Document Server. Please check your server configuration."
+    }
+  },
+  "component": {
+    "content-tree": {
+      "actions": {
+        "show-only-files": "Show only files",
+        "edit": "Edit",
+        "view": "View",
+        "download": "Download",
+        "navigate-to": "Navigate to",
+        "delete": "Delete"
+      },
+      "section": {
+        "content": "Content",
+        "blogs": "Blogs"
+      },
+      "table": {
+        "headers": {
+          "title": "Title",
+          "size": "Size",
+          "modified": "Modified"
+        }
+      },
+      "empty-state": {
+        "search": {
+          "title": "Nothing found",
+          "description": "We couldn't find any content with that title"
+        },
+        "list": {
+          "title": "No docs here yet",
+          "description": "Create a new document by clicking Create button"
+        }
+      },
+      "dialog": {
+        "delete-attachment": {
+          "title": "Delete attachment",
+          "description": "Are you sure you want to delete \"{filename}\"?"
+        }
+      }
+    }
+  },
+  "notifications": {
+    "attachment-created": "Attachment \"{filename}\" created successfully.",
+    "attachment-deleted": "Attachment \"{filename}\" deleted successfully.",
+    "attachment-create-failed": "Failed to create attachment. Please try again.",
+    "attachment-delete-failed": "Failed to delete attachment. Please try again."
+  },
+  "validation": {
+    "title-required": "A title is required"
+  },
+  "content-type": {
+    "page": "Page",
+    "blogpost": "Blog Post",
+    "whiteboard": "Whiteboard",
+    "database": "Database",
+    "embed": "Smart Link",
+    "folder": "Folder"
+  },
+  "document-type": {
+    "word": "Document",
+    "cell": "Spreadsheet",
+    "slide": "Presentaion",
+    "pdf": "PDF form"
   }
 }

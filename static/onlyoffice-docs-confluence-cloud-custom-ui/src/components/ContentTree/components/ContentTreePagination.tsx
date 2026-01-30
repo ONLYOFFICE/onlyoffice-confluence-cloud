@@ -16,7 +16,7 @@
  *
  */
 
-import React from "react";
+import React, { useContext } from "react";
 
 import { ButtonGroup } from "@atlaskit/button";
 import Button from "@atlaskit/button/new";
@@ -28,6 +28,8 @@ import ChevronDownIcon from "@atlaskit/icon/core/chevron-down";
 import ChevronLeftIcon from "@atlaskit/icon/core/chevron-left";
 import ChevronRightIcon from "@atlaskit/icon/core/chevron-right";
 import { Box, Inline } from "@atlaskit/primitives";
+
+import { AppContext } from "../../../context/AppContext";
 
 export const COUNT_ELEMENTS_ON_PAGE_OPTIONS = [25, 50, 100] as const;
 export type CountElementsOnPage =
@@ -50,24 +52,26 @@ export const ContentTreePagination: React.FC<ContentTreePaginationProps> = ({
   onChangePage,
   onChangeCountElementsOnPage,
 }) => {
+  const { t } = useContext(AppContext);
+
   return (
     <Inline spread="space-between">
       <Box>
         {(prevLink || nextLink) && (
-          <ButtonGroup label="Default button group">
+          <ButtonGroup>
             <Button
               iconBefore={ChevronLeftIcon}
               isDisabled={!prevLink || isLoading}
               onClick={() => onChangePage(prevLink)}
             >
-              Previous
+              {t("buttons.previous.title")}
             </Button>
             <Button
               iconAfter={ChevronRightIcon}
               isDisabled={!nextLink || isLoading}
               onClick={() => onChangePage(nextLink)}
             >
-              Next
+              {t("buttons.next.title")}
             </Button>
           </ButtonGroup>
         )}

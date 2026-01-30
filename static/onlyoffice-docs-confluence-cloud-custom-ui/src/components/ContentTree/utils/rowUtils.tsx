@@ -26,7 +26,7 @@ import DropdownMenu, {
 import { RowType } from "@atlaskit/dynamic-table/dist/types/types";
 import ShowMoreIcon from "@atlaskit/icon/core/show-more-horizontal";
 import { Box, Inline, xcss } from "@atlaskit/primitives";
-import { router, showFlag } from "@forge/bridge";
+import { i18n, router, showFlag } from "@forge/bridge";
 import bytes from "bytes";
 
 import { deleteAttachment } from "../../../client";
@@ -53,31 +53,37 @@ const styles = {
   }),
 };
 
-export const head = {
-  cells: [
-    {
-      key: "title",
-      content: <Box paddingInlineStart="space.100">Title</Box>,
-      isSortable: true,
-      width: 40,
-    },
-    {
-      key: "fileSize",
-      content: "Size",
-      isSortable: true,
-    },
-    {
-      key: "lastmodified",
-      content: "Modified",
-      isSortable: true,
-    },
-    {
-      key: "actions",
-      content: "",
-      isSortable: false,
-      width: 10,
-    },
-  ],
+export const getHead = (t: i18n.TranslationFunction) => {
+  return {
+    cells: [
+      {
+        key: "title",
+        content: (
+          <Box paddingInlineStart="space.100">
+            {t("component.content-tree.table.headers.title")}
+          </Box>
+        ),
+        isSortable: true,
+        width: 40,
+      },
+      {
+        key: "fileSize",
+        content: t("component.content-tree.table.headers.size"),
+        isSortable: true,
+      },
+      {
+        key: "lastmodified",
+        content: t("component.content-tree.table.headers.modified"),
+        isSortable: true,
+      },
+      {
+        key: "actions",
+        content: "",
+        isSortable: false,
+        width: 10,
+      },
+    ],
+  };
 };
 
 const getFormatedDate = (
@@ -109,6 +115,7 @@ export const buildContentTreeRows = (
   timeZone: string,
   onChangeParentId: (id: string) => void,
   onDeleteAttachment: () => void,
+  t: i18n.TranslationFunction,
 ): RowType[] => {
   const { getDocumentType, isEditable, isViewable } = useFormats(formats);
 
@@ -139,23 +146,24 @@ export const buildContentTreeRows = (
 
   const onClickDelete = (entity: Content) => {
     confirmDialogService.show({
-      title: "Delete attachments",
-      description: "You want delete" + entity.title + "?",
+      title: t("component.content-tree.dialog.delete-attachment.title"),
+      description: t(
+        "component.content-tree.dialog.delete-attachment.description",
+      ).replace("{filename}", entity.title),
       appearance: "danger",
       buttons: {
         submit: {
-          title: "Delete",
+          title: t("buttons.delete.title"),
           onClick: () => {
             confirmDialogService.setLoading(true);
             deleteAttachment(entity.id)
               .then(() => {
                 showFlag({
                   id: "delete-attachment-success",
-                  title:
-                    'Attachment "{filename}" deleted successfully.'.replace(
-                      "{filename}",
-                      entity.title,
-                    ),
+                  title: t("notifications.attachment-deleted").replace(
+                    "{filename}",
+                    entity.title,
+                  ),
                   type: "success",
                   appearance: "success",
                   isAutoDismiss: true,
@@ -165,7 +173,7 @@ export const buildContentTreeRows = (
               .catch(() => {
                 showFlag({
                   id: "delete-attachment-error",
-                  title: "Failed to delete attachment. Please try again.",
+                  title: t("notifications.attachment-delete-failed"),
                   type: "error",
                   appearance: "error",
                   isAutoDismiss: true,
@@ -177,7 +185,7 @@ export const buildContentTreeRows = (
           },
         },
         cancel: {
-          title: "Cancel",
+          title: t("buttons.cancel.title"),
           onClick: () => {
             confirmDialogService.close();
           },
@@ -260,7 +268,8 @@ export const buildContentTreeRows = (
             <Inline space="space.075" alignBlock="center">
               <Box xcss={styles.iconContainer}>
                 {getIconByContentType(
-                  entity.type || "blogpost",
+                  entity.type,
+                  t("document-type." + entity.type),
                   getDocumentType(entity.title) || "",
                 )}
               </Box>
@@ -292,7 +301,7 @@ export const buildContentTreeRows = (
                 <IconButton
                   {...props}
                   icon={ShowMoreIcon}
-                  label="more"
+                  label={t("labels.more")}
                   ref={triggerRef}
                 />
               )}
@@ -302,29 +311,29 @@ export const buildContentTreeRows = (
               <DropdownItemGroup>
                 {editCondition(entity) && (
                   <DropdownItem onClick={() => onClickEdit(entity)}>
-                    Edit
+                    {t("component.content-tree.actions.edit")}
                   </DropdownItem>
                 )}
                 {viewCondition(entity) && (
                   <DropdownItem onClick={() => onClickEdit(entity)}>
-                    View
+                    {t("component.content-tree.actions.view")}
                   </DropdownItem>
                 )}
                 {downloadCondition(entity) && (
                   <DropdownItem onClick={() => onClickDownload(entity)}>
-                    Download
+                    {t("component.content-tree.actions.download")}
                   </DropdownItem>
                 )}
                 {navigateCondition(entity) && (
                   <DropdownItem onClick={() => onClickNavigate(entity)}>
-                    Navigate to
+                    {t("component.content-tree.actions.navigate-to")}
                   </DropdownItem>
                 )}
               </DropdownItemGroup>
               {deleteCondition(entity) && (
                 <DropdownItemGroup hasSeparator>
                   <DropdownItem onClick={() => onClickDelete(entity)}>
-                    Delete
+                    {t("component.content-tree.actions.delete")}
                   </DropdownItem>
                 </DropdownItemGroup>
               )}

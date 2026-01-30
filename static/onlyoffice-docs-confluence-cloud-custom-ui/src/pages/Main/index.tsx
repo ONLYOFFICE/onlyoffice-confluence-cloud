@@ -16,7 +16,7 @@
  *
  */
 
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 import Heading from "@atlaskit/heading";
 import {
@@ -35,6 +35,7 @@ import {
   CountElementsOnPage,
 } from "../../components/ContentTree/components/ContentTreePagination";
 import { Section } from "../../components/ContentTree/components/ContentTreeToolbar";
+import { AppContext } from "../../context/AppContext";
 import { SortOrder } from "../../types/types";
 
 const styles = {
@@ -81,18 +82,16 @@ const MainPage: React.FC<MainPageProps> = ({
   const locale = context.locale;
   const timeZone = context.timezone;
 
+  const { t } = useContext(AppContext);
+
   const getContainer = (type: string, children: React.ReactNode) => {
     switch (type) {
       case "confluence:spacePage":
         return (
           <Stack space="space.300">
             <Stack space="space.050">
-              <Heading size="medium">Welcome to ONLYOFFICE!</Heading>
-              <Text>
-                Create and open attachments from your space. All files from
-                Content and Blogs will appear here. To create a new file, click
-                to any page and press Create button.
-              </Text>
+              <Heading size="medium">{t("page.main.title")}</Heading>
+              <Text>{t("page.main.description")}</Text>
             </Stack>
             <Box xcss={styles.pageBodyContainer}>{children}</Box>
           </Stack>
@@ -101,7 +100,7 @@ const MainPage: React.FC<MainPageProps> = ({
         return (
           <FullScreenModalDialog onClose={() => view.close()}>
             <ModalHeader hasCloseButton>
-              <ModalTitle>ONLYOFFICE Docs</ModalTitle>
+              <ModalTitle>{t("page.main.modal-title")}</ModalTitle>
             </ModalHeader>
             <ModalBody>
               <Box xcss={styles.modalBodyContainer}>{children}</Box>

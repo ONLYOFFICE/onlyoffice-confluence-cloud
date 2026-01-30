@@ -24,7 +24,7 @@ import CheckMarkIcon from "@atlaskit/icon/core/check-mark";
 import CrossIcon from "@atlaskit/icon/core/cross";
 import { Box, Inline, xcss } from "@atlaskit/primitives";
 import Textfield from "@atlaskit/textfield";
-import { invoke, showFlag } from "@forge/bridge";
+import { i18n, invoke, showFlag } from "@forge/bridge";
 
 import { getIconForDocumentType } from "./iconUtils";
 
@@ -55,6 +55,7 @@ export const buildCreateRow = (
   onSuccess: (attachmentId: string) => void,
   onCancel: () => void,
   setLoading: (value: boolean) => void,
+  t: i18n.TranslationFunction,
 ) => {
   const onSubmit = (data: FormData) => {
     const { title } = data;
@@ -69,7 +70,7 @@ export const buildCreateRow = (
       .then((response: CreateAttachmentResponse) => {
         showFlag({
           id: "create-attachment-success",
-          title: 'Attachment "{filename}" created successfully.'.replace(
+          title: t("notifications.attachment-created").replace(
             "{filename}",
             response.filename,
           ),
@@ -85,7 +86,7 @@ export const buildCreateRow = (
 
         showFlag({
           id: "create-attachment-error",
-          title: "Failed to create attachment. Please try again.",
+          title: t("notifications.attachment-create-failed"),
           type: "error",
           appearance: "error",
           isAutoDismiss: true,
@@ -117,7 +118,7 @@ export const buildCreateRow = (
                         isRequired
                         validate={(value) => {
                           if (!value) {
-                            return "A key is required";
+                            return t("validation.title-required");
                           }
                         }}
                       >
@@ -133,12 +134,12 @@ export const buildCreateRow = (
                     </Box>
                     <IconButton
                       type="submit"
-                      label="Accept"
+                      label={t("buttons.create.title")}
                       icon={CheckMarkIcon}
                       isDisabled={isLoading}
                     />
                     <IconButton
-                      label="Cross"
+                      label={t("buttons.create.cancel")}
                       icon={CrossIcon}
                       isDisabled={isLoading}
                       onClick={onCancel}

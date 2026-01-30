@@ -16,7 +16,7 @@
  *
  */
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import Button, { IconButton } from "@atlaskit/button/new";
 import DropdownMenu, {
@@ -35,6 +35,7 @@ import { ReactComponent as CellIcon } from "../../../assets/images/cell.svg";
 import { ReactComponent as PdfIcon } from "../../../assets/images/pdf.svg";
 import { ReactComponent as SlideIcon } from "../../../assets/images/slide.svg";
 import { ReactComponent as WordIcon } from "../../../assets/images/word.svg";
+import { AppContext } from "../../../context/AppContext";
 
 export const SECTIONS = ["content", "blogs"] as const;
 export type Section = (typeof SECTIONS)[number];
@@ -64,10 +65,10 @@ type ContentTreeToolbarProps = {
 };
 
 const createTypeOptions = [
-  { label: "Document", icon: <WordIcon />, value: "word" },
-  { label: "Spreadsheet", icon: <CellIcon />, value: "cell" },
-  { label: "Presentaion", icon: <SlideIcon />, value: "slide" },
-  { label: "PDF form", icon: <PdfIcon />, value: "pdf" },
+  { icon: <WordIcon />, value: "word" },
+  { icon: <CellIcon />, value: "cell" },
+  { icon: <SlideIcon />, value: "slide" },
+  { icon: <PdfIcon />, value: "pdf" },
 ];
 
 const SEARCH_DEBOUNCE_MS = 1000;
@@ -83,6 +84,8 @@ export const ContentTreeToolbar: React.FC<ContentTreeToolbarProps> = ({
   onClickCreate,
 }) => {
   const [localSearch, setLocalSearch] = useState(search);
+
+  const { t } = useContext(AppContext);
 
   useEffect(() => {
     setLocalSearch(search);
@@ -110,7 +113,7 @@ export const ContentTreeToolbar: React.FC<ContentTreeToolbarProps> = ({
               <Box xcss={xcss({ marginLeft: "space.negative.075" })}>
                 <IconButton
                   {...props}
-                  label="Filter"
+                  label={t("buttons.filter.title")}
                   icon={FilterIcon}
                   isDisabled={isLoading}
                 />
@@ -126,7 +129,7 @@ export const ContentTreeToolbar: React.FC<ContentTreeToolbarProps> = ({
                 isSelected={section === value}
                 onClick={() => onChangeSection(value)}
               >
-                {value}
+                {t("component.content-tree.section." + value)}
               </DropdownItem>
             ))}
           </DropdownItemGroup>
@@ -147,7 +150,7 @@ export const ContentTreeToolbar: React.FC<ContentTreeToolbarProps> = ({
         </DropdownMenu>
       )}
       <Textfield
-        placeholder="Search"
+        placeholder={t("labels.search")}
         value={localSearch}
         isDisabled={isLoading}
         onChange={(event) =>
@@ -156,7 +159,7 @@ export const ContentTreeToolbar: React.FC<ContentTreeToolbarProps> = ({
         className="small-input"
         elemBeforeInput={
           <Box xcss={styles.searchIcon}>
-            <SearchIcon label="Search" />
+            <SearchIcon label={t("labels.search")} />
           </Box>
         }
       />
@@ -170,7 +173,7 @@ export const ContentTreeToolbar: React.FC<ContentTreeToolbarProps> = ({
                 iconBefore={AddIcon}
                 appearance="primary"
               >
-                Create
+                {t("buttons.create.title")}
               </Button>
             </Box>
           </Box>
@@ -185,7 +188,7 @@ export const ContentTreeToolbar: React.FC<ContentTreeToolbarProps> = ({
             >
               <Inline space="space.100" alignBlock="center">
                 {option.icon}
-                <Box>{option.label}</Box>
+                <Box>{t("document-type." + option.value)}</Box>
               </Inline>
             </DropdownItem>
           ))}

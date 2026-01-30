@@ -16,11 +16,12 @@
  *
  */
 
-import React from "react";
+import React, { useContext } from "react";
 
 import Breadcrumbs, { BreadcrumbsItem } from "@atlaskit/breadcrumbs";
 import HomeIcon from "@atlaskit/icon/core/home";
 
+import { AppContext } from "../../../context/AppContext";
 import { getIconByContentType } from "../utils/iconUtils";
 
 type ContentTreeBreadcrumbsProps = {
@@ -36,6 +37,8 @@ export const ContentTreeBreadcrumbs: React.FC<ContentTreeBreadcrumbsProps> = ({
   items,
   onClickItem,
 }) => {
+  const { t } = useContext(AppContext);
+
   return (
     <Breadcrumbs>
       {items.map((item) => (
@@ -44,9 +47,9 @@ export const ContentTreeBreadcrumbs: React.FC<ContentTreeBreadcrumbsProps> = ({
           text={item.title}
           iconBefore={
             item.id === "root" ? (
-              <HomeIcon label="Home" />
+              <HomeIcon label={item.title} />
             ) : (
-              getIconByContentType(item.type)
+              getIconByContentType(item.type, t("content-type." + item.type))
             )
           }
           onClick={() => onClickItem(item.id === "root" ? undefined : item.id)}
