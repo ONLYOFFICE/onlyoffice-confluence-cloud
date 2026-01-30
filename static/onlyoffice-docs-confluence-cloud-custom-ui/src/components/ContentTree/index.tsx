@@ -23,6 +23,7 @@ import { RowType } from "@atlaskit/dynamic-table/dist/types/types";
 import { Stack } from "@atlaskit/primitives";
 import { invoke, router } from "@forge/bridge";
 
+import NotFoundIcon from "../../assets/images/not-found.svg";
 import {
   findContent,
   findContentById,
@@ -153,14 +154,19 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
       );
     }
 
-    Promise.all([
-      requestCurrentEntity(parentId, currentEntity),
-      requestContent,
-    ]).then(([currentEntityResponse, contentResponse]) => {
-      setCurrentEntity(currentEntityResponse?.results[0] || null);
-      setChildEntities(contentResponse.results);
-      setNavigationLinks(contentResponse._links);
-    });
+    Promise.all([requestCurrentEntity(parentId), requestContent])
+      .then(([currentEntityResponse, contentResponse]) => {
+        setCurrentEntity(currentEntityResponse?.results[0] || null);
+        setChildEntities(contentResponse.results);
+        setNavigationLinks(contentResponse._links);
+      })
+      .catch(() => {
+        setAppError({
+          title: "App loading error",
+          description:
+            "An unexpected error occurred while loading the application. Please reload it to continue.",
+        });
+      });
   }, [
     parentId,
     section,
@@ -189,18 +195,22 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
     }
   }, [appContext, formats, childEntities]);
 
-  const requestCurrentEntity = (
+  const requestCurrentEntity = async (
     parentId: string | undefined,
-    currentEntity: Content | null,
   ): Promise<SearchResponse<Content> | null> => {
     if (parentId) {
-      if (parentId === currentEntity?.id) {
-        return new Promise((resolve) => {
-          resolve({ results: [currentEntity] } as SearchResponse<Content>);
+      const contentResponse = await findContentById(parentId);
+
+      if (contentResponse.results.length <= 0) {
+        setAppError({
+          title: "We couldn't find what you're looking for",
+          description:
+            "It may have been deleted, the URL could have a typo in it, or you may need to log in to view it.",
+          imageUrl: NotFoundIcon,
         });
-      } else {
-        return findContentById(parentId);
       }
+
+      return contentResponse;
     } else {
       return new Promise((resolve) => {
         resolve(null);

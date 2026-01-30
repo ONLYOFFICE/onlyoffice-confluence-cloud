@@ -48,6 +48,7 @@ export interface AppError {
   title: string;
   description: string;
   secondaryAction?: ReactNode;
+  imageUrl?: string;
 }
 
 export interface IAppContext {
@@ -98,7 +99,7 @@ export const AppContextProvider: React.FC<AppContextProps> = ({ children }) => {
       {appError && t && (
         <Box xcss={styles.emptyStateContainer}>
           <EmptyState
-            imageUrl={ErrorIcon}
+            imageUrl={appError.imageUrl || ErrorIcon}
             header={appError.title}
             description={appError.description}
             headingLevel={2}
