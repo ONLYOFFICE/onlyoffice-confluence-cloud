@@ -102,7 +102,7 @@ export const buildCreateRow = (
       {
         key: "title",
         content: (
-          <Box>
+          <Box paddingInlineStart="space.100">
             <Form<FormData> noValidate onSubmit={onSubmit}>
               {({ formProps }) => (
                 <form {...formProps} name="create">
@@ -152,7 +152,7 @@ export const buildCreateRow = (
       },
       {
         key: "fileSize",
-        content: documentType,
+        content: "",
       },
       {
         key: "lastmodified",
