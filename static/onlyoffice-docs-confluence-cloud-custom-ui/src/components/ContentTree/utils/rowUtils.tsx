@@ -113,7 +113,9 @@ export const buildContentTreeRows = (
   const { getDocumentType, isEditable, isViewable } = useFormats(formats);
 
   const onClickOnTitle = (entity: Content) => {
-    if (entity.type !== "attachment") {
+    if (entity.type === "attachment") {
+      onClickEdit(entity);
+    } else {
       onChangeParentId(entity.id);
     }
   };
