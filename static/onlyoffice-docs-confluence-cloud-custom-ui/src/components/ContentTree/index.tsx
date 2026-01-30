@@ -219,26 +219,19 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
   };
 
   const onSwitchPage = (link: string | null) => {
-    if (link && appContext && formats) {
+    if (link) {
       setIsLoading(true);
       findContentByLink(link)
         .then((contentResponse) => {
-          setRows(
-            buildContentTreeRows(
-              appContext,
-              parentId,
-              contentResponse.results,
-              formats,
-              locale,
-              timeZone,
-              onChangeParentId,
-              onDeleteAttachment,
-            ),
-          );
+          setChildEntities(contentResponse.results);
           setNavigationLinks(contentResponse._links);
         })
-        .finally(() => {
-          setIsLoading(false);
+        .catch(() => {
+          setAppError({
+            title: "App loading error",
+            description:
+              "An unexpected error occurred while loading the application. Please reload it to continue.",
+          });
         });
     }
   };
