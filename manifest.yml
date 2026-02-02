@@ -57,7 +57,7 @@ modules:
       resource: custom-ui
       resolver:
         endpoint: onlyoffice-backend-endpoint
-      title: editor-page
+      title: ONLYOFFICE
       routePrefix: editor
   function:
     - key: settings-page-resolver

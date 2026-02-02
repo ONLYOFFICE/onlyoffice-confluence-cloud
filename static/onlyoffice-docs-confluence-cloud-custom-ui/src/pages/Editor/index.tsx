@@ -255,6 +255,7 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
         }
 
         if (type === "PAGE_IS_LOADED") {
+          view.changeWindowTitle(`${data.config.document.title} - ONLYOFFICE`);
           setLoading(false);
         }
 
