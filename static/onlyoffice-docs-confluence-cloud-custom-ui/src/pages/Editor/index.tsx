@@ -30,10 +30,9 @@ import StatusWarningIcon from "@atlaskit/icon/core/status-warning";
 import { Flex, xcss } from "@atlaskit/primitives";
 import Spinner from "@atlaskit/spinner";
 import { token } from "@atlaskit/tokens";
-import { invoke, view } from "@forge/bridge";
+import { invokeRemote, view } from "@forge/bridge";
 import { FullContext } from "@forge/bridge/out/types";
 
-import { RemoteAppAuthorization } from "../../../src/types/types";
 import { AppContext } from "../../context/AppContext";
 
 const styles = {
@@ -113,13 +112,22 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
   };
 
   useEffect(() => {
-    invoke<RemoteAppAuthorization>("authorizeRemoteApp", {
-      pageId,
-      attachmentId,
+    invokeRemote({
+      method: "POST",
+      path: "/api/v1/remote/authorization",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: {
+        parentId: pageId,
+        entityId: attachmentId,
+      },
     })
-      .then((data: RemoteAppAuthorization) => {
-        setToken(data.token);
-        remoteAppUrl.current = data.remoteAppUrl;
+      .then((response) => {
+        if (response) {
+          setToken(response.body.token);
+          remoteAppUrl.current = response.body.remoteAppUrl;
+        }
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -139,15 +147,24 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
   };
 
   const onSessionExpired = () => {
-    invoke<RemoteAppAuthorization>("authorizeRemoteApp", {
-      pageId,
-      attachmentId,
+    invokeRemote({
+      method: "POST",
+      path: "/api/v1/remote/authorization",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: {
+        parentId: pageId,
+        entityId: attachmentId,
+      },
     })
-      .then((data: RemoteAppAuthorization) => {
-        sendMessageToIframe("UPDATE_CONFIG", {
-          mode: mode,
-          token: data.token,
-        });
+      .then((response) => {
+        if (response) {
+          sendMessageToIframe("UPDATE_CONFIG", {
+            mode: mode,
+            token: response.body.token,
+          });
+        }
       })
       .catch((error) => {
         console.error(error);
