@@ -24,7 +24,6 @@ import React, {
   useContext,
 } from "react";
 
-import Button from "@atlaskit/button/new";
 import Flag, { ActionsType, FlagGroup } from "@atlaskit/flag";
 import StatusWarningIcon from "@atlaskit/icon/core/status-warning";
 import { Flex, xcss } from "@atlaskit/primitives";
@@ -135,16 +134,9 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
         setAppError({
           title: t("error-state.common.title"),
           description: t("error-state.common.description"),
-          secondaryAction: (
-            <Button onClick={closeWindow}>{t("buttons.close.title")}</Button>
-          ),
         });
       });
   }, []);
-
-  const closeWindow = () => {
-    view.close();
-  };
 
   const onSessionExpired = () => {
     invokeRemote({
@@ -250,7 +242,6 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
           setAppError({
             title: t("error-state.docs-api-undefined.title"),
             description: t("error-state.docs-api-undefined.description"),
-            secondaryAction: <Button onClick={closeWindow}>Close</Button>,
           });
         }
 
