@@ -30,7 +30,7 @@ import StatusWarningIcon from "@atlaskit/icon/core/status-warning";
 import { Flex, xcss } from "@atlaskit/primitives";
 import Spinner from "@atlaskit/spinner";
 import { token } from "@atlaskit/tokens";
-import { invokeRemote, view } from "@forge/bridge";
+import { invokeRemote, router, view } from "@forge/bridge";
 import { FullContext } from "@forge/bridge/out/types";
 
 import { AppContext } from "../../context/AppContext";
@@ -270,7 +270,9 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
         }
 
         if (type === "REQUEST_CLOSE") {
-          closeWindow();
+          const { url } = data;
+
+          router.open(url);
         }
 
         if (type === "REQUEST_USERS") {
