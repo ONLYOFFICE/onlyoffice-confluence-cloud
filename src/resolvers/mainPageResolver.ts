@@ -39,9 +39,9 @@ mainPageResolver.define("getAppContext", () => {
 });
 
 mainPageResolver.define("authorizeRemoteApp", async (request: Request) => {
-  const { pageId, attachmentId } = request.payload;
+  const { parentId, attachmentId } = request.payload;
 
-  return await postRemoteAppAuthorization(pageId, attachmentId);
+  return await postRemoteAppAuthorization(parentId, attachmentId);
 });
 
 mainPageResolver.define("getFormats", async () => {

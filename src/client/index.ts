@@ -25,7 +25,7 @@ import {
 } from "../../src/types/types";
 
 export const postRemoteAppAuthorization = async (
-  pageId: string,
+  parentId: string,
   attachmentId: string,
 ): Promise<RemoteAppAuthorization> => {
   return await _executeRequest<RemoteAppAuthorization>(
@@ -37,7 +37,7 @@ export const postRemoteAppAuthorization = async (
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          parentId: pageId,
+          parentId: parentId,
           entityId: attachmentId,
         }),
       });

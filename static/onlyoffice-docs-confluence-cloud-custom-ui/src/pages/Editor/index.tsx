@@ -85,7 +85,7 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
     useState<SessionExpiredFlag>();
 
   const location = new URL(context.extension.location);
-  const pageId = location.searchParams.get("pageId");
+  const parentId = location.searchParams.get("parentId");
   const attachmentId = location.searchParams.get("attachmentId");
   const mode = location.searchParams.get("mode") || "EDIT";
 
@@ -118,7 +118,7 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
         "Content-Type": "application/json",
       },
       body: {
-        parentId: pageId,
+        parentId: parentId,
         entityId: attachmentId,
       },
     })
@@ -146,7 +146,7 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
         "Content-Type": "application/json",
       },
       body: {
-        parentId: pageId,
+        parentId: parentId,
         entityId: attachmentId,
       },
     })

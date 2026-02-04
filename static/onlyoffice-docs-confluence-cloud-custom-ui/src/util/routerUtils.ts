@@ -21,10 +21,10 @@ import { History } from "history";
 export const getEditorPageUrl = (
   appId: string,
   environmentId: string,
-  pageId: string,
+  parentId: string,
   attachmentId: string,
 ) => {
-  return `/forge-apps/a/${appId}/e/${environmentId}/r/editor?pageId=${pageId}&attachmentId=${attachmentId}`;
+  return `/forge-apps/a/${appId}/e/${environmentId}/r/editor?parentId=${parentId}&attachmentId=${attachmentId}`;
 };
 
 export const updateHistory = (
