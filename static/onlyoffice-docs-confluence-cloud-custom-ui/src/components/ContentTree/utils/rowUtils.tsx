@@ -108,7 +108,7 @@ const getFormatedDate = (
 
 export const buildContentTreeRows = (
   appContext: AppContext,
-  parentId: string | undefined,
+  parentId: { id: string; contentType: string } | undefined,
   entities: Content[],
   formats: Format[],
   locale: string,

@@ -180,7 +180,9 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
       setRows(
         buildContentTreeRows(
           appContext,
-          parentId,
+          currentEntity
+            ? { id: currentEntity.id, contentType: currentEntity.type }
+            : undefined,
           childEntities,
           formats,
           locale,
@@ -258,12 +260,12 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
     onChangeSort({ key: "lastmodified", order: SortOrder.DESC });
     setReloadFlag(!reloadFlag);
 
-    if (appContext && parentId) {
+    if (appContext && currentEntity) {
       router.navigate(
         getEditorPageUrl(
           appContext.appId,
           appContext.environmentId,
-          parentId,
+          { id: currentEntity.id, contentType: currentEntity.type },
           attachmentId,
         ),
       );
