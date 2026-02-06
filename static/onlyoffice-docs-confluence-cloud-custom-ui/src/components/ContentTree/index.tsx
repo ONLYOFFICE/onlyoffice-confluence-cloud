@@ -235,6 +235,18 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
     }
   };
 
+  const createCondititon = (entity: Content) => {
+    if (entity?.type !== "page" && currentEntity?.type !== "blogpost") {
+      return false;
+    }
+
+    const createPermission = entity.operations.some((value) => {
+      return value.operation === "create" && value.targetType === "attachment";
+    });
+
+    return createPermission;
+  };
+
   const onClickCreate = (documentType: string) => {
     const rowsWithotCreateRow = rows.filter((row) => row.key !== "create");
 
@@ -305,9 +317,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
           onChangeSection={onChangeSection}
           onChangeSearch={onChangeSearch}
           onClickCreate={
-            (currentEntity?.type !== "page" &&
-              currentEntity?.type !== "blogpost") ||
-            isLoading
+            !currentEntity || !createCondititon(currentEntity) || isLoading
               ? undefined
               : onClickCreate
           }
