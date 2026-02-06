@@ -33,6 +33,7 @@ import { invokeRemote, router, view } from "@forge/bridge";
 import { FullContext } from "@forge/bridge/out/types";
 
 import { AppContext } from "../../context/AppContext";
+// import { getEditorPageUrl } from "../../util/routerUtils";
 
 const styles = {
   mainContainer: xcss({
@@ -165,6 +166,15 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
       });
   };
 
+  const onRequestOpen = (data: object) => {
+    const { referenceData } = data as { referenceData: { fileKey: string } };
+
+    const editorUrl = new URL(location);
+    editorUrl.searchParams.set("attachmentId", referenceData.fileKey);
+
+    router.open(editorUrl.toString());
+  };
+
   const onRequestUsers = (c: string, ids: string[]) => {
     const users = ids.map((id) => ({
       id: id,
@@ -279,6 +289,10 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
               message: t("page.editor.messages.you-using-demo-server"),
             });
           }
+        }
+
+        if (type === "REQUEST_OPEN") {
+          onRequestOpen(data);
         }
 
         if (type === "REQUEST_CLOSE") {
