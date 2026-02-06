@@ -109,7 +109,8 @@
     "attachment-created": "Attachment \"{filename}\" created successfully.",
     "attachment-deleted": "Attachment \"{filename}\" deleted successfully.",
     "attachment-create-failed": "Failed to create attachment. Please try again.",
-    "attachment-delete-failed": "Failed to delete attachment. Please try again."
+    "attachment-delete-failed": "Failed to delete attachment. Please try again.",
+    "attachment-not-found": "Attachment File Not Found"
   },
   "validation": {
     "title-required": "A title is required"

@@ -177,6 +177,27 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
     });
   };
 
+  const onRequestReferenceData = (data: object) => {
+    invokeRemote({
+      method: "POST",
+      path: `/api/v1/remote/reference-data?parentId=${parentId}`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: data,
+    })
+      .then((response) => {
+        if (response) {
+          sendMessageToIframe("SET_REFERENCE_DATA", response.body);
+        }
+      })
+      .catch(() => {
+        sendMessageToIframe("SET_REFERENCE_DATA", {
+          error: t("notifications.attachment-not-found"),
+        });
+      });
+  };
+
   const sessionSuccessfullyExtended = () => {
     const timer = setInterval(() => {
       const onFinal = () => {
@@ -270,6 +291,10 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
           const { c, ids } = data;
 
           onRequestUsers(c, ids);
+        }
+
+        if (type === "REQUEST_REFERENCE_DATA") {
+          onRequestReferenceData(data);
         }
 
         if (type === "SESSION_EXPIRED") {
