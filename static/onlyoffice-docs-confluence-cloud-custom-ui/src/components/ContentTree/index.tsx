@@ -153,7 +153,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
       );
     }
 
-    Promise.all([requestCurrentEntity(parentId), requestContent])
+    Promise.all([requestCurrentEntity(parentId, section), requestContent])
       .then(([currentEntityResponse, contentResponse]) => {
         setCurrentEntity(currentEntityResponse?.results[0] || null);
         setChildEntities(contentResponse.results);
@@ -198,9 +198,10 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
 
   const requestCurrentEntity = async (
     parentId: string | undefined,
+    section: Section,
   ): Promise<SearchResponse<Content> | null> => {
     if (parentId) {
-      const contentResponse = await findContentById(parentId);
+      const contentResponse = await findContentById(parentId, section);
 
       if (contentResponse.results.length <= 0) {
         setAppError({

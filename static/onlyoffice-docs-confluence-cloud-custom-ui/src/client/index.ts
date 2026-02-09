@@ -59,11 +59,22 @@ export const getContentInSpace = async (
 
 export const findContentById = async (
   id: string,
+  section: "content" | "blogs",
 ): Promise<SearchResponse<Content>> => {
   return await _executeRequest<SearchResponse<Content>>(
     async () => {
+      let cql = `content=${id}`;
+
+      if (section === "content") {
+        cql = cql.concat(
+          " and type IN (page, attachment, whiteboard, database, embed, folder)",
+        );
+      } else {
+        cql = cql.concat(" and type IN (blogpost, attachment)");
+      }
+
       return await requestConfluence(
-        `/wiki/rest/api/content/search?cql=content="${id}"&expand=operations,version,ancestors`,
+        `/wiki/rest/api/content/search?cql=${cql}&expand=operations,version,ancestors`,
       );
     },
     async (response: Response) => {
