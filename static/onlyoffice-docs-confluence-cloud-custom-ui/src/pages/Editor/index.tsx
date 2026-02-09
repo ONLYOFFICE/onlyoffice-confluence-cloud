@@ -32,8 +32,8 @@ import { token } from "@atlaskit/tokens";
 import { invokeRemote, router, view } from "@forge/bridge";
 import { FullContext } from "@forge/bridge/out/types";
 
+import NotFoundIcon from "../../assets/images/not-found.svg";
 import { AppContext } from "../../context/AppContext";
-// import { getEditorPageUrl } from "../../util/routerUtils";
 
 const styles = {
   mainContainer: xcss({
@@ -110,6 +110,23 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
       );
     }
   };
+
+  useEffect(() => {
+    if (token) {
+      invokeRemote({
+        method: "GET",
+        path: `/editor/confluence?mode=${mode}&token=${token}&format=json`,
+      }).catch((error) => {
+        console.error("Error fetching data:", error);
+
+        setAppError({
+          title: t("error-state.not-found.title"),
+          description: t("error-state.not-found.description"),
+          imageUrl: NotFoundIcon,
+        });
+      });
+    }
+  }, [token]);
 
   useEffect(() => {
     invokeRemote({
