@@ -67,10 +67,7 @@ const MainPage: React.FC<MainPageProps> = ({
     ? "blogs"
     : "content";
   const search = searchParams.get("search") || "";
-  const showOnlyFiles = searchParams
-    .get("filter")
-    ?.split(",")
-    .includes("files");
+  let showOnlyFiles = searchParams.get("filter")?.split(",").includes("files");
   const sort = {
     key: searchParams.get("sortKey") || "lastmodified",
     order:
@@ -83,6 +80,10 @@ const MainPage: React.FC<MainPageProps> = ({
   const timeZone = context.timezone;
 
   const { t } = useContext(AppContext);
+
+  if ("confluence:contentAction" === type) {
+    showOnlyFiles = true;
+  }
 
   const getContainer = (type: string, children: React.ReactNode) => {
     switch (type) {
