@@ -63,7 +63,7 @@ const MainPage: React.FC<MainPageProps> = ({
   const space = context.extension.space;
   const parentId =
     searchParams.get("parentId") || context.extension.content?.id;
-  const section = searchParams.get("filter")?.split(",").includes("blogs")
+  let section = searchParams.get("filter")?.split(",").includes("blogs")
     ? "blogs"
     : "content";
   const search = searchParams.get("search") || "";
@@ -83,6 +83,9 @@ const MainPage: React.FC<MainPageProps> = ({
 
   if ("confluence:contentAction" === type) {
     showOnlyFiles = true;
+    if ("blogpost" === context.extension.content?.type) {
+      section = "blogs";
+    }
   }
 
   const getContainer = (type: string, children: React.ReactNode) => {
