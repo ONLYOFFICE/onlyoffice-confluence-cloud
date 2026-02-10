@@ -83,10 +83,8 @@ resources:
 
 environment:
   variables:
-    - key: FORGE_APP_ID
-      default: f8a806c4-dbce-447e-9fc5-5edd102f13aa
-    - key: FORGE_REMOTE_APP_URL
-      default: https://ed3a06f8f640.ngrok-free.app
+    - FORGE_APP_ID
+    - FORGE_REMOTE_APP_URL
 
 permissions:
   content:
