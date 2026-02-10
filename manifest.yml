@@ -2,22 +2,19 @@ app:
   id: ari:cloud:ecosystem::app/${FORGE_APP_ID}
   connect:
     key: onlyoffice.onlyoffice-confluence-plugin
-    remote: connect
-    authentication: jwt
   runtime:
-    name: nodejs20.x
+    name: nodejs22.x
+    memoryMB: 256
+    architecture: arm64
 
 translations:
   resources:
     - key: en-US
       path: locales/en-US.json
-  
   fallback:
     default: en-US
 
 remotes:
-  - key: connect
-    baseUrl: https://confluence-cloud.onlyoffice.com
   - key: onlyoffice-backend
     baseUrl: "${FORGE_REMOTE_APP_URL}"
     operations:
@@ -90,74 +87,6 @@ environment:
     - key: FORGE_REMOTE_APP_URL
       default: https://ed3a06f8f640.ngrok-free.app
 
-connectModules:
-  confluence:lifecycle:
-    - key: lifecycle-events
-      installed: /installed
-      uninstalled: /uninstalled
-  confluence:generalPages:
-    - key: editor
-      name:
-        value: ONLYOFFICE Editor
-      url: >-
-        /editor?pageId={page.id}&attachmentId={attachment.id}&attachmentName={attachment.name}&mode={ac.mode}
-  confluence:webItems:
-    - key: web-item-onlyoffice-create
-      name:
-        value: New document
-        i18n: onlyoffice.create.link
-      location: system.content.button
-      context: page
-      url: /create?pageId={page.id}
-      icon:
-        width: 16
-        height: 16
-        url: /image/onlyoffice-icon-16.svg
-      target:
-        type: dialog
-        options:
-          chrome: false
-          size: x-large
-      conditions:
-        - condition: has_page_permission
-          params:
-            permission: EDIT
-    - key: web-item-onlyoffice-edit
-      name:
-        value: Edit in ONLYOFFICE
-        i18n: onlyoffice.editor.link.edit
-      url: editor
-      location: system.attachment
-      context: page
-      conditions:
-        - condition: has_attachment_permission
-          params:
-            permission: EDIT
-      weight: 9
-    - key: web-item-onlyoffice-view
-      name:
-        value: View in ONLYOFFICE
-        i18n: onlyoffice.editor.link.view
-      url: editor
-      location: system.attachment
-      context: page
-      conditions:
-        - condition: has_attachment_permission
-          params:
-            permission: VIEW
-        - condition: has_attachment_permission
-          invert: true
-          params:
-            permission: EDIT
-      weight: 10
-  confluence:translations:
-    - paths:
-        de-DE: /i18n/de_DE.json
-        es-ES: /i18n/es_ES.json
-        fr-FR: /i18n/fr_FR.json
-        ja-JP: /i18n/ja_JP.json
-        ru-RU: /i18n/ru_RU.json
-      key: connect-translations
 permissions:
   content:
     scripts:
@@ -165,9 +94,6 @@ permissions:
     styles:
       - 'unsafe-inline'
   scopes:
-    - read:connect-confluence
-    - write:connect-confluence
-    - act-as-user:connect-confluence
     - storage:app
     - read:confluence-user
     - read:app-system-token
