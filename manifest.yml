@@ -41,6 +41,7 @@ modules:
       resolver:
         function: main-page-resolver
       title: ONLYOFFICE
+      icon: resource:assets;images/onlyoffice-logo-monochrome.svg
       route: onlyoffice
   confluence:contentAction:
     - key: main-page-action
