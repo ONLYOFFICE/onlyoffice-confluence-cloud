@@ -43,15 +43,15 @@ modules:
       resource: custom-ui
       resolver:
         function: main-page-resolver
-      title: ONLYOFFICE Docs
-      route: onlyoffice-docs
+      title: ONLYOFFICE
+      route: onlyoffice
   confluence:contentAction:
     - key: main-page-action
       resource: custom-ui
       resolver:
         function: main-page-resolver
       viewportSize: max
-      title: ONLYOFFICE Docs
+      title: ONLYOFFICE
   confluence:fullPage:
     - key: editor-page
       resource: custom-ui
@@ -79,7 +79,7 @@ resources:
   - key: settings-page
     path: src/frontend/settingsPage.tsx
   - key: custom-ui
-    path: static/onlyoffice-docs-confluence-cloud-custom-ui/build
+    path: static/onlyoffice-confluence-cloud-custom-ui/build
   - key: assets
     path: src/assets
 
