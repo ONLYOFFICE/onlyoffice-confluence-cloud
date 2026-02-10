@@ -1,7 +1,34 @@
 {
   "page": {
     "settings": {
-      "title": "ONLYOFFICE Docs Configuration"
+      "title": "ONLYOFFICE Configuration",
+      "connections-settings": {
+        "header": "Connection Settings",
+        "fields": {
+          "url": {
+            "title": "ONLYOFFICE Docs address",
+            "description": "Here, please specify the address of your ONLYOFFICE Docs server."
+          },
+          "security-key": {
+            "title": "ONLYOFFICE Docs secret key",
+            "description": "Use the auto-generated JWT secret key or set your own here and the same one in the ONLYOFFICE Docs config file."
+          },
+          "security-header": {
+            "title": "Authorization header",
+            "description": "Leave blank to use default header"
+          },
+          "demo": {
+            "title": "Connect to demo ONLYOFFICE Docs server",
+            "description-active": "You are successfully connected to the demo server. It will be available until {time}. To disable it, uncheck the box.",
+            "description-availabale": "This is a public test server, please do not use it for private sensitive data. The server will be available during a 30-day period.",
+            "description-not-availabale": "The 30-day test period is over. You are no longer able to connect to the demo server."
+          }
+        }
+      },
+      "messages": {
+        "settings-saved": "Settings saved successfully.",
+        "save-settings-failed": "Error saving settings, please try again"
+      }
     },
     "main": {
       "title": "Welcome to ONLYOFFICE!",
@@ -29,6 +56,12 @@
     },
     "close": {
       "title": "Close"
+    },
+    "save": {
+      "title": "Save"
+    },
+    "get-now": {
+      "title": "Get Now"
     },
     "previous": {
       "title": "Previous"
@@ -128,5 +161,9 @@
     "cell": "Spreadsheet",
     "slide": "Presentaion",
     "pdf": "PDF form"
+  },
+  "docs-cloud-banner": {
+    "header": "ONLYOFFICE Docs Cloud",
+    "description": "Easily launch the editors in the cloud without downloading and installation"
   }
 }
