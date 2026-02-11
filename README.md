@@ -52,7 +52,7 @@ Administrators can configure ONLYOFFICE integration app via the **Manage Apps** 
 
 * **Document Editing Service Address**: The URL of the installed ONLYOFFICE Docs (Document Server).
 
-* **Secret key**: Enables JWT to protect your documents from unauthorized access (further information can be found [here](https://api.onlyoffice.com/docs/docs-api/additional-api/signature/).
+* **Secret key**: Enables JWT to protect your documents from unauthorized access (further information can be found [here](https://api.onlyoffice.com/docs/docs-api/additional-api/signature/)).
 
 * **JWT Header**: Name of the header to pass the JWT in, if you use a custom header in your server
 
