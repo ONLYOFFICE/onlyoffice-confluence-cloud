@@ -37,12 +37,6 @@
     },
     "editor": {
       "messages": {
-        "session-expired": "The current session has expired.",
-        "please-save-changes": "Please make sure to save any changes to prevent data loss.",
-        "editor-will-be-reloaded": "The editor will be reloaded to continue working in ({time}).",
-        "editing-will-stop": "Editing will stop in ({time}).",
-        "stop-editing-by-cause-session-expired": "Editing of this document has been stopped because the current session has expired.",
-        "update-session-failed": "Unfortunately, it was not possible to extend the session.",
         "you-using-demo-server": "You are using the public demo server of ONLYOFFICE Docs. Please avoid storing any private or sensitive data."
       }
     }

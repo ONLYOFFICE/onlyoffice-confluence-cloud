@@ -16,19 +16,10 @@
  *
  */
 
-import React, {
-  useEffect,
-  useState,
-  useRef,
-  type ReactNode,
-  useContext,
-} from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 
-import Flag, { ActionsType, FlagGroup } from "@atlaskit/flag";
-import StatusWarningIcon from "@atlaskit/icon/core/status-warning";
 import { Flex, xcss } from "@atlaskit/primitives";
 import Spinner from "@atlaskit/spinner";
-import { token } from "@atlaskit/tokens";
 import { invokeRemote, router, view } from "@forge/bridge";
 import { FullContext } from "@forge/bridge/out/types";
 
@@ -53,26 +44,6 @@ const styles = {
   },
 };
 
-type SessionExpiredFlag = {
-  description: string;
-  icon: ReactNode;
-  id: string;
-  time: number;
-  title: string;
-  actions: ActionsType;
-};
-
-const defaultSessionExpiredFlagData: SessionExpiredFlag = {
-  id: "session-expired-flag",
-  title: "",
-  description: "",
-  icon: (
-    <StatusWarningIcon label="Warning" color={token("color.icon.warning")} />
-  ),
-  time: 59,
-  actions: [],
-};
-
 export type EditorPageProps = {
   context: FullContext;
 };
@@ -82,8 +53,6 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
   const [loading, setLoading] = useState(true);
   const remoteAppUrl = useRef<string | null>(null);
   const [token, setToken] = useState<string>();
-  const [sessionExpiredFlag, setSessionExpiredFlag] =
-    useState<SessionExpiredFlag>();
 
   const location = new URL(context.extension.location);
   const parentId = location.searchParams.get("parentId");
@@ -129,6 +98,43 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
   }, [token]);
 
   useEffect(() => {
+    let sessionTimeout: ReturnType<typeof setTimeout>;
+
+    const scheduleReauthorization = (sessionExpires: number) => {
+      const targetTime = new Date(sessionExpires);
+      const now = new Date();
+      targetTime.setSeconds(targetTime.getSeconds() - 10);
+
+      const delay = targetTime.getTime() - now.getTime();
+
+      if (delay > 0) {
+        sessionTimeout = setTimeout(() => {
+          invokeRemote({
+            method: "POST",
+            path: "/api/v1/remote/authorization",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: {
+              parentId: parentId,
+              entityId: attachmentId,
+            },
+          })
+            .then((response) => {
+              if (response) {
+                sendMessageToIframe("REFRESH_SESSION", {
+                  sessionExpires: response.body.sessionExpires,
+                });
+                scheduleReauthorization(response.body.sessionExpires);
+              }
+            })
+            .catch((error) => {
+              console.error("Error reauthorizing session:", error);
+            });
+        }, delay);
+      }
+    };
+
     invokeRemote({
       method: "POST",
       path: "/api/v1/remote/authorization",
@@ -144,6 +150,7 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
         if (response) {
           setToken(response.body.token);
           remoteAppUrl.current = response.body.remoteAppUrl;
+          scheduleReauthorization(response.body.sessionExpires);
         }
       })
       .catch((error) => {
@@ -154,34 +161,11 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
           description: t("error-state.common.description"),
         });
       });
+
+    return () => {
+      clearTimeout(sessionTimeout);
+    };
   }, []);
-
-  const onSessionExpired = () => {
-    invokeRemote({
-      method: "POST",
-      path: "/api/v1/remote/authorization",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: {
-        parentId: parentId,
-        entityId: attachmentId,
-      },
-    })
-      .then((response) => {
-        if (response) {
-          sendMessageToIframe("UPDATE_CONFIG", {
-            mode: mode,
-            token: response.body.token,
-          });
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-
-        sessionFailedToExtend();
-      });
-  };
 
   const onRequestOpen = (data: object) => {
     const { referenceData } = data as { referenceData: { fileKey: string } };
@@ -223,60 +207,6 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
           error: t("notifications.attachment-not-found"),
         });
       });
-  };
-
-  const sessionSuccessfullyExtended = () => {
-    const timer = setInterval(() => {
-      const onFinal = () => {
-        clearInterval(timer);
-        sendMessageToIframe("RELOAD_EDITOR", null);
-      };
-
-      setSessionExpiredFlag((prev) => {
-        if (prev && prev.time - 1 < 0) {
-          onFinal();
-          return undefined;
-        }
-
-        return {
-          ...defaultSessionExpiredFlagData,
-          time: prev ? prev.time - 1 : defaultSessionExpiredFlagData.time,
-          title: t("labels.warning"),
-          description: `${t("page.editor.messages.session-expired")}
-             ${t("page.editor.messages.please-save-changes")}
-             ${t("page.editor.messages.editor-will-be-reloaded").replace("{time}", String(prev ? prev.time - 1 : defaultSessionExpiredFlagData.time))}`,
-        };
-      });
-    }, 1000);
-  };
-
-  const sessionFailedToExtend = () => {
-    const timer = setInterval(() => {
-      const onFinal = () => {
-        clearInterval(timer);
-        sendMessageToIframe("STOP_EDITING", {
-          message: t(
-            "page.editor.messages.stop-editing-by-cause-session-expired",
-          ),
-        });
-      };
-
-      setSessionExpiredFlag((prev) => {
-        if (prev && prev.time - 1 < 0) {
-          onFinal();
-          return undefined;
-        }
-
-        return {
-          ...defaultSessionExpiredFlagData,
-          time: prev ? prev.time - 1 : defaultSessionExpiredFlagData.time,
-          title: t("labels.warning"),
-          description: `${t("page.editor.messages.session-expired")}
-            ${t("page.editor.messages.update-session-failed")} ${t("page.editor.messages.please-save-changes")}
-            ${t("page.editor.messages.editing-will-stop").replace("{time}", String(prev ? prev.time - 1 : defaultSessionExpiredFlagData.time))}`,
-        };
-      });
-    }, 1000);
   };
 
   useEffect(() => {
@@ -327,18 +257,6 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
         if (type === "REQUEST_REFERENCE_DATA") {
           onRequestReferenceData(data);
         }
-
-        if (type === "SESSION_EXPIRED") {
-          onSessionExpired();
-        }
-
-        if (type === "CONFIG_UPDATED") {
-          sessionSuccessfullyExtended();
-        }
-
-        if (type === "ERROR_UPDATE_CONFIG") {
-          sessionFailedToExtend();
-        }
       };
 
       window.addEventListener("message", handleMessage);
@@ -361,17 +279,6 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
           }}
           src={`${remoteAppUrl.current}/editor/confluence?mode=${mode}&token=${token}`}
         />
-      )}
-      {sessionExpiredFlag && (
-        <FlagGroup>
-          <Flag
-            id={sessionExpiredFlag.id}
-            title={sessionExpiredFlag.title}
-            description={sessionExpiredFlag.description}
-            icon={sessionExpiredFlag.icon}
-            actions={sessionExpiredFlag.actions}
-          />
-        </FlagGroup>
       )}
     </Flex>
   );
