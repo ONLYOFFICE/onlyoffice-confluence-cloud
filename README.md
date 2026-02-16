@@ -12,11 +12,11 @@ Edit, co-author, and manage office files right inside [Confluence Cloud](https:/
 
 ## Features ✨
 
-- **Open & edit inside Confluence:** Launch ONLYOFFICE editors directly from page attachments.  
-- **Real-time co-editing:** Collaborate with colleagues using Fast and Strict modes, plus track changes, comments, and built-in chat.  
-- **Wide format support:** Edit and view popular office formats.  
-- **In-place saving:** Changes overwrite the same attachment file (saved as the page attachment).  
-- **Secure connections:** JWT token protection is used for authenticated, safe access.  
+- **Open & edit inside Confluence:** Launch ONLYOFFICE editors directly from page attachments.
+- **Real-time co-editing:** Collaborate with colleagues using Fast and Strict modes, plus track changes, comments, and built-in chat.
+- **Wide format support:** Edit and view popular office formats.
+- **In-place saving:** Changes overwrite the same attachment file (saved as the page attachment).
+- **Secure connections:** JWT token protection is used for authenticated, safe access.
 
 ### Supported formats 📚
 
@@ -58,17 +58,17 @@ Administrators can configure ONLYOFFICE integration app via the **Manage Apps** 
 
 ## App usage
 
-In the Pages module, you can attach files to the created pages: open the right context menu, click on the Attachments item and upload a file from the device. 
+In the Pages module, you can attach files to the created pages: open the right context menu, click on the Attachments item and upload a file from the device.
 
 The uploaded file will appear in the Attachments list. To launch the editor, click **Edit in ONLYOFFICE**. The file opens in the same window. The changes made are saved in the same file.
 
 > Note: If a file is not supported by ONLYOFFICE, the integration will show an error message.
 
-## ONLYOFFICE Docs editions 
+## ONLYOFFICE Docs editions
 
 ONLYOFFICE offers different versions of its online document editors that can be deployed on your own servers.
 
-**ONLYOFFICE Docs** packaged as Document Server: 
+**ONLYOFFICE Docs** packaged as Document Server:
 
 * Community Edition 🆓 (`onlyoffice-documentserver` package)
 * Enterprise Edition 🏢 (`onlyoffice-documentserver-ee` package)
