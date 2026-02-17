@@ -6,6 +6,8 @@ on:
   push:
     branches:
     - develop
+    paths-ignore:
+      - '.github/**'
 
   workflow_dispatch:
     inputs:
@@ -46,6 +48,9 @@ jobs:
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
+      
+      - name: get version script
+        run: wget https://raw.githubusercontent.com/ONLYOFFICE/ga-common/refs/heads/master/.github/scripts/get_connector_version.py
 
       - name: handle-rc-tag
         env:
@@ -53,11 +58,10 @@ jobs:
           REF: ${{ github.ref_name }}
           MANUAL_TAG: ${{ github.event.inputs.tag }}
         run: |
-          APP_VERSION=$(cat package.json | jq -r '.version')
           if [[ "$EVENT" == 'push' && "$REF" == 'develop' ]]; then
-           echo "RC_TAG=${APP_VERSION}-rc.${{ github.run_number }}" >> "$GITHUB_ENV"
+           echo "RC_TAG=$(python3 get_connector_version.py CHANGELOG.md)-rc.${{ github.run_number }}" >> "$GITHUB_ENV"
           elif [[ "$EVENT" == 'workflow_dispatch' && -z "$TAG" ]]; then
-           echo "RC_TAG=${APP_VERSION}-rc.${{ github.run_number }}" >> "$GITHUB_ENV"
+           echo "RC_TAG=$(python3 get_connector_version.py CHANGELOG.md)-rc.${{ github.run_number }}" >> "$GITHUB_ENV"
           fi
 
       - name: Publish Image
