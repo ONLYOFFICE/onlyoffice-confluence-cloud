@@ -23,7 +23,7 @@ import { RowType } from "@atlaskit/dynamic-table/dist/types/types";
 import { Stack } from "@atlaskit/primitives";
 import { invoke, router } from "@forge/bridge";
 
-import NotFoundIcon from "../../assets/images/not-found.svg";
+import NotFoundIcon from "../../assets/images/not-found.svg?url";
 import {
   findContent,
   findContentById,

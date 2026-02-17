@@ -24,7 +24,7 @@ import RetryIcon from "@atlaskit/icon/core/retry";
 import { Box, xcss } from "@atlaskit/primitives";
 import { i18n } from "@forge/bridge";
 
-import ErrorIcon from "../../../src/assets/images/error.svg";
+import ErrorIcon from "../../../src/assets/images/error.svg?url";
 import {
   ConfirmDialog,
   ConfirmDialogProps,

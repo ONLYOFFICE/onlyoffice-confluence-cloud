@@ -16,13 +16,23 @@
  *
  */
 
-declare module "*.svg" {
-  import * as React from "react";
+import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
+import svgr from "vite-plugin-svgr";
 
-  export const ReactComponent: React.FunctionComponent<
-    React.SVGProps<SVGSVGElement> & { title?: string }
-  >;
-
-  const src: string;
-  export default src;
-}
+export default defineConfig({
+  plugins: [
+    react(),
+    svgr({
+      include: "**/*.svg",
+      svgrOptions: {
+        exportType: "named",
+        ref: true,
+      },
+    }),
+  ],
+  base: "./",
+  build: {
+    outDir: "build",
+  },
+});

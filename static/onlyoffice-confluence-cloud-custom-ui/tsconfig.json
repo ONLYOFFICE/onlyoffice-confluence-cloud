@@ -1,3 +1,9 @@
 {
-  "extends": "../../tsconfig.json"
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "types": ["vite/client", "vite-plugin-svgr/client"]
+  }
 }

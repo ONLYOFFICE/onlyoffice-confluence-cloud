@@ -23,7 +23,7 @@ import Spinner from "@atlaskit/spinner";
 import { invokeRemote, router, view } from "@forge/bridge";
 import { FullContext } from "@forge/bridge/out/types";
 
-import NotFoundIcon from "../../assets/images/not-found.svg";
+import NotFoundIcon from "../../assets/images/not-found.svg?url";
 import { AppContext } from "../../context/AppContext";
 
 const styles = {

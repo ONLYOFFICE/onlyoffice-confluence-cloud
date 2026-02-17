@@ -20,8 +20,8 @@ import React, { useContext } from "react";
 
 import EmptyState from "@atlaskit/empty-state";
 
-import EmptyListIcon from "../../../assets/images/empty-list.svg";
-import EmptySearchIcon from "../../../assets/images/empty-search.svg";
+import EmptyListIcon from "../../../assets/images/empty-list.svg?url";
+import EmptySearchIcon from "../../../assets/images/empty-search.svg?url";
 import { AppContext } from "../../../context/AppContext";
 
 type ContentTreeEmptyStateProps = {
