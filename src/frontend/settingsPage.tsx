@@ -51,7 +51,7 @@ import ErrorIcon from "../assets/images/error.svg";
 const styles = {
   mainContainer: xcss({
     padding: "space.250",
-    borderRadius: "border.radius",
+    borderRadius: "radius.small",
     borderColor: "color.border",
     borderWidth: "border.width",
     borderStyle: "solid",
