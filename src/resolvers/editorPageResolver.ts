@@ -16,6 +16,16 @@
  *
  */
 
-export { default as settingsPageResolver } from "./resolvers/settingsPageResolver";
-export { default as mainPageResolver } from "./resolvers/mainPageResolver";
-export { default as editorPageResolver } from "./resolvers/editorPageResolver";
+import Resolver, { Request } from "@forge/resolver";
+
+import { postRemoteAppAuthorization } from "../client";
+
+const editorPageResolver = new Resolver();
+
+editorPageResolver.define("authorizeRemoteApp", async (request: Request) => {
+  const { parentId, attachmentId } = request.payload;
+
+  return await postRemoteAppAuthorization(parentId, attachmentId);
+});
+
+export default editorPageResolver.getDefinitions();

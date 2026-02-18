@@ -20,11 +20,11 @@ import React, { useEffect, useState, useRef, useContext } from "react";
 
 import { Flex, xcss } from "@atlaskit/primitives";
 import Spinner from "@atlaskit/spinner";
-import { invokeRemote, router, view } from "@forge/bridge";
+import { invoke, invokeRemote, router, view } from "@forge/bridge";
 import { FullContext } from "@forge/bridge/out/types";
 
-import NotFoundIcon from "../../assets/images/not-found.svg?url";
 import { AppContext } from "../../context/AppContext";
+import { RemoteAppAuthorization } from "../../types/types";
 
 const styles = {
   mainContainer: xcss({
@@ -81,23 +81,6 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
   };
 
   useEffect(() => {
-    if (token) {
-      invokeRemote({
-        method: "GET",
-        path: `/editor/confluence?mode=${mode}&token=${token}&format=json`,
-      }).catch((error) => {
-        console.error("Error fetching data:", error);
-
-        setAppError({
-          title: t("error-state.not-found.title"),
-          description: t("error-state.not-found.description"),
-          imageUrl: NotFoundIcon,
-        });
-      });
-    }
-  }, [token]);
-
-  useEffect(() => {
     let sessionTimeout: ReturnType<typeof setTimeout>;
 
     const scheduleReauthorization = (sessionExpires: number) => {
@@ -109,24 +92,15 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
 
       if (delay > 0) {
         sessionTimeout = setTimeout(() => {
-          invokeRemote({
-            method: "POST",
-            path: "/api/v1/remote/authorization",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: {
-              parentId: parentId,
-              entityId: attachmentId,
-            },
+          invoke<RemoteAppAuthorization>("authorizeRemoteApp", {
+            parentId,
+            attachmentId,
           })
-            .then((response) => {
-              if (response) {
-                sendMessageToIframe("REFRESH_SESSION", {
-                  sessionExpires: response.body.sessionExpires,
-                });
-                scheduleReauthorization(response.body.sessionExpires);
-              }
+            .then((data: RemoteAppAuthorization) => {
+              sendMessageToIframe("REFRESH_SESSION", {
+                sessionExpires: data.sessionExpires,
+              });
+              scheduleReauthorization(data.sessionExpires);
             })
             .catch((error) => {
               console.error("Error reauthorizing session:", error);
@@ -135,23 +109,14 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
       }
     };
 
-    invokeRemote({
-      method: "POST",
-      path: "/api/v1/remote/authorization",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: {
-        parentId: parentId,
-        entityId: attachmentId,
-      },
+    invoke<RemoteAppAuthorization>("authorizeRemoteApp", {
+      parentId,
+      attachmentId,
     })
-      .then((response) => {
-        if (response) {
-          setToken(response.body.token);
-          remoteAppUrl.current = response.body.remoteAppUrl;
-          scheduleReauthorization(response.body.sessionExpires);
-        }
+      .then((data: RemoteAppAuthorization) => {
+        setToken(data.token);
+        remoteAppUrl.current = data.remoteAppUrl;
+        scheduleReauthorization(data.sessionExpires);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);

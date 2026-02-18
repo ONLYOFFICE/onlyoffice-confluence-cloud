@@ -19,11 +19,7 @@
 import { getAppContext } from "@forge/api";
 import Resolver, { Request } from "@forge/resolver";
 
-import {
-  getRemoteFormats,
-  postRemoteAppAuthorization,
-  postRemoteCreateAttachment,
-} from "../../src/client";
+import { getRemoteFormats, postRemoteCreateAttachment } from "../../src/client";
 import { Format } from "../types/types";
 
 const FORMATS_CACHE_TTL = 1000 * 60 * 60 * 24;
@@ -36,12 +32,6 @@ mainPageResolver.define("getAppContext", () => {
   const { appAri, environmentAri } = getAppContext();
 
   return { appId: appAri.appId, environmentId: environmentAri.environmentId };
-});
-
-mainPageResolver.define("authorizeRemoteApp", async (request: Request) => {
-  const { parentId, attachmentId } = request.payload;
-
-  return await postRemoteAppAuthorization(parentId, attachmentId);
 });
 
 mainPageResolver.define("getFormats", async () => {

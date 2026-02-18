@@ -54,7 +54,7 @@ modules:
     - key: editor-page
       resource: custom-ui
       resolver:
-        endpoint: onlyoffice-backend-endpoint
+        function: editor-page-resolver
       title: ONLYOFFICE
       routePrefix: editor
   function:
@@ -62,16 +62,8 @@ modules:
       handler: index.settingsPageResolver
     - key: main-page-resolver
       handler: index.mainPageResolver
-  endpoint:
-    - key: onlyoffice-backend-endpoint
-      remote: onlyoffice-backend
-      route:
-        path: /api/v1/remote
-      auth:
-        appUserToken:
-          enabled: true
-        appSystemToken:
-          enabled: true
+    - key: editor-page-resolver
+      handler: index.editorPageResolver
 
 resources:
   - key: settings-page
