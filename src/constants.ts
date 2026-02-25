@@ -16,7 +16,5 @@
  *
  */
 
-export { aiRequestHandler } from "./consumers/aiRequestConsumer";
-export { default as settingsPageResolver } from "./resolvers/settingsPageResolver";
-export { default as mainPageResolver } from "./resolvers/mainPageResolver";
-export { default as editorPageResolver } from "./resolvers/editorPageResolver";
+export const REALTIME_AI_CHANNEL_NAME = "onlyoffice-ai-channel";
+export const AI_REQUEST_QUEUE_NAME = "ai-request-queue";

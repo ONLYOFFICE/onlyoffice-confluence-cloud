@@ -20,11 +20,26 @@ import React, { useEffect, useState, useRef, useContext } from "react";
 
 import { Flex, xcss } from "@atlaskit/primitives";
 import Spinner from "@atlaskit/spinner";
-import { invoke, invokeRemote, router, view } from "@forge/bridge";
-import { FullContext } from "@forge/bridge/out/types";
+import {
+  FullContext,
+  invoke,
+  invokeRemote,
+  realtime,
+  router,
+  view,
+} from "@forge/bridge";
 
 import { AppContext } from "../../context/AppContext";
-import { RemoteAppAuthorization } from "../../types/types";
+import {
+  AIRequest,
+  AIResponse,
+  AsyncAIResponse,
+  ExecAIRequestResponse,
+  RemoteAppAuthorization,
+} from "../../types/types";
+
+import { AIChannel, loadAIProvider } from "./utils/aiUtils";
+import { OrderedEventRouter } from "./utils/orderedEventRouter";
 
 const styles = {
   mainContainer: xcss({
@@ -53,6 +68,9 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
   const [loading, setLoading] = useState(true);
   const remoteAppUrl = useRef<string | null>(null);
   const [token, setToken] = useState<string>();
+  const aiChannelId = useRef<string>();
+  const [aiChannel, setAiChannel] = useState<AIChannel>();
+  const aiRequests = useRef(new Map<string, string>());
 
   const location = new URL(context.extension.location);
   const parentId = location.searchParams.get("parentId");
@@ -79,6 +97,52 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
       );
     }
   };
+
+  useEffect(() => {
+    if (!aiChannel) return;
+
+    const subscribeToAIChannel = async (channelName: string, token: string) => {
+      const router = new OrderedEventRouter<AIResponse>((event) => {
+        const { id, body } = event;
+
+        sendMessageToIframe("AI_FETCH_RESPONSE", body);
+
+        if (body.type === "end" || body.type === "error") {
+          aiRequests.current.delete(id);
+          router.remove(id);
+        }
+      });
+
+      return realtime.subscribeGlobal(
+        channelName,
+        (event) => {
+          console.log("Received real-time event:", event);
+          if (typeof event === "string") return;
+
+          const e = event as unknown as AsyncAIResponse;
+          router.push({
+            id: e.id,
+            index: e.index,
+            body: e.aiResponse as AIResponse,
+          });
+        },
+        {
+          token,
+        },
+      );
+    };
+
+    const subscriptionToAiChannel = subscribeToAIChannel(
+      aiChannel.name,
+      aiChannel.token,
+    );
+
+    aiChannelId.current = aiChannel.id;
+
+    return () => {
+      subscriptionToAiChannel.then((s) => s.unsubscribe());
+    };
+  }, [aiChannel]);
 
   useEffect(() => {
     let sessionTimeout: ReturnType<typeof setTimeout>;
@@ -201,6 +265,15 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
               message: t("page.editor.messages.you-using-demo-server"),
             });
           }
+
+          loadAIProvider()
+            .then((provider) => {
+              setAiChannel(provider.channel);
+              sendMessageToIframe("INIT_AI_PROVIDER", provider.config);
+            })
+            .catch((error) => {
+              console.error("[ONLYOFFICE] Error loading AI provider:", error);
+            });
         }
 
         if (type === "REQUEST_OPEN") {
@@ -222,6 +295,10 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
         if (type === "REQUEST_REFERENCE_DATA") {
           onRequestReferenceData(data);
         }
+
+        if (type === "AI_FETCH") {
+          onAIFetch(data);
+        }
       };
 
       window.addEventListener("message", handleMessage);
@@ -231,6 +308,40 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
       };
     }
   }, [remoteAppUrl.current]);
+
+  const onAIFetch = (aiRequest: AIRequest) => {
+    console.log("onAIFetch: ", aiRequest);
+
+    if (aiRequest.type === "abort") {
+      const jobId = aiRequests.current.get(aiRequest.id);
+
+      invoke("cancelAIRequest", { jobId }).finally(() => {
+        aiRequests.current.delete(aiRequest.id);
+      });
+      return;
+    }
+
+    invoke<ExecAIRequestResponse>("execAIRequest", {
+      aiChannelId: aiChannelId.current,
+      aiRequest,
+    })
+      .then((response) => {
+        console.log("execAIRequest response:", response);
+
+        if (aiRequest.streaming) {
+          aiRequests.current.set(aiRequest.id, response.jobId);
+        }
+
+        sendMessageToIframe("AI_FETCH_RESPONSE", response.aiResponse);
+      })
+      .catch((error) => {
+        sendMessageToIframe("AI_FETCH_RESPONSE", {
+          type: "error",
+          id: aiRequest.id,
+          error: String(error),
+        });
+      });
+  };
 
   return (
     <Flex xcss={styles.mainContainer}>

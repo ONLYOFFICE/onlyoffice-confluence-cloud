@@ -57,6 +57,10 @@ modules:
         function: editor-page-resolver
       title: ONLYOFFICE
       routePrefix: editor
+  consumer:
+    - key: ai-request-consumer
+      queue: ai-request-queue
+      function: ai-request-handler
   function:
     - key: settings-page-resolver
       handler: index.settingsPageResolver
@@ -64,6 +68,13 @@ modules:
       handler: index.mainPageResolver
     - key: editor-page-resolver
       handler: index.editorPageResolver
+    - key: ai-request-handler
+      handler: index.aiRequestHandler
+      timeoutSeconds: 900
+  llm:
+    - key: llm
+      model:
+        - claude
 
 resources:
   - key: settings-page

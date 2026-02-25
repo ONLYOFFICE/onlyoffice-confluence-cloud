@@ -16,7 +16,19 @@
  *
  */
 
-export { aiRequestHandler } from "./consumers/aiRequestConsumer";
-export { default as settingsPageResolver } from "./resolvers/settingsPageResolver";
-export { default as mainPageResolver } from "./resolvers/mainPageResolver";
-export { default as editorPageResolver } from "./resolvers/editorPageResolver";
+import { Choice } from "@forge/llm/out/interfaces/internal";
+
+export const processChoices = (choices: Choice[]) => {
+  return choices.map((item) => ({
+    ...item,
+    message: {
+      ...item.message,
+      content: Array.isArray(item.message.content)
+        ? item.message.content
+            .filter((block) => block.type === "text")
+            .map((block) => block.text)
+            .join("")
+        : item.message.content,
+    },
+  }));
+};

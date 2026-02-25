@@ -86,6 +86,46 @@ export interface User {
   profilePicture: Record<string, string>;
 }
 
+export interface AIModelsResponse {
+  result: Array<{ id: string }>;
+}
+
+export interface AIChannelResponse {
+  claims: {
+    channelName: string;
+    channelId: string;
+  };
+  token: string;
+}
+
+export interface AsyncAIResponse {
+  id: string;
+  index: number;
+  type: string;
+  aiResponse: AIResponse;
+}
+
+export interface ExecAIRequestResponse {
+  jobId: string;
+  aiResponse: AIResponse;
+}
+
+export interface AIRequest {
+  id: string;
+  url: string;
+  streaming: boolean;
+  type: string;
+  options: {
+    body: string;
+  };
+}
+
+export interface AIResponse {
+  type: string;
+  id: string;
+  body?: string;
+}
+
 export class ClientError extends Error {
   status: number | null;
 

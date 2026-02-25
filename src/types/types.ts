@@ -40,6 +40,15 @@ export interface Format {
   mime: string[];
 }
 
+export interface AIRequest {
+  id: string;
+  url: string;
+  streaming: boolean;
+  options: {
+    body: string;
+  };
+}
+
 export class ClientError extends Error {
   status: number | null;
 

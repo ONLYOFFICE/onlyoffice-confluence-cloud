@@ -45,8 +45,11 @@
   "dependencies": {
     "@forge/api": "7.0.2",
     "@forge/bridge": "5.13.0",
+    "@forge/events": "^2.0.18",
     "@forge/kvs": "1.3.1",
+    "@forge/llm": "^0.5.0",
     "@forge/react": "11.12.0",
+    "@forge/realtime": "^0.3.2",
     "@forge/resolver": "1.7.1",
     "react": "^18.3.1"
   }
