@@ -18,7 +18,7 @@
 
 import Resolver, { Request } from "@forge/resolver";
 
-import { postRemoteAppAuthorization } from "../client";
+import { postRemoteAppAuthorization, postRemoteReferenceData } from "../client";
 
 const editorPageResolver = new Resolver();
 
@@ -32,6 +32,13 @@ editorPageResolver.define("authorizeRemoteApp", async (request: Request) => {
     parentId,
     attachmentId,
   );
+});
+
+editorPageResolver.define("referenceData", async (request: Request) => {
+  const { cloudId, environmentId } = request.context;
+  const { parentId, data } = request.payload;
+
+  return await postRemoteReferenceData(cloudId, environmentId, parentId, data);
 });
 
 export default editorPageResolver.getDefinitions();

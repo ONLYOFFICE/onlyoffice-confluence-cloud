@@ -102,6 +102,32 @@ export const postRemoteCreateAttachment = async (
   );
 };
 
+export const postRemoteReferenceData = async (
+  cloudId: string,
+  environmentId: string,
+  parentId: string,
+  data: object,
+): Promise<Record<string, object>> => {
+  return await _executeRequest<Record<string, object>>(
+    async () => {
+      return await invokeRemote("onlyoffice-backend", {
+        method: "POST",
+        path: `/api/v1/remote/reference-data?parentId=${parentId}`,
+        headers: {
+          "Content-Type": "application/json",
+          "x-cloud-id": cloudId,
+          "x-environment-id": environmentId,
+        },
+        body: JSON.stringify(data),
+      });
+    },
+    async (response: APIResponse) => {
+      return await response.json();
+    },
+    1,
+  );
+};
+
 async function _executeRequest<T>(
   onRequest: () => Promise<APIResponse>,
   onResponse: (response: APIResponse) => T | Promise<T>,

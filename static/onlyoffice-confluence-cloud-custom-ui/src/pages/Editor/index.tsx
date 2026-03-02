@@ -20,7 +20,7 @@ import React, { useEffect, useState, useRef, useContext } from "react";
 
 import { Flex, xcss } from "@atlaskit/primitives";
 import Spinner from "@atlaskit/spinner";
-import { invoke, invokeRemote, router, view } from "@forge/bridge";
+import { invoke, router, view } from "@forge/bridge";
 import { FullContext } from "@forge/bridge/out/types";
 
 import { AppContext } from "../../context/AppContext";
@@ -154,18 +154,12 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
   };
 
   const onRequestReferenceData = (data: object) => {
-    invokeRemote({
-      method: "POST",
-      path: `/api/v1/remote/reference-data?parentId=${parentId}`,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: data,
+    invoke<object>("referenceData", {
+      parentId,
+      data,
     })
-      .then((response) => {
-        if (response) {
-          sendMessageToIframe("SET_REFERENCE_DATA", response.body);
-        }
+      .then((referenceData) => {
+        sendMessageToIframe("SET_REFERENCE_DATA", referenceData);
       })
       .catch(() => {
         sendMessageToIframe("SET_REFERENCE_DATA", {
