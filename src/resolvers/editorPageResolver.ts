@@ -23,9 +23,15 @@ import { postRemoteAppAuthorization } from "../client";
 const editorPageResolver = new Resolver();
 
 editorPageResolver.define("authorizeRemoteApp", async (request: Request) => {
+  const { cloudId, environmentId } = request.context;
   const { parentId, attachmentId } = request.payload;
 
-  return await postRemoteAppAuthorization(parentId, attachmentId);
+  return await postRemoteAppAuthorization(
+    cloudId,
+    environmentId,
+    parentId,
+    attachmentId,
+  );
 });
 
 export default editorPageResolver.getDefinitions();

@@ -25,6 +25,8 @@ import {
 } from "../../src/types/types";
 
 export const postRemoteAppAuthorization = async (
+  cloudId: string,
+  environmentId: string,
   parentId: string,
   attachmentId: string,
 ): Promise<RemoteAppAuthorization> => {
@@ -35,6 +37,8 @@ export const postRemoteAppAuthorization = async (
         path: "/api/v1/remote/authorization",
         headers: {
           "Content-Type": "application/json",
+          "x-cloud-id": cloudId,
+          "x-environment-id": environmentId,
         },
         body: JSON.stringify({
           parentId: parentId,
