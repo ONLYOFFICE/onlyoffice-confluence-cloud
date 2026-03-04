@@ -43,10 +43,10 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@forge/api": "7.0.2",
-    "@forge/bridge": "5.13.0",
-    "@forge/kvs": "1.3.1",
-    "@forge/react": "11.12.0",
+    "@forge/api": "7.1.0",
+    "@forge/bridge": "5.14.0",
+    "@forge/kvs": "1.4.0",
+    "@forge/react": "11.13.0",
     "@forge/resolver": "1.7.1",
     "react": "^18.3.1"
   }
