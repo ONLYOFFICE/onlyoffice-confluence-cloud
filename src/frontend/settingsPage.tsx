@@ -47,6 +47,7 @@ import ForgeReconciler, {
 } from "@forge/react";
 
 import ErrorIcon from "../assets/images/error.svg";
+import ExternalLink from "../components/ExternalLink";
 
 const styles = {
   mainContainer: xcss({
@@ -197,6 +198,21 @@ const SettingsPage = () => {
       )}
       {!loading && settings && localSettings && (
         <Stack space="space.250">
+          <Stack space="space.150">
+            <Heading size="small">{t("page.settings.welcome.header")}</Heading>
+            <Text>{t("page.settings.welcome.description")}</Text>
+            <Inline space="space.300">
+              <ExternalLink
+                url="https://github.com/ONLYOFFICE/onlyoffice-confluence-cloud"
+                label={t("page.settings.welcome.links.learn-more")}
+              />
+              <ExternalLink
+                url="https://feedback.onlyoffice.com/forums/966080-your-voice-matters?category_id=519288"
+                label={t("page.settings.welcome.links.suggest-feature")}
+              />
+            </Inline>
+          </Stack>
+
           <Form onSubmit={handleSubmit(onSubmit)}>
             <Heading size="small">
               {t("page.settings.connections-settings.header")}
