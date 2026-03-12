@@ -73,7 +73,7 @@
     },
     "create": {
       "title": "Create",
-      "tooltip": "Open any Content or Blog page to create a file"
+      "tooltip": "Open any page or blog post to create a file"
     },
     "delete": {
       "title": "Delete"
@@ -105,7 +105,7 @@
   "component": {
     "content-tree": {
       "actions": {
-        "show-only-files": "Show only files",
+        "show-only-files": "Show files only",
         "edit": "Edit",
         "view": "View",
         "download": "Download",
