@@ -64,7 +64,8 @@
       "title": "Next"
     },
     "create": {
-      "title": "Create"
+      "title": "Create",
+      "tooltip": "Open any Content or Blog page to create a file"
     },
     "delete": {
       "title": "Delete"

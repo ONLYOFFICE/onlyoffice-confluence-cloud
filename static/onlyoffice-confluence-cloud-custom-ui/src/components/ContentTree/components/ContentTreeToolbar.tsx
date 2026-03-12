@@ -30,6 +30,7 @@ import FilterIcon from "@atlaskit/icon/core/filter";
 import SearchIcon from "@atlaskit/icon/core/search";
 import { Box, Inline, xcss } from "@atlaskit/primitives";
 import Textfield from "@atlaskit/textfield";
+import Tooltip from "@atlaskit/tooltip";
 
 import { ReactComponent as CellIcon } from "../../../assets/images/cell.svg";
 import { ReactComponent as PdfIcon } from "../../../assets/images/pdf.svg";
@@ -167,14 +168,21 @@ export const ContentTreeToolbar: React.FC<ContentTreeToolbarProps> = ({
         trigger={({ triggerRef, ...props }) => (
           <Box xcss={xcss({ marginRight: "space.075" })} ref={triggerRef}>
             <Box xcss={xcss({ marginRight: "space.negative.075" })}>
-              <Button
-                {...props}
-                isDisabled={!onClickCreate}
-                iconBefore={AddIcon}
-                appearance="primary"
+              <Tooltip
+                content={!onClickCreate ? t("buttons.create.tooltip") : null}
               >
-                {t("buttons.create.title")}
-              </Button>
+                {(tooltipProps) => (
+                  <Button
+                    {...tooltipProps}
+                    {...props}
+                    isDisabled={!onClickCreate}
+                    iconBefore={AddIcon}
+                    appearance="primary"
+                  >
+                    {t("buttons.create.title")}
+                  </Button>
+                )}
+              </Tooltip>
             </Box>
           </Box>
         )}

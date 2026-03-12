@@ -21,6 +21,7 @@
     "@atlaskit/select": "^21.6.3",
     "@atlaskit/tabs": "^18.3.1",
     "@atlaskit/textfield": "^8.2.0",
+    "@atlaskit/tooltip": "^20.14.6",
     "@atlaskit/visually-hidden": "^3.0.4",
     "@forge/bridge": "5.13.0",
     "bytes": "^3.1.2",
