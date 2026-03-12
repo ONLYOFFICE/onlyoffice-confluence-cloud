@@ -300,6 +300,7 @@ export const buildContentTreeRows = (
               trigger={({ triggerRef, ...props }) => (
                 <IconButton
                   {...props}
+                  appearance="subtle"
                   icon={ShowMoreIcon}
                   label={t("labels.more")}
                   ref={triggerRef}
