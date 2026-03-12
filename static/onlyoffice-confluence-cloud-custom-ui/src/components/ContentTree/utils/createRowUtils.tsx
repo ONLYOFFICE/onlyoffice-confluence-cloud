@@ -97,6 +97,10 @@ export const buildCreateRow = (
       });
   };
 
+  const getDefaultTitleValue = () => {
+    return t("document-type.new-" + documentType);
+  };
+
   return {
     key: "create",
     cells: [
@@ -114,7 +118,7 @@ export const buildCreateRow = (
                     <Box xcss={styles.formFieldWraper}>
                       <Field
                         name="title"
-                        defaultValue=""
+                        defaultValue={getDefaultTitleValue()}
                         isRequired
                         validate={(value) => {
                           if (!value) {
