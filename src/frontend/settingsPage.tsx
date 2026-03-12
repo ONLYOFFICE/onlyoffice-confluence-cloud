@@ -307,7 +307,7 @@ const SettingsPage = () => {
               </Text>
             </Stack>
             <LinkButton
-              href="https://www.onlyoffice.com/docs-registration.aspx?referer=jira-cloud"
+              href="https://www.onlyoffice.com/docs-registration.aspx?referer=confluence-cloud"
               target="_blank"
             >
               {t("buttons.get-now.title")}
