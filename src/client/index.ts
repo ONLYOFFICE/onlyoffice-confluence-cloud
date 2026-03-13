@@ -22,6 +22,7 @@ import {
   ClientError,
   Format,
   RemoteAppAuthorization,
+  RemoteSettings,
 } from "../../src/types/types";
 
 export const postRemoteAppAuthorization = async (
@@ -44,6 +45,42 @@ export const postRemoteAppAuthorization = async (
           parentId: parentId,
           entityId: attachmentId,
         }),
+      });
+    },
+    async (response: APIResponse) => {
+      return await response.json();
+    },
+    1,
+  );
+};
+
+export const getRemoteSettings = async (): Promise<RemoteSettings> => {
+  return await _executeRequest<RemoteSettings>(
+    async () => {
+      return await invokeRemote("onlyoffice-backend", {
+        method: "GET",
+        path: "/api/v1/remote/settings",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    },
+    async (response: APIResponse) => {
+      return await response.json();
+    },
+    1,
+  );
+};
+
+export const postRemoteSettings = async (): Promise<RemoteSettings> => {
+  return await _executeRequest<RemoteSettings>(
+    async () => {
+      return await invokeRemote("onlyoffice-backend", {
+        method: "POST",
+        path: "/api/v1/remote/settings",
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
     },
     async (response: APIResponse) => {
