@@ -84,6 +84,23 @@ export const buildCreateRow = (
       .catch((error) => {
         console.error("Error creating attachment:", error);
 
+        if (
+          error?.message?.includes(
+            "Request failed with status 400: Bad Request",
+          )
+        ) {
+          showFlag({
+            id: "create-attachment-error",
+            title: t(
+              "notifications.attachment-create-with-same-filename",
+            ).replace("{filename}", title),
+            type: "error",
+            appearance: "error",
+            isAutoDismiss: true,
+          });
+          return;
+        }
+
         showFlag({
           id: "create-attachment-error",
           title: t("notifications.attachment-create-failed"),
