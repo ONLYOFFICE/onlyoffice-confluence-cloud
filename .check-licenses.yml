@@ -1,0 +1,73 @@
+---
+- - :approve
+  - "@atlaskit/forge-react-types"
+  - :who:
+    :why: The Unlicense
+    :versions: []
+    :when: 2025-11-11 11:56:14.425456100 Z
+- - :approve
+  - "@atlaskit/navigation-system"
+  - :who:
+    :why: The Unlicense
+    :versions: []
+    :when: 2025-11-11 11:56:27.116344100 Z
+- - :approve
+  - "@forge/api"
+  - :who:
+    :why: Atlassian
+    :versions: []
+    :when: 2025-11-11 11:57:50.405959500 Z
+- - :approve
+  - "@forge/auth"
+  - :who:
+    :why: Atlassian
+    :versions: []
+    :when: 2025-11-11 11:57:50.405959500 Z
+- - :approve
+  - "@forge/bridge"
+  - :who:
+    :why: Atlassian
+    :versions: []
+    :when: 2025-11-11 11:57:50.405959500 Z
+- - :approve
+  - "@forge/egress"
+  - :who:
+    :why: Atlassian
+    :versions: []
+    :when: 2025-11-11 11:57:50.405959500 Z
+- - :approve
+  - "@forge/i18n"
+  - :who:
+    :why: Atlassian
+    :versions: []
+    :when: 2025-11-11 11:57:50.405959500 Z
+- - :approve
+  - "@forge/kvs"
+  - :who:
+    :why: Atlassian
+    :versions: []
+    :when: 2025-11-11 11:57:50.405959500 Z
+- - :approve
+  - "@forge/manifest"
+  - :who:
+    :why: Atlassian
+    :versions: []
+    :when: 2025-11-11 11:57:50.405959500 Z
+- - :approve
+  - "@forge/react"
+  - :who:
+    :why: Atlassian
+    :versions: []
+    :when: 2025-11-11 11:57:50.405959500 Z
+- - :approve
+  - "@forge/resolver"
+  - :who:
+    :why: Atlassian
+    :versions: []
+    :when: 2025-11-11 11:57:50.405959500 Z
+- - :approve
+  - "@forge/storage"
+  - :who:
+    :why: Atlassian
+    :versions: []
+    :when: 2025-11-11 11:57:50.405959500 Z
