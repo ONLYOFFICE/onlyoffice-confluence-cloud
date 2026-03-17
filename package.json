@@ -73,7 +73,7 @@
     "nodemon": "^3.1.7",
     "parcel-bundler": "^1.12.5",
     "parcel-plugin-externals": "^0.5.2",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^6.0.1"
   },
   "overrides": {
     "braces": "3.0.3",
