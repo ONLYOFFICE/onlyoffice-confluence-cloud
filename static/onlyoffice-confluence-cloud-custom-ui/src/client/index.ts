@@ -18,7 +18,12 @@
 
 import { requestConfluence } from "@forge/bridge";
 
-import { ClientError, Content, SearchResponse } from "../../src/types/types";
+import {
+  ClientError,
+  Content,
+  SearchResponse,
+  User,
+} from "../../src/types/types";
 
 export const getContentInSpace = async (
   id: string,
@@ -143,6 +148,19 @@ export const deleteAttachment = async (id: string): Promise<void> => {
     },
     async (response: Response) => {
       await response;
+    },
+  );
+};
+
+export const getCurrentUser = async (): Promise<User> => {
+  return await _executeRequest<User>(
+    async () => {
+      return await requestConfluence(
+        "/wiki/rest/api/user/current?expand=operations",
+      );
+    },
+    async (response: Response) => {
+      return await response.json();
     },
   );
 };

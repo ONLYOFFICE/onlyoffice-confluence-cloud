@@ -59,6 +59,9 @@
     "close": {
       "title": "Close"
     },
+    "configure": {
+      "title": "Check configuration"
+    },
     "save": {
       "title": "Save"
     },
@@ -99,7 +102,8 @@
     },
     "docs-api-undefined": {
       "title": "Document Server Error",
-      "description": "Failed to connect to the ONLYOFFICE Document Server. Please check your server configuration."
+      "description": "ONLYOFFICE Docs server cannot be reached. Please contact admin.",
+      "description-admin": "ONLYOFFICE Docs server cannot be reached. Please check the ONLYOFFICE Docs configuration."
     }
   },
   "component": {

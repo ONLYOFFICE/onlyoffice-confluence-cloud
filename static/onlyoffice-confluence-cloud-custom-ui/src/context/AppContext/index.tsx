@@ -47,6 +47,7 @@ const styles = {
 export interface AppError {
   title: string;
   description: string;
+  primaryAction?: ReactNode;
   secondaryAction?: ReactNode;
   imageUrl?: string;
 }
@@ -104,15 +105,19 @@ export const AppContextProvider: React.FC<AppContextProps> = ({ children }) => {
             description={appError.description}
             headingLevel={2}
             primaryAction={
-              <Button
-                appearance="primary"
-                iconBefore={RetryIcon}
-                onClick={() => {
-                  setAppError(undefined);
-                }}
-              >
-                {t("buttons.reload-app.title")}
-              </Button>
+              appError.primaryAction ? (
+                appError.primaryAction
+              ) : (
+                <Button
+                  appearance="primary"
+                  iconBefore={RetryIcon}
+                  onClick={() => {
+                    setAppError(undefined);
+                  }}
+                >
+                  {t("buttons.reload-app.title")}
+                </Button>
+              )
             }
             secondaryAction={appError.secondaryAction}
           />

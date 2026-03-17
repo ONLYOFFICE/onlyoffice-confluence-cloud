@@ -18,13 +18,16 @@
 
 import React, { useEffect, useState, useRef, useContext } from "react";
 
+import Button from "@atlaskit/button/new";
 import { Flex, xcss } from "@atlaskit/primitives";
 import Spinner from "@atlaskit/spinner";
 import { invoke, router, view } from "@forge/bridge";
 import { FullContext } from "@forge/bridge/out/types";
 
+import { getCurrentUser } from "../../client";
 import { AppContext } from "../../context/AppContext";
-import { RemoteAppAuthorization } from "../../types/types";
+import { RemoteAppAuthorization, User } from "../../types/types";
+import { isAdmin } from "../../util/userUtils";
 
 const styles = {
   mainContainer: xcss({
@@ -53,6 +56,7 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
   const [loading, setLoading] = useState(true);
   const remoteAppUrl = useRef<string | null>(null);
   const [token, setToken] = useState<string>();
+  const currentUserRef = useRef<User>();
 
   const location = new URL(context.extension.location);
   const parentId = location.searchParams.get("parentId");
@@ -109,14 +113,18 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
       }
     };
 
-    invoke<RemoteAppAuthorization>("authorizeRemoteApp", {
-      parentId,
-      attachmentId,
-    })
-      .then((data: RemoteAppAuthorization) => {
-        setToken(data.token);
-        remoteAppUrl.current = data.remoteAppUrl;
-        scheduleReauthorization(data.sessionExpires);
+    Promise.all([
+      invoke<RemoteAppAuthorization>("authorizeRemoteApp", {
+        parentId,
+        attachmentId,
+      }),
+      getCurrentUser(),
+    ])
+      .then(([authData, currentUser]) => {
+        setToken(authData.token);
+        remoteAppUrl.current = authData.remoteAppUrl;
+        scheduleReauthorization(authData.sessionExpires);
+        currentUserRef.current = currentUser;
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -178,7 +186,22 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
         if (type === "DOCS_API_UNDEFINED") {
           setAppError({
             title: t("error-state.docs-api-undefined.title"),
-            description: t("error-state.docs-api-undefined.description"),
+            description: isAdmin(currentUserRef.current?.operations)
+              ? t("error-state.docs-api-undefined.description-admin")
+              : t("error-state.docs-api-undefined.description"),
+            primaryAction: isAdmin(currentUserRef.current?.operations) ? (
+              <Button
+                appearance="primary"
+                onClick={() => {
+                  router.navigate({
+                    target: "module",
+                    moduleKey: "settings-page",
+                  });
+                }}
+              >
+                {t("buttons.configure.title")}
+              </Button>
+            ) : undefined,
           });
         }
 

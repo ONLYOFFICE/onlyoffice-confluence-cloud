@@ -84,6 +84,12 @@ export interface User {
   displayName: string;
   email: string;
   profilePicture: Record<string, string>;
+  operations: Array<Operation>;
+}
+
+export interface Operation {
+  operation: string;
+  targetType: string;
 }
 
 export class ClientError extends Error {
