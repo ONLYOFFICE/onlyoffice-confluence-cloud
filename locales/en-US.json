@@ -1,0 +1,181 @@
+{
+  "page": {
+    "settings": {
+      "title": "ONLYOFFICE",
+      "welcome": {
+        "header": "Welcome to ONLYOFFICE Docs!",
+        "description": "Work on all kinds of office documents within Confluence Cloud using ONLYOFFICE Docs.",
+        "links": {
+          "learn-more": "Learn more",
+          "suggest-feature": "Suggest a feature"
+        }
+      },
+      "connections-settings": {
+        "header": "Connection Settings",
+        "fields": {
+          "url": {
+            "title": "ONLYOFFICE Docs address",
+            "description": "Here, please specify the address of your ONLYOFFICE Docs server."
+          },
+          "security-key": {
+            "title": "ONLYOFFICE Docs secret key",
+            "description": "Use the auto-generated JWT secret key or set your own here and the same one in the ONLYOFFICE Docs config file."
+          },
+          "security-header": {
+            "title": "Authorization header",
+            "description": "Leave blank to use default header"
+          },
+          "demo": {
+            "title": "Connect to demo ONLYOFFICE Docs server",
+            "description-active": "You are successfully connected to the demo server. It will be available until {time}. To disable it, uncheck the box.",
+            "description-availabale": "This is a public test server, please do not use it for private sensitive data. The server will be available during a 30-day period.",
+            "description-not-availabale": "The 30-day test period is over. You are no longer able to connect to the demo server."
+          }
+        }
+      },
+      "messages": {
+        "settings-saved": "Settings saved successfully.",
+        "save-settings-failed": "Error saving settings, please try again"
+      }
+    },
+    "main": {
+      "title": "Welcome to ONLYOFFICE!",
+      "description": "Create and open attachments from your space. All files from Content and Blogs will appear here. To create a new file, click to any page and press Create button.",
+      "modal-title": "ONLYOFFICE Docs"
+    },
+    "editor": {
+      "messages": {
+        "you-using-demo-server": "You are using the public demo server of ONLYOFFICE Docs. Please avoid storing any private or sensitive data."
+      }
+    }
+  },
+  "buttons": {
+    "filter": {
+      "title": "Filter"
+    },
+    "reload-app": {
+      "title": "Reload"
+    },
+    "close": {
+      "title": "Close"
+    },
+    "configure": {
+      "title": "Check configuration"
+    },
+    "save": {
+      "title": "Save"
+    },
+    "get-now": {
+      "title": "Get Now"
+    },
+    "previous": {
+      "title": "Previous"
+    },
+    "next": {
+      "title": "Next"
+    },
+    "create": {
+      "title": "Create",
+      "tooltip": "Open any page or blog post to create a file"
+    },
+    "delete": {
+      "title": "Delete"
+    },
+    "cancel": {
+      "title": "Cancel"
+    }
+  },
+  "labels": {
+    "loading": "Loading",
+    "warning": "Warning",
+    "search": "Search",
+    "more": "More actions"
+  },
+  "error-state": {
+    "common": {
+      "title": "App loading error",
+      "description": "An unexpected error occurred while loading the application. Please reload it to continue."
+    },
+    "not-found": {
+      "title": "We couldn't find what you're looking for",
+      "description": "It may have been deleted, the URL could have a typo in it, or you may need to log in to view it."
+    },
+    "docs-api-undefined": {
+      "title": "Document Server Error",
+      "description": "ONLYOFFICE Docs server cannot be reached. Please contact admin.",
+      "description-admin": "ONLYOFFICE Docs server cannot be reached. Please check the ONLYOFFICE Docs configuration."
+    }
+  },
+  "component": {
+    "content-tree": {
+      "actions": {
+        "show-only-files": "Show files only",
+        "edit": "Edit",
+        "view": "View",
+        "download": "Download",
+        "navigate-to": "Navigate to",
+        "delete": "Delete"
+      },
+      "section": {
+        "content": "Content",
+        "blogs": "Blogs"
+      },
+      "table": {
+        "headers": {
+          "title": "Title",
+          "size": "Size",
+          "modified": "Modified"
+        }
+      },
+      "empty-state": {
+        "search": {
+          "title": "Nothing found",
+          "description": "We couldn't find any content with that title"
+        },
+        "list": {
+          "title": "No docs here yet",
+          "description": "Create a new document by clicking Create button"
+        }
+      },
+      "dialog": {
+        "delete-attachment": {
+          "title": "Delete attachment",
+          "description": "Are you sure you want to delete \"{filename}\"?"
+        }
+      }
+    }
+  },
+  "notifications": {
+    "attachment-created": "Attachment \"{filename}\" created successfully.",
+    "attachment-deleted": "Attachment \"{filename}\" deleted successfully.",
+    "attachment-create-failed": "Failed to create attachment. Please try again.",
+    "attachment-create-with-same-filename": "Cannot add a new attachment with same file name as an existing attachment: \"{filename}\".",
+    "attachment-delete-failed": "Failed to delete attachment. Please try again.",
+    "attachment-not-found": "Attachment File Not Found"
+  },
+  "validation": {
+    "title-required": "A title is required"
+  },
+  "content-type": {
+    "page": "Page",
+    "blogpost": "Blog Post",
+    "whiteboard": "Whiteboard",
+    "database": "Database",
+    "embed": "Smart Link",
+    "folder": "Folder"
+  },
+  "document-type": {
+    "word": "Document",
+    "cell": "Spreadsheet",
+    "slide": "Presentaion",
+    "pdf": "PDF form",
+    "new-word": "New Document",
+    "new-cell": "New Spreadsheet",
+    "new-slide": "New Presentation",
+    "new-pdf": "New PDF form"
+  },
+  "docs-cloud-banner": {
+    "header": "ONLYOFFICE Docs Cloud",
+    "description": "Easily launch the editors in the cloud without downloading and installation"
+  }
+}

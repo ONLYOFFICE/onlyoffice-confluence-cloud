@@ -1,0 +1,99 @@
+app:
+  id: ari:cloud:ecosystem::app/${FORGE_APP_ID}
+  connect:
+    key: onlyoffice.onlyoffice-confluence-plugin
+  runtime:
+    name: nodejs22.x
+    memoryMB: 256
+    architecture: arm64
+
+translations:
+  resources:
+    - key: en-US
+      path: locales/en-US.json
+  fallback:
+    default: en-US
+
+remotes:
+  - key: onlyoffice-backend
+    baseUrl: "${FORGE_REMOTE_APP_URL}"
+    operations:
+      - compute
+    auth:
+      appSystemToken:
+        enabled: true
+      appUserToken:
+        enabled: true
+
+modules:
+  confluence:globalSettings:
+    - key: settings-page
+      title:
+        i18n: page.settings.title
+      render: native
+      useAsConfig: true
+      resource: settings-page
+      resolver:
+        function: settings-page-resolver
+  confluence:spacePage:
+    - key: main-page
+      resource: custom-ui
+      resolver:
+        function: main-page-resolver
+      title: ONLYOFFICE
+      icon: resource:assets;images/onlyoffice-logo-monochrome.svg
+      route: onlyoffice
+  confluence:contentAction:
+    - key: main-page-action
+      resource: custom-ui
+      resolver:
+        function: main-page-resolver
+      viewportSize: max
+      title: ONLYOFFICE
+  confluence:fullPage:
+    - key: editor-page
+      resource: custom-ui
+      resolver:
+        function: editor-page-resolver
+      title: ONLYOFFICE
+      routePrefix: editor
+  function:
+    - key: settings-page-resolver
+      handler: index.settingsPageResolver
+    - key: main-page-resolver
+      handler: index.mainPageResolver
+    - key: editor-page-resolver
+      handler: index.editorPageResolver
+
+resources:
+  - key: settings-page
+    path: src/frontend/settingsPage.tsx
+  - key: custom-ui
+    path: static/onlyoffice-confluence-cloud-custom-ui/build
+  - key: assets
+    path: src/assets
+
+environment:
+  variables:
+    - FORGE_APP_ID
+    - FORGE_REMOTE_APP_URL
+
+permissions:
+  content:
+    scripts:
+      - 'unsafe-inline'
+    styles:
+      - 'unsafe-inline'
+  scopes:
+    - storage:app
+    - read:confluence-user
+    - read:app-system-token
+    - read:app-user-token
+    - read:content-details:confluence
+    - read:attachment:confluence
+    - read:page:confluence
+    - write:confluence-file
+    - delete:attachment:confluence
+  external:
+    frames:
+      - address: ${FORGE_REMOTE_APP_URL}/editor/confluence

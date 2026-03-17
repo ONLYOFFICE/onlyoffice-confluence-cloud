@@ -1,0 +1,31 @@
+---
+- - :approve
+  - "@forge/bridge"
+  - :who:
+    :why: Atlassian
+    :versions: []
+    :when: 2025-11-11 11:57:50.405959500 Z
+- - :approve
+  - "@forge/egress"
+  - :who:
+    :why: Atlassian
+    :versions: []
+    :when: 2025-11-11 11:57:50.405959500 Z 
+- - :approve
+  - "@forge/i18n"
+  - :who:
+    :why: Atlassian
+    :versions: []
+    :when: 2025-11-11 11:57:50.405959500 Z   
+- - :approve
+  - "@forge/manifest"
+  - :who:
+    :why: Atlassian
+    :versions: []
+    :when: 2025-11-11 11:57:50.405959500 Z
+- - :approve
+  - "@forge/resolver"
+  - :who:
+    :why: Atlassian
+    :versions: []
+    :when: 2025-11-11 11:57:50.405959500 Z

@@ -1,0 +1,45 @@
+{
+  "name": "@onlyoffice/confluence-cloud-custom-ui",
+  "version": "0.1.57",
+  "private": true,
+  "dependencies": {
+    "@atlaskit/app-provider": "^4.1.0",
+    "@atlaskit/breadcrumbs": "^15.3.16",
+    "@atlaskit/button": "^23.4.1",
+    "@atlaskit/css": "^0.19.0",
+    "@atlaskit/css-reset": "^7.3.12",
+    "@atlaskit/dropdown-menu": "^16.3.23",
+    "@atlaskit/dynamic-table": "^18.2.10",
+    "@atlaskit/empty-state": "^10.1.4",
+    "@atlaskit/flag": "^17.3.2",
+    "@atlaskit/form": "^15.2.0",
+    "@atlaskit/heading": "^5.2.16",
+    "@atlaskit/icon": "^31.0.0",
+    "@atlaskit/modal-dialog": "^14.8.0",
+    "@atlaskit/popup": "^4.9.0",
+    "@atlaskit/primitives": "^18.0.0",
+    "@atlaskit/select": "^21.6.3",
+    "@atlaskit/tabs": "^18.3.1",
+    "@atlaskit/textfield": "^8.2.0",
+    "@atlaskit/tooltip": "^20.14.6",
+    "@atlaskit/visually-hidden": "^3.0.4",
+    "@forge/bridge": "5.13.0",
+    "bytes": "^3.1.2",
+    "react": "^18",
+    "react-dom": "^18"
+  },
+  "devDependencies": {
+    "@types/bytes": "^3.1.5",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "5.9.3",
+    "vite": "^6.1.0",
+    "vite-plugin-svgr": "^4.3.0"
+  },
+  "scripts": {
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  }
+}

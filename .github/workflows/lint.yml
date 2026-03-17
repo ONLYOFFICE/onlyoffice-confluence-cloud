@@ -2,10 +2,22 @@ name: Lint
 
 on:
   workflow_dispatch:
-  push:
-    branches: [master]
   pull_request:
+    types: [opened, reopened]
     branches: [master, develop]
+    paths:
+      - '**/*.ts'
+      - '**/*.tsx'
+      - '**/*.yml'
+  push:
+    branches: [master, develop]
+    paths:
+      - '**/*.ts'
+      - '**/*.tsx'
+      - '**/*.yml'
+
+permissions:
+  contents: read
 
 jobs:
   lint:
@@ -18,10 +30,10 @@ jobs:
       - name: Install NodeJS
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 22
 
       - name: Install Dependencies
         run: npm install
 
       - name: Code Linting
-        run: npm run lint
+        run: npm run eslint
