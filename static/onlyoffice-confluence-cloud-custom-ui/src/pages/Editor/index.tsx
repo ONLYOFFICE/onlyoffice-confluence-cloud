@@ -26,7 +26,11 @@ import { FullContext } from "@forge/bridge/out/types";
 
 import { getCurrentUser } from "../../client";
 import { AppContext } from "../../context/AppContext";
-import { RemoteAppAuthorization, User } from "../../types/types";
+import {
+  EditorConfigResponse,
+  RemoteAppAuthorization,
+  User,
+} from "../../types/types";
 import { isAdmin } from "../../util/userUtils";
 
 const styles = {
@@ -57,6 +61,9 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
   const remoteAppUrl = useRef<string | null>(null);
   const [token, setToken] = useState<string>();
   const currentUserRef = useRef<User>();
+  const [editorConfigResponse, setEditorConfigResponse] =
+    useState<EditorConfigResponse>();
+  const [editorIframeIsLoaded, setEditorFrameIsLoaded] = useState(false);
 
   const location = new URL(context.extension.location);
   const parentId = location.searchParams.get("parentId");
@@ -113,18 +120,34 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
       }
     };
 
-    Promise.all([
-      invoke<RemoteAppAuthorization>("authorizeRemoteApp", {
-        parentId,
-        attachmentId,
-      }),
-      getCurrentUser(),
-    ])
-      .then(([authData, currentUser]) => {
-        setToken(authData.token);
-        remoteAppUrl.current = authData.remoteAppUrl;
-        scheduleReauthorization(authData.sessionExpires);
-        currentUserRef.current = currentUser;
+    if (editorIframeIsLoaded && editorConfigResponse) {
+      view.changeWindowTitle(
+        `${editorConfigResponse.config.document.title} - ONLYOFFICE`,
+      );
+
+      scheduleReauthorization(editorConfigResponse.sessionExpires);
+
+      sendMessageToIframe("OPEN_EDITOR", {
+        config: editorConfigResponse.config,
+        sessionExpires: editorConfigResponse.sessionExpires,
+      });
+
+      setLoading(false);
+    }
+
+    return () => {
+      clearTimeout(sessionTimeout);
+    };
+  }, [editorIframeIsLoaded, editorConfigResponse]);
+
+  useEffect(() => {
+    invoke<EditorConfigResponse>("editor-config", {
+      parentId,
+      attachmentId,
+      mode,
+    })
+      .then((editorConfigResponse) => {
+        setEditorConfigResponse(editorConfigResponse);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -135,9 +158,26 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
         });
       });
 
-    return () => {
-      clearTimeout(sessionTimeout);
-    };
+    Promise.all([
+      invoke<RemoteAppAuthorization>("authorizeRemoteApp", {
+        parentId,
+        attachmentId,
+      }),
+      getCurrentUser(),
+    ])
+      .then(([authData, currentUser]) => {
+        setToken(authData.token);
+        remoteAppUrl.current = authData.remoteAppUrl;
+        currentUserRef.current = currentUser;
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+
+        setAppError({
+          title: t("error-state.common.title"),
+          description: t("error-state.common.description"),
+        });
+      });
   }, []);
 
   const onRequestOpen = (data: object) => {
@@ -206,8 +246,7 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
         }
 
         if (type === "PAGE_IS_LOADED") {
-          view.changeWindowTitle(`${data.config.document.title} - ONLYOFFICE`);
-          setLoading(false);
+          setEditorFrameIsLoaded(true);
         }
 
         if (type === "DOCUMENT_READY") {
@@ -259,7 +298,7 @@ const EditorPage: React.FC<EditorPageProps> = ({ context }) => {
             ...styles.iframe,
             display: loading ? "none" : "block",
           }}
-          src={`${remoteAppUrl.current}/editor/confluence?mode=${mode}&token=${token}`}
+          src={`${remoteAppUrl.current}/editor/confluence?format=single&token=${token}`}
         />
       )}
     </Flex>

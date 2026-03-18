@@ -18,7 +18,11 @@
 
 import Resolver, { Request } from "@forge/resolver";
 
-import { postRemoteAppAuthorization, postRemoteReferenceData } from "../client";
+import {
+  getRemoteEditorConfig,
+  postRemoteAppAuthorization,
+  postRemoteReferenceData,
+} from "../client";
 
 const editorPageResolver = new Resolver();
 
@@ -31,6 +35,19 @@ editorPageResolver.define("authorizeRemoteApp", async (request: Request) => {
     environmentId,
     parentId,
     attachmentId,
+  );
+});
+
+editorPageResolver.define("editor-config", async (request: Request) => {
+  const { cloudId, environmentId } = request.context;
+  const { parentId, attachmentId, mode } = request.payload;
+
+  return await getRemoteEditorConfig(
+    cloudId,
+    environmentId,
+    parentId,
+    attachmentId,
+    mode,
   );
 });
 

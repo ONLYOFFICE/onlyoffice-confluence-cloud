@@ -165,6 +165,32 @@ export const postRemoteReferenceData = async (
   );
 };
 
+export const getRemoteEditorConfig = async (
+  cloudId: string,
+  environmentId: string,
+  parentId: string,
+  attachmentId: string,
+  mode: string,
+): Promise<Record<string, object>> => {
+  return await _executeRequest<Record<string, object>>(
+    async () => {
+      return await invokeRemote("onlyoffice-backend", {
+        method: "GET",
+        path: `/api/v1/remote/editor-config/confluence?parentId=${parentId}&attachmentId=${attachmentId}&mode=${mode}`,
+        headers: {
+          "Content-Type": "application/json",
+          "x-cloud-id": cloudId,
+          "x-environment-id": environmentId,
+        },
+      });
+    },
+    async (response: APIResponse) => {
+      return await response.json();
+    },
+    1,
+  );
+};
+
 async function _executeRequest<T>(
   onRequest: () => Promise<APIResponse>,
   onResponse: (response: APIResponse) => T | Promise<T>,

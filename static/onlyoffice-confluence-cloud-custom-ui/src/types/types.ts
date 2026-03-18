@@ -92,6 +92,17 @@ export interface Operation {
   targetType: string;
 }
 
+export interface EditorConfigResponse {
+  config: Config;
+  sessionExpires: number;
+}
+
+export interface Config {
+  document: {
+    title: string;
+  };
+}
+
 export class ClientError extends Error {
   status: number | null;
 
