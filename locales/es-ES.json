@@ -1,0 +1,181 @@
+{
+  "page": {
+    "settings": {
+      "title": "ONLYOFFICE",
+      "welcome": {
+        "header": "Bienvenido a ONLYOFFICE Docs!",
+        "description": "Trabaje con todo tipo de documentos de oficina en Confluence Cloud usando ONLYOFFICE Docs.",
+        "links": {
+          "learn-more": "Más información",
+          "suggest-feature": "Sugerir una función"
+        }
+      },
+      "connections-settings": {
+        "header": "Configuración de conexión",
+        "fields": {
+          "url": {
+            "title": "Dirección de ONLYOFFICE Docs",
+            "description": "Especifique aquí la dirección de su servidor de ONLYOFFICE Docs."
+          },
+          "security-key": {
+            "title": "Clave secreta de ONLYOFFICE Docs",
+            "description": "Use la clave secreta JWT generada automáticamente o establezca aquí la suya propia y la misma en el archivo de configuración de ONLYOFFICE Docs."
+          },
+          "security-header": {
+            "title": "Encabezado de autorización",
+            "description": "Déjelo en blanco para usar el encabezado predeterminado"
+          },
+          "demo": {
+            "title": "Conectar al servidor demo de ONLYOFFICE Docs",
+            "description-active": "Se ha conectado correctamente al servidor demo. Estará disponible hasta {time}. Para desactivarlo, desmarque la casilla.",
+            "description-availabale": "Este es un servidor de prueba público; no lo utilice para datos privados o sensibles. El servidor estará disponible durante un periodo de 30 días.",
+            "description-not-availabale": "El periodo de prueba de 30 días ha terminado. Ya no puede conectarse al servidor demo."
+          }
+        }
+      },
+      "messages": {
+        "settings-saved": "Configuración guardada correctamente.",
+        "save-settings-failed": "Error al guardar la configuración. Inténtelo de nuevo"
+      }
+    },
+    "main": {
+      "title": "Bienvenido a ONLYOFFICE!",
+      "description": "Cree y abra archivos adjuntos desde su espacio. Todos los archivos de Contenido y Blogs aparecerán aquí. Para crear un archivo nuevo, abra cualquier página y pulse el botón Crear.",
+      "modal-title": "ONLYOFFICE Docs"
+    },
+    "editor": {
+      "messages": {
+        "you-using-demo-server": "Está usando el servidor demo público de ONLYOFFICE Docs. Evite almacenar datos privados o sensibles."
+      }
+    }
+  },
+  "buttons": {
+    "filter": {
+      "title": "Filtro"
+    },
+    "reload-app": {
+      "title": "Recargar"
+    },
+    "close": {
+      "title": "Cerrar"
+    },
+    "configure": {
+      "title": "Comprobar configuración"
+    },
+    "save": {
+      "title": "Guardar"
+    },
+    "get-now": {
+      "title": "Obtener ahora"
+    },
+    "previous": {
+      "title": "Anterior"
+    },
+    "next": {
+      "title": "Siguiente"
+    },
+    "create": {
+      "title": "Crear",
+      "tooltip": "Abra cualquier página o entrada de blog para crear un archivo"
+    },
+    "delete": {
+      "title": "Eliminar"
+    },
+    "cancel": {
+      "title": "Cancelar"
+    }
+  },
+  "labels": {
+    "loading": "Cargando",
+    "warning": "Advertencia",
+    "search": "Buscar",
+    "more": "Más acciones"
+  },
+  "error-state": {
+    "common": {
+      "title": "Error al cargar la aplicación",
+      "description": "Se produjo un error inesperado al cargar la aplicación. Recárguela para continuar."
+    },
+    "not-found": {
+      "title": "No hemos podido encontrar lo que busca",
+      "description": "Puede que se haya eliminado, que la URL contenga un error tipográfico o que deba iniciar sesión para verlo."
+    },
+    "docs-api-undefined": {
+      "title": "Error del servidor de documentos",
+      "description": "No se puede acceder al servidor de ONLYOFFICE Docs. Póngase en contacto con el administrador.",
+      "description-admin": "No se puede acceder al servidor de ONLYOFFICE Docs. Compruebe la configuración de ONLYOFFICE Docs."
+    }
+  },
+  "component": {
+    "content-tree": {
+      "actions": {
+        "show-only-files": "Mostrar solo archivos",
+        "edit": "Editar",
+        "view": "Ver",
+        "download": "Descargar",
+        "navigate-to": "Ir a",
+        "delete": "Eliminar"
+      },
+      "section": {
+        "content": "Contenido",
+        "blogs": "Blogs"
+      },
+      "table": {
+        "headers": {
+          "title": "Título",
+          "size": "Tamaño",
+          "modified": "Modificado"
+        }
+      },
+      "empty-state": {
+        "search": {
+          "title": "No se encontró nada",
+          "description": "No hemos encontrado ningún contenido con ese título"
+        },
+        "list": {
+          "title": "Aún no hay documentos",
+          "description": "Cree un documento nuevo haciendo clic en el botón Crear"
+        }
+      },
+      "dialog": {
+        "delete-attachment": {
+          "title": "Eliminar archivo adjunto",
+          "description": "¿Seguro que desea eliminar \"{filename}\"?"
+        }
+      }
+    }
+  },
+  "notifications": {
+    "attachment-created": "El archivo adjunto \"{filename}\" se ha creado correctamente.",
+    "attachment-deleted": "El archivo adjunto \"{filename}\" se ha eliminado correctamente.",
+    "attachment-create-failed": "No se pudo crear el archivo adjunto. Inténtelo de nuevo.",
+    "attachment-create-with-same-filename": "No se puede añadir un archivo adjunto nuevo con el mismo nombre que uno existente: \"{filename}\".",
+    "attachment-delete-failed": "No se pudo eliminar el archivo adjunto. Inténtelo de nuevo.",
+    "attachment-not-found": "Archivo adjunto no encontrado"
+  },
+  "validation": {
+    "title-required": "Se requiere un título"
+  },
+  "content-type": {
+    "page": "Página",
+    "blogpost": "Entrada de blog",
+    "whiteboard": "Pizarra",
+    "database": "Base de datos",
+    "embed": "Smart Link",
+    "folder": "Carpeta"
+  },
+  "document-type": {
+    "word": "Documento",
+    "cell": "Hoja de cálculo",
+    "slide": "Presentación",
+    "pdf": "Formulario PDF",
+    "new-word": "Nuevo documento",
+    "new-cell": "Nueva hoja de cálculo",
+    "new-slide": "Nueva presentación",
+    "new-pdf": "Nuevo formulario PDF"
+  },
+  "docs-cloud-banner": {
+    "header": "ONLYOFFICE Docs Cloud",
+    "description": "Inicie fácilmente los editores en la nube sin descargarlos ni instalarlos"
+  }
+}

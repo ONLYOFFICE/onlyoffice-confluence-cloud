@@ -1,0 +1,181 @@
+{
+  "page": {
+    "settings": {
+      "title": "ONLYOFFICE",
+      "welcome": {
+        "header": "Bienvenue dans ONLYOFFICE Docs !",
+        "description": "Travaillez sur tous types de documents bureautiques dans Confluence Cloud avec ONLYOFFICE Docs.",
+        "links": {
+          "learn-more": "En savoir plus",
+          "suggest-feature": "Suggérer une fonctionnalité"
+        }
+      },
+      "connections-settings": {
+        "header": "Paramètres de connexion",
+        "fields": {
+          "url": {
+            "title": "Adresse d'ONLYOFFICE Docs",
+            "description": "Indiquez ici l'adresse de votre serveur ONLYOFFICE Docs."
+          },
+          "security-key": {
+            "title": "Clé secrète ONLYOFFICE Docs",
+            "description": "Utilisez la clé secrète JWT générée automatiquement ou définissez ici votre propre clé, puis utilisez la même dans le fichier de configuration d'ONLYOFFICE Docs."
+          },
+          "security-header": {
+            "title": "En-tête d'autorisation",
+            "description": "Laissez vide pour utiliser l'en-tête par défaut"
+          },
+          "demo": {
+            "title": "Se connecter au serveur de démonstration ONLYOFFICE Docs",
+            "description-active": "Vous êtes bien connecté au serveur de démonstration. Il sera disponible jusqu'au {time}. Pour le désactiver, décochez la case.",
+            "description-availabale": "Il s'agit d'un serveur de test public. Veuillez ne pas l'utiliser pour des données privées ou sensibles. Le serveur sera disponible pendant une période de 30 jours.",
+            "description-not-availabale": "La période d'essai de 30 jours est terminée. Vous ne pouvez plus vous connecter au serveur de démonstration."
+          }
+        }
+      },
+      "messages": {
+        "settings-saved": "Paramètres enregistrés avec succès.",
+        "save-settings-failed": "Erreur lors de l'enregistrement des paramètres, veuillez réessayer"
+      }
+    },
+    "main": {
+      "title": "Bienvenue dans ONLYOFFICE !",
+      "description": "Créez et ouvrez des pièces jointes depuis votre espace. Tous les fichiers de Contenu et Blogs apparaîtront ici. Pour créer un nouveau fichier, ouvrez n'importe quelle page et cliquez sur le bouton Créer.",
+      "modal-title": "ONLYOFFICE Docs"
+    },
+    "editor": {
+      "messages": {
+        "you-using-demo-server": "Vous utilisez le serveur de démonstration public d'ONLYOFFICE Docs. Évitez d'y stocker des données privées ou sensibles."
+      }
+    }
+  },
+  "buttons": {
+    "filter": {
+      "title": "Filtrer"
+    },
+    "reload-app": {
+      "title": "Recharger"
+    },
+    "close": {
+      "title": "Fermer"
+    },
+    "configure": {
+      "title": "Vérifier la configuration"
+    },
+    "save": {
+      "title": "Enregistrer"
+    },
+    "get-now": {
+      "title": "Obtenir maintenant"
+    },
+    "previous": {
+      "title": "Précédent"
+    },
+    "next": {
+      "title": "Suivant"
+    },
+    "create": {
+      "title": "Créer",
+      "tooltip": "Ouvrez une page ou un article de blog pour créer un fichier"
+    },
+    "delete": {
+      "title": "Supprimer"
+    },
+    "cancel": {
+      "title": "Annuler"
+    }
+  },
+  "labels": {
+    "loading": "Chargement",
+    "warning": "Avertissement",
+    "search": "Rechercher",
+    "more": "Plus d'actions"
+  },
+  "error-state": {
+    "common": {
+      "title": "Erreur de chargement de l'application",
+      "description": "Une erreur inattendue s'est produite lors du chargement de l'application. Veuillez la recharger pour continuer."
+    },
+    "not-found": {
+      "title": "Nous n'avons pas trouvé ce que vous recherchez",
+      "description": "L'élément a peut-être été supprimé, l'URL contient peut-être une faute de frappe, ou vous devez vous connecter pour le consulter."
+    },
+    "docs-api-undefined": {
+      "title": "Erreur du serveur de documents",
+      "description": "Le serveur ONLYOFFICE Docs est inaccessible. Veuillez contacter l'administrateur.",
+      "description-admin": "Le serveur ONLYOFFICE Docs est inaccessible. Veuillez vérifier la configuration d'ONLYOFFICE Docs."
+    }
+  },
+  "component": {
+    "content-tree": {
+      "actions": {
+        "show-only-files": "Afficher uniquement les fichiers",
+        "edit": "Modifier",
+        "view": "Afficher",
+        "download": "Télécharger",
+        "navigate-to": "Accéder à",
+        "delete": "Supprimer"
+      },
+      "section": {
+        "content": "Contenu",
+        "blogs": "Blogs"
+      },
+      "table": {
+        "headers": {
+          "title": "Titre",
+          "size": "Taille",
+          "modified": "Modifié"
+        }
+      },
+      "empty-state": {
+        "search": {
+          "title": "Aucun résultat",
+          "description": "Nous n'avons trouvé aucun contenu avec ce titre"
+        },
+        "list": {
+          "title": "Aucun document pour le moment",
+          "description": "Créez un nouveau document en cliquant sur le bouton Créer"
+        }
+      },
+      "dialog": {
+        "delete-attachment": {
+          "title": "Supprimer la pièce jointe",
+          "description": "Voulez-vous vraiment supprimer \"{filename}\" ?"
+        }
+      }
+    }
+  },
+  "notifications": {
+    "attachment-created": "La pièce jointe \"{filename}\" a été créée avec succès.",
+    "attachment-deleted": "La pièce jointe \"{filename}\" a été supprimée avec succès.",
+    "attachment-create-failed": "Impossible de créer la pièce jointe. Veuillez réessayer.",
+    "attachment-create-with-same-filename": "Impossible d'ajouter une nouvelle pièce jointe portant le même nom qu'une pièce jointe existante : \"{filename}\".",
+    "attachment-delete-failed": "Impossible de supprimer la pièce jointe. Veuillez réessayer.",
+    "attachment-not-found": "Fichier joint introuvable"
+  },
+  "validation": {
+    "title-required": "Un titre est requis"
+  },
+  "content-type": {
+    "page": "Page",
+    "blogpost": "Article de blog",
+    "whiteboard": "Tableau blanc",
+    "database": "Base de données",
+    "embed": "Smart Link",
+    "folder": "Dossier"
+  },
+  "document-type": {
+    "word": "Document",
+    "cell": "Feuille de calcul",
+    "slide": "Présentation",
+    "pdf": "Formulaire PDF",
+    "new-word": "Nouveau document",
+    "new-cell": "Nouvelle feuille de calcul",
+    "new-slide": "Nouvelle présentation",
+    "new-pdf": "Nouveau formulaire PDF"
+  },
+  "docs-cloud-banner": {
+    "header": "ONLYOFFICE Docs Cloud",
+    "description": "Lancez facilement les éditeurs dans le cloud sans téléchargement ni installation"
+  }
+}
