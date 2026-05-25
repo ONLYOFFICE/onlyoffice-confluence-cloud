@@ -222,7 +222,7 @@ const SettingsPage = () => {
                 label={t("page.settings.welcome.links.learn-more")}
               />
               <ExternalLink
-                url="https://feedback.onlyoffice.com/forums/966080-your-voice-matters?category_id=519288"
+                url="https://community.onlyoffice.com/c/suggestions/integrations/56"
                 label={t("page.settings.welcome.links.suggest-feature")}
               />
             </Inline>
