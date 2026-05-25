@@ -1,6 +1,6 @@
 # Change Log
 
-##
+## 2.1.0
 ## Added
 - new empty file templates
 - Forge settings page for configuring ONLYOFFICE Docs connection and demo server access
