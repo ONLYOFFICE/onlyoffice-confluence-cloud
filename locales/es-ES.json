@@ -44,9 +44,9 @@
       "modal-title": "ONLYOFFICE Docs"
     },
     "editor": {
-        "messages": {
-            "you-using-demo-server": "Está usando el servidor público de demostración de ONLYOFFICE Docs. Evite almacenar datos privados o sensibles."
-        }
+      "messages": {
+        "you-using-demo-server": "Está usando el servidor público de demostración de ONLYOFFICE Docs. Evite almacenar datos privados o sensibles."
+      }
     }
   },
   "buttons": {
@@ -93,8 +93,8 @@
   },
   "error-state": {
     "common": {
-        "title": "Error al cargar la aplicación",
-        "description": "Se ha producido un error inesperado al cargar la aplicación. Recárguela para continuar."
+      "title": "Error al cargar la aplicación",
+      "description": "Se ha producido un error inesperado al cargar la aplicación. Recárguela para continuar."
     },
     "not-found": {
       "title": "No hemos podido encontrar lo que busca",
@@ -129,8 +129,8 @@
       },
       "empty-state": {
         "search": {
-            "title": "No se ha encontrado nada",
-            "description": "No hemos encontrado ningún contenido con ese título"
+          "title": "No se ha encontrado nada",
+          "description": "No hemos encontrado ningún contenido con ese título"
         },
         "list": {
           "title": "Aún no hay documentos",
