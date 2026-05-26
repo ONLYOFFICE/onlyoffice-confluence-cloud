@@ -48,7 +48,7 @@ Alternatively, you can opt for **ONLYOFFICE Docs Cloud** which doesn't require d
 
 ## App configuration ⚙️
 
-Administrators can configure ONLYOFFICE integration app via the **Manage Apps** section in Confluence Cloud (Apps -> Manage Apps -> ONLYOFFICE -> Configure). On the configuration page, set up:
+Administrators can configure ONLYOFFICE app via the **Manage Apps** section in Confluence Cloud (Apps -> Manage Apps -> ONLYOFFICE -> Configure). On the configuration page, set up:
 
 * **Document Editing Service Address**: The URL of the installed ONLYOFFICE Docs (Document Server).
 
@@ -62,7 +62,7 @@ In the Pages module, you can attach files to the created pages: open the right c
 
 The uploaded file will appear in the Attachments list. To launch the editor, click **Edit in ONLYOFFICE**. The file opens in the same window. The changes made are saved in the same file.
 
-> Note: If a file is not supported by ONLYOFFICE, the integration will show an error message.
+> Note: If a file is not supported by ONLYOFFICE, the app will show an error message.
 
 ## ONLYOFFICE Docs editions
 

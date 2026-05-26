@@ -1,0 +1,181 @@
+{
+  "page": {
+    "settings": {
+      "title": "ONLYOFFICE",
+      "welcome": {
+        "header": "Willkommen bei ONLYOFFICE Docs!",
+        "description": "Bearbeiten Sie alle Arten von Office-Dokumenten in Confluence Cloud mit ONLYOFFICE Docs.",
+        "links": {
+          "learn-more": "Mehr erfahren",
+          "suggest-feature": "Funktion vorschlagen"
+        }
+      },
+      "connections-settings": {
+        "header": "Verbindungseinstellungen",
+        "fields": {
+          "url": {
+            "title": "Adresse von ONLYOFFICE Docs",
+            "description": "Geben Sie hier die Adresse Ihres ONLYOFFICE Docs-Servers an."
+          },
+          "security-key": {
+            "title": "Geheimer Schlüssel von ONLYOFFICE Docs",
+            "description": "Verwenden Sie den automatisch generierten geheimen JWT-Schlüssel oder legen Sie hier Ihren eigenen fest und verwenden Sie denselben in der Konfigurationsdatei von ONLYOFFICE Docs."
+          },
+          "security-header": {
+            "title": "Autorisierungsheader",
+            "description": "Leer lassen, um den Standardheader zu verwenden"
+          },
+          "demo": {
+            "title": "Mit dem Demo-Server von ONLYOFFICE Docs verbinden",
+            "description-active": "Sie sind erfolgreich mit dem Demo-Server verbunden. Er ist bis {time} verfügbar. Um ihn zu deaktivieren, entfernen Sie das Häkchen.",
+            "description-availabale": "Dies ist ein öffentlicher Testserver. Bitte verwenden Sie ihn nicht für private sensible Daten. Der Server ist für einen Zeitraum von 30 Tagen verfügbar.",
+            "description-not-availabale": "Der 30-tägige Testzeitraum ist abgelaufen. Sie können sich nicht mehr mit dem Demo-Server verbinden."
+          }
+        }
+      },
+      "messages": {
+        "settings-saved": "Einstellungen erfolgreich gespeichert.",
+        "save-settings-failed": "Fehler beim Speichern der Einstellungen. Bitte versuchen Sie es erneut"
+      }
+    },
+    "main": {
+      "title": "Willkommen bei ONLYOFFICE!",
+      "description": "Erstellen und öffnen Sie Anhänge aus Ihrem Bereich. Alle Dateien aus Inhalten und Blogs werden hier angezeigt. Um eine neue Datei zu erstellen, öffnen Sie eine beliebige Seite und klicken Sie auf die Schaltfläche Erstellen.",
+      "modal-title": "ONLYOFFICE Docs"
+    },
+    "editor": {
+      "messages": {
+        "you-using-demo-server": "Sie verwenden den öffentlichen Demo-Server von ONLYOFFICE Docs. Bitte speichern Sie dort keine privaten oder sensiblen Daten."
+      }
+    }
+  },
+  "buttons": {
+    "filter": {
+      "title": "Filter"
+    },
+    "reload-app": {
+      "title": "Neu laden"
+    },
+    "close": {
+      "title": "Schließen"
+    },
+    "configure": {
+      "title": "Konfiguration prüfen"
+    },
+    "save": {
+      "title": "Speichern"
+    },
+    "get-now": {
+      "title": "Jetzt abrufen"
+    },
+    "previous": {
+      "title": "Zurück"
+    },
+    "next": {
+      "title": "Weiter"
+    },
+    "create": {
+      "title": "Erstellen",
+      "tooltip": "Öffnen Sie eine Seite oder einen Blogbeitrag, um eine Datei zu erstellen"
+    },
+    "delete": {
+      "title": "Löschen"
+    },
+    "cancel": {
+      "title": "Abbrechen"
+    }
+  },
+  "labels": {
+    "loading": "Laden",
+    "warning": "Warnung",
+    "search": "Suchen",
+    "more": "Weitere Aktionen"
+  },
+  "error-state": {
+    "common": {
+      "title": "Fehler beim Laden der App",
+      "description": "Beim Laden der Anwendung ist ein unerwarteter Fehler aufgetreten. Bitte laden Sie sie neu, um fortzufahren."
+    },
+    "not-found": {
+      "title": "Wir konnten nicht finden, wonach Sie suchen",
+      "description": "Es wurde möglicherweise gelöscht, die URL enthält möglicherweise einen Tippfehler, oder Sie müssen sich anmelden, um es anzuzeigen."
+    },
+    "docs-api-undefined": {
+      "title": "Document Server-Fehler",
+      "description": "Der ONLYOFFICE Docs-Server ist nicht erreichbar. Bitte wenden Sie sich an den Administrator.",
+      "description-admin": "Der ONLYOFFICE Docs-Server ist nicht erreichbar. Bitte überprüfen Sie die Konfiguration von ONLYOFFICE Docs."
+    }
+  },
+  "component": {
+    "content-tree": {
+      "actions": {
+        "show-only-files": "Nur Dateien anzeigen",
+        "edit": "Bearbeiten",
+        "view": "Anzeigen",
+        "download": "Herunterladen",
+        "navigate-to": "Öffnen",
+        "delete": "Löschen"
+      },
+      "section": {
+        "content": "Inhalt",
+        "blogs": "Blogs"
+      },
+      "table": {
+        "headers": {
+          "title": "Titel",
+          "size": "Größe",
+          "modified": "Geändert"
+        }
+      },
+      "empty-state": {
+        "search": {
+          "title": "Nichts gefunden",
+          "description": "Wir konnten keinen Inhalt mit diesem Titel finden"
+        },
+        "list": {
+          "title": "Noch keine Dokumente vorhanden",
+          "description": "Erstellen Sie ein neues Dokument, indem Sie auf die Schaltfläche Erstellen klicken"
+        }
+      },
+      "dialog": {
+        "delete-attachment": {
+          "title": "Anhang löschen",
+          "description": "Möchten Sie \"{filename}\" wirklich löschen?"
+        }
+      }
+    }
+  },
+  "notifications": {
+    "attachment-created": "Anhang \"{filename}\" wurde erfolgreich erstellt.",
+    "attachment-deleted": "Anhang \"{filename}\" wurde erfolgreich gelöscht.",
+    "attachment-create-failed": "Anhang konnte nicht erstellt werden. Bitte versuchen Sie es erneut.",
+    "attachment-create-with-same-filename": "Ein neuer Anhang mit demselben Dateinamen wie ein vorhandener Anhang kann nicht hinzugefügt werden: \"{filename}\".",
+    "attachment-delete-failed": "Anhang konnte nicht gelöscht werden. Bitte versuchen Sie es erneut.",
+    "attachment-not-found": "Anhangsdatei nicht gefunden"
+  },
+  "validation": {
+    "title-required": "Ein Titel ist erforderlich"
+  },
+  "content-type": {
+    "page": "Seite",
+    "blogpost": "Blogbeitrag",
+    "whiteboard": "Whiteboard",
+    "database": "Datenbank",
+    "embed": "Smart Link",
+    "folder": "Ordner"
+  },
+  "document-type": {
+    "word": "Dokument",
+    "cell": "Kalkulationstabelle",
+    "slide": "Präsentation",
+    "pdf": "PDF-Formular",
+    "new-word": "Neues Dokument",
+    "new-cell": "Neue Kalkulationstabelle",
+    "new-slide": "Neue Präsentation",
+    "new-pdf": "Neues PDF-Formular"
+  },
+  "docs-cloud-banner": {
+    "header": "ONLYOFFICE Docs Cloud",
+    "description": "Starten Sie die Editoren einfach in der Cloud, ohne sie herunterzuladen und zu installieren"
+  }
+}
