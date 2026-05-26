@@ -26,10 +26,10 @@
             "description": "Déjelo en blanco para usar el encabezado predeterminado"
           },
           "demo": {
-            "title": "Conectar al servidor demo de ONLYOFFICE Docs",
-            "description-active": "Se ha conectado correctamente al servidor demo. Estará disponible hasta {time}. Para desactivarlo, desmarque la casilla.",
+            "title": "Conectarse al servidor de demostración de ONLYOFFICE Docs",
+            "description-active": "Se ha conectado correctamente al servidor de demostración. Estará disponible hasta {time}. Para desactivarlo, desmarque la casilla.",
             "description-availabale": "Este es un servidor de prueba público; no lo utilice para datos privados o sensibles. El servidor estará disponible durante un periodo de 30 días.",
-            "description-not-availabale": "El periodo de prueba de 30 días ha terminado. Ya no puede conectarse al servidor demo."
+            "description-not-availabale": "El periodo de prueba de 30 días ha terminado. Ya no puede conectarse al servidor de demostración."
           }
         }
       },
@@ -44,9 +44,9 @@
       "modal-title": "ONLYOFFICE Docs"
     },
     "editor": {
-      "messages": {
-        "you-using-demo-server": "Está usando el servidor demo público de ONLYOFFICE Docs. Evite almacenar datos privados o sensibles."
-      }
+        "messages": {
+            "you-using-demo-server": "Está usando el servidor público de demostración de ONLYOFFICE Docs. Evite almacenar datos privados o sensibles."
+        }
     }
   },
   "buttons": {
@@ -93,8 +93,8 @@
   },
   "error-state": {
     "common": {
-      "title": "Error al cargar la aplicación",
-      "description": "Se produjo un error inesperado al cargar la aplicación. Recárguela para continuar."
+        "title": "Error al cargar la aplicación",
+        "description": "Se ha producido un error inesperado al cargar la aplicación. Recárguela para continuar."
     },
     "not-found": {
       "title": "No hemos podido encontrar lo que busca",
@@ -129,8 +129,8 @@
       },
       "empty-state": {
         "search": {
-          "title": "No se encontró nada",
-          "description": "No hemos encontrado ningún contenido con ese título"
+            "title": "No se ha encontrado nada",
+            "description": "No hemos encontrado ningún contenido con ese título"
         },
         "list": {
           "title": "Aún no hay documentos",
@@ -148,9 +148,9 @@
   "notifications": {
     "attachment-created": "El archivo adjunto \"{filename}\" se ha creado correctamente.",
     "attachment-deleted": "El archivo adjunto \"{filename}\" se ha eliminado correctamente.",
-    "attachment-create-failed": "No se pudo crear el archivo adjunto. Inténtelo de nuevo.",
+    "attachment-create-failed": "No se ha podido crear el archivo adjunto. Inténtelo de nuevo.",
     "attachment-create-with-same-filename": "No se puede añadir un archivo adjunto nuevo con el mismo nombre que uno existente: \"{filename}\".",
-    "attachment-delete-failed": "No se pudo eliminar el archivo adjunto. Inténtelo de nuevo.",
+    "attachment-delete-failed": "No se ha podido eliminar el archivo adjunto. Inténtelo de nuevo.",
     "attachment-not-found": "Archivo adjunto no encontrado"
   },
   "validation": {

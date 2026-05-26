@@ -166,11 +166,11 @@
   },
   "document-type": {
     "word": "Dokument",
-    "cell": "Tabellendokument",
+    "cell": "Kalkulationstabelle",
     "slide": "Präsentation",
     "pdf": "PDF-Formular",
     "new-word": "Neues Dokument",
-    "new-cell": "Neue Tabelle",
+    "new-cell": "Neue Kalkulationstabelle",
     "new-slide": "Neue Präsentation",
     "new-pdf": "Neues PDF-Formular"
   },
