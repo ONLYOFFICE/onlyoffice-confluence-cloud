@@ -1,0 +1,181 @@
+{
+  "page": {
+    "settings": {
+      "title": "ONLYOFFICE",
+      "welcome": {
+        "header": "Добро пожаловать в ONLYOFFICE Docs!",
+        "description": "Работайте с любыми офисными документами в Confluence Cloud с помощью ONLYOFFICE Docs.",
+        "links": {
+          "learn-more": "Подробнее",
+          "suggest-feature": "Предложить функцию"
+        }
+      },
+      "connections-settings": {
+        "header": "Настройки подключения",
+        "fields": {
+          "url": {
+            "title": "Адрес ONLYOFFICE Docs",
+            "description": "Укажите здесь адрес вашего сервера ONLYOFFICE Docs."
+          },
+          "security-key": {
+            "title": "Секретный ключ ONLYOFFICE Docs",
+            "description": "Используйте автоматически сгенерированный секретный ключ JWT или задайте здесь свой ключ и укажите тот же ключ в конфигурационном файле ONLYOFFICE Docs."
+          },
+          "security-header": {
+            "title": "Заголовок авторизации",
+            "description": "Оставьте пустым, чтобы использовать заголовок по умолчанию"
+          },
+          "demo": {
+            "title": "Подключиться к демо-серверу ONLYOFFICE Docs",
+            "description-active": "Вы успешно подключены к демо-серверу. Он будет доступен до {time}. Чтобы отключить его, снимите флажок.",
+            "description-availabale": "Это публичный тестовый сервер, пожалуйста, не используйте его для конфиденциальных данных. Сервер будет доступен в течение 30 дней.",
+            "description-not-availabale": "30-дневный тестовый период завершен. Вы больше не можете подключиться к демо-серверу."
+          }
+        }
+      },
+      "messages": {
+        "settings-saved": "Настройки успешно сохранены.",
+        "save-settings-failed": "Ошибка сохранения настроек. Повторите попытку"
+      }
+    },
+    "main": {
+      "title": "Добро пожаловать в ONLYOFFICE!",
+      "description": "Создавайте и открывайте вложения из вашего пространства. Здесь будут отображаться все файлы из разделов «Контент» и «Блоги». Чтобы создать новый файл, откройте любую страницу и нажмите кнопку «Создать».",
+      "modal-title": "ONLYOFFICE Docs"
+    },
+    "editor": {
+      "messages": {
+        "you-using-demo-server": "Вы используете публичный демо-сервер ONLYOFFICE Docs. Пожалуйста, не храните на нем личные или конфиденциальные данные."
+      }
+    }
+  },
+  "buttons": {
+    "filter": {
+      "title": "Фильтр"
+    },
+    "reload-app": {
+      "title": "Перезагрузить"
+    },
+    "close": {
+      "title": "Закрыть"
+    },
+    "configure": {
+      "title": "Проверить конфигурацию"
+    },
+    "save": {
+      "title": "Сохранить"
+    },
+    "get-now": {
+      "title": "Получить"
+    },
+    "previous": {
+      "title": "Назад"
+    },
+    "next": {
+      "title": "Далее"
+    },
+    "create": {
+      "title": "Создать",
+      "tooltip": "Откройте любую страницу или запись блога, чтобы создать файл"
+    },
+    "delete": {
+      "title": "Удалить"
+    },
+    "cancel": {
+      "title": "Отмена"
+    }
+  },
+  "labels": {
+    "loading": "Загрузка",
+    "warning": "Предупреждение",
+    "search": "Поиск",
+    "more": "Другие действия"
+  },
+  "error-state": {
+    "common": {
+      "title": "Ошибка загрузки приложения",
+      "description": "При загрузке приложения произошла непредвиденная ошибка. Перезагрузите его, чтобы продолжить."
+    },
+    "not-found": {
+      "title": "Не удалось найти то, что вы ищете",
+      "description": "Возможно, объект был удален, в URL есть опечатка или вам нужно войти в систему, чтобы просмотреть его."
+    },
+    "docs-api-undefined": {
+      "title": "Ошибка сервера документов",
+      "description": "Сервер ONLYOFFICE Docs недоступен. Обратитесь к администратору.",
+      "description-admin": "Сервер ONLYOFFICE Docs недоступен. Проверьте конфигурацию ONLYOFFICE Docs."
+    }
+  },
+  "component": {
+    "content-tree": {
+      "actions": {
+        "show-only-files": "Показывать только файлы",
+        "edit": "Редактировать",
+        "view": "Просмотреть",
+        "download": "Скачать",
+        "navigate-to": "Перейти",
+        "delete": "Удалить"
+      },
+      "section": {
+        "content": "Контент",
+        "blogs": "Блоги"
+      },
+      "table": {
+        "headers": {
+          "title": "Название",
+          "size": "Размер",
+          "modified": "Изменено"
+        }
+      },
+      "empty-state": {
+        "search": {
+          "title": "Ничего не найдено",
+          "description": "Не удалось найти контент с таким названием"
+        },
+        "list": {
+          "title": "Здесь пока нет документов",
+          "description": "Создайте новый документ, нажав кнопку Создать"
+        }
+      },
+      "dialog": {
+        "delete-attachment": {
+          "title": "Удалить вложение",
+          "description": "Вы действительно хотите удалить \"{filename}\"?"
+        }
+      }
+    }
+  },
+  "notifications": {
+    "attachment-created": "Вложение \"{filename}\" успешно создано.",
+    "attachment-deleted": "Вложение \"{filename}\" успешно удалено.",
+    "attachment-create-failed": "Не удалось создать вложение. Повторите попытку.",
+    "attachment-create-with-same-filename": "Нельзя добавить новое вложение с тем же именем файла, что и у существующего вложения: \"{filename}\".",
+    "attachment-delete-failed": "Не удалось удалить вложение. Повторите попытку.",
+    "attachment-not-found": "Файл вложения не найден"
+  },
+  "validation": {
+    "title-required": "Необходимо указать название"
+  },
+  "content-type": {
+    "page": "Страница",
+    "blogpost": "Запись блога",
+    "whiteboard": "Доска",
+    "database": "База данных",
+    "embed": "Smart Link",
+    "folder": "Папка"
+  },
+  "document-type": {
+    "word": "Документ",
+    "cell": "Таблица",
+    "slide": "Презентация",
+    "pdf": "PDF-форма",
+    "new-word": "Новый документ",
+    "new-cell": "Новая таблица",
+    "new-slide": "Новая презентация",
+    "new-pdf": "Новая PDF-форма"
+  },
+  "docs-cloud-banner": {
+    "header": "ONLYOFFICE Docs Cloud",
+    "description": "Легко запускайте редакторы в облаке без скачивания и установки"
+  }
+}

@@ -167,12 +167,12 @@
   "document-type": {
     "word": "Document",
     "cell": "Spreadsheet",
-    "slide": "Presentaion",
-    "pdf": "PDF form",
+    "slide": "Presentation",
+    "pdf": "PDF Form",
     "new-word": "New Document",
     "new-cell": "New Spreadsheet",
     "new-slide": "New Presentation",
-    "new-pdf": "New PDF form"
+    "new-pdf": "New PDF Form"
   },
   "docs-cloud-banner": {
     "header": "ONLYOFFICE Docs Cloud",

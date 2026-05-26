@@ -1,0 +1,181 @@
+{
+  "page": {
+    "settings": {
+      "title": "ONLYOFFICE",
+      "welcome": {
+        "header": "Benvenuto in ONLYOFFICE Docs!",
+        "description": "Lavora su tutti i tipi di documenti d'ufficio in Confluence Cloud usando ONLYOFFICE Docs.",
+        "links": {
+          "learn-more": "Scopri di più",
+          "suggest-feature": "Suggerisci una funzionalità"
+        }
+      },
+      "connections-settings": {
+        "header": "Impostazioni di connessione",
+        "fields": {
+          "url": {
+            "title": "Indirizzo di ONLYOFFICE Docs",
+            "description": "Specifica qui l'indirizzo del tuo server ONLYOFFICE Docs."
+          },
+          "security-key": {
+            "title": "Chiave segreta di ONLYOFFICE Docs",
+            "description": "Usa la chiave segreta JWT generata automaticamente oppure impostane una tua qui e usa la stessa nel file di configurazione di ONLYOFFICE Docs."
+          },
+          "security-header": {
+            "title": "Intestazione di autorizzazione",
+            "description": "Lascia vuoto per usare l'intestazione predefinita"
+          },
+          "demo": {
+            "title": "Connetti al server demo di ONLYOFFICE Docs",
+            "description-active": "Sei connesso correttamente al server demo. Sarà disponibile fino a {time}. Per disattivarlo, deseleziona la casella.",
+            "description-availabale": "Questo è un server di prova pubblico; non usarlo per dati privati o sensibili. Il server sarà disponibile per un periodo di 30 giorni.",
+            "description-not-availabale": "Il periodo di prova di 30 giorni è terminato. Non puoi più connetterti al server demo."
+          }
+        }
+      },
+      "messages": {
+        "settings-saved": "Impostazioni salvate correttamente.",
+        "save-settings-failed": "Errore durante il salvataggio delle impostazioni. Riprova"
+      }
+    },
+    "main": {
+      "title": "Benvenuto in ONLYOFFICE!",
+      "description": "Crea e apri allegati dal tuo spazio. Tutti i file da Contenuto e Blog appariranno qui. Per creare un nuovo file, apri qualsiasi pagina e premi il pulsante Crea.",
+      "modal-title": "ONLYOFFICE Docs"
+    },
+    "editor": {
+      "messages": {
+        "you-using-demo-server": "Stai usando il server demo pubblico di ONLYOFFICE Docs. Evita di archiviare dati privati o sensibili."
+      }
+    }
+  },
+  "buttons": {
+    "filter": {
+      "title": "Filtro"
+    },
+    "reload-app": {
+      "title": "Ricarica"
+    },
+    "close": {
+      "title": "Chiudi"
+    },
+    "configure": {
+      "title": "Controlla configurazione"
+    },
+    "save": {
+      "title": "Salva"
+    },
+    "get-now": {
+      "title": "Ottieni ora"
+    },
+    "previous": {
+      "title": "Precedente"
+    },
+    "next": {
+      "title": "Avanti"
+    },
+    "create": {
+      "title": "Crea",
+      "tooltip": "Apri una pagina o un post del blog per creare un file"
+    },
+    "delete": {
+      "title": "Elimina"
+    },
+    "cancel": {
+      "title": "Annulla"
+    }
+  },
+  "labels": {
+    "loading": "Caricamento",
+    "warning": "Avviso",
+    "search": "Cerca",
+    "more": "Altre azioni"
+  },
+  "error-state": {
+    "common": {
+      "title": "Errore di caricamento dell'app",
+      "description": "Si è verificato un errore imprevisto durante il caricamento dell'applicazione. Ricaricala per continuare."
+    },
+    "not-found": {
+      "title": "Non abbiamo trovato quello che stai cercando",
+      "description": "Potrebbe essere stato eliminato, l'URL potrebbe contenere un errore di battitura oppure potresti dover accedere per visualizzarlo."
+    },
+    "docs-api-undefined": {
+      "title": "Errore del server documenti",
+      "description": "Il server ONLYOFFICE Docs non è raggiungibile. Contatta l'amministratore.",
+      "description-admin": "Il server ONLYOFFICE Docs non è raggiungibile. Controlla la configurazione di ONLYOFFICE Docs."
+    }
+  },
+  "component": {
+    "content-tree": {
+      "actions": {
+        "show-only-files": "Mostra solo file",
+        "edit": "Modifica",
+        "view": "Visualizza",
+        "download": "Scarica",
+        "navigate-to": "Vai a",
+        "delete": "Elimina"
+      },
+      "section": {
+        "content": "Contenuto",
+        "blogs": "Blog"
+      },
+      "table": {
+        "headers": {
+          "title": "Titolo",
+          "size": "Dimensione",
+          "modified": "Modificato"
+        }
+      },
+      "empty-state": {
+        "search": {
+          "title": "Nessun risultato",
+          "description": "Non abbiamo trovato alcun contenuto con questo titolo"
+        },
+        "list": {
+          "title": "Ancora nessun documento",
+          "description": "Crea un nuovo documento facendo clic sul pulsante Crea"
+        }
+      },
+      "dialog": {
+        "delete-attachment": {
+          "title": "Elimina allegato",
+          "description": "Vuoi davvero eliminare \"{filename}\"?"
+        }
+      }
+    }
+  },
+  "notifications": {
+    "attachment-created": "Allegato \"{filename}\" creato correttamente.",
+    "attachment-deleted": "Allegato \"{filename}\" eliminato correttamente.",
+    "attachment-create-failed": "Impossibile creare l'allegato. Riprova.",
+    "attachment-create-with-same-filename": "Impossibile aggiungere un nuovo allegato con lo stesso nome di un allegato esistente: \"{filename}\".",
+    "attachment-delete-failed": "Impossibile eliminare l'allegato. Riprova.",
+    "attachment-not-found": "File allegato non trovato"
+  },
+  "validation": {
+    "title-required": "Il titolo è obbligatorio"
+  },
+  "content-type": {
+    "page": "Pagina",
+    "blogpost": "Post del blog",
+    "whiteboard": "Lavagna",
+    "database": "Database",
+    "embed": "Smart Link",
+    "folder": "Cartella"
+  },
+  "document-type": {
+    "word": "Documento",
+    "cell": "Foglio di calcolo",
+    "slide": "Presentazione",
+    "pdf": "Modulo PDF",
+    "new-word": "Nuovo documento",
+    "new-cell": "Nuovo foglio di calcolo",
+    "new-slide": "Nuova presentazione",
+    "new-pdf": "Nuovo modulo PDF"
+  },
+  "docs-cloud-banner": {
+    "header": "ONLYOFFICE Docs Cloud",
+    "description": "Avvia facilmente gli editor nel cloud senza scaricare né installare nulla"
+  }
+}
