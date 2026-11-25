@@ -1,6 +1,9 @@
 # Change Log
 
 ## [Unreleased]
+## Changed
+- updated dependencies to fix security vulnerabilities (undici, lodash, markdown-it, vite and others)
+
 ## Fixed
 - "App loading error" when opening attachments in the editor: the editor page is migrated from the removed `confluence:fullPage` module to `global:fullPage`
 
