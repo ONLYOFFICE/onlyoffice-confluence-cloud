@@ -29,9 +29,9 @@ let formats: Format[] = [];
 const mainPageResolver = new Resolver();
 
 mainPageResolver.define("getAppContext", () => {
-  const { appAri, environmentAri } = getAppContext();
+  const { installationAri } = getAppContext();
 
-  return { appId: appAri.appId, environmentId: environmentAri.environmentId };
+  return { installationId: installationAri.installationId };
 });
 
 mainPageResolver.define("getFormats", async () => {

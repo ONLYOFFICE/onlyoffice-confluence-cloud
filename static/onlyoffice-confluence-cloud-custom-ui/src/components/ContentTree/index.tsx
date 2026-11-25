@@ -276,8 +276,7 @@ export const ContentTree: React.FC<ContentTreeProps> = ({
     if (appContext && currentEntity) {
       router.navigate(
         getEditorPageUrl(
-          appContext.appId,
-          appContext.environmentId,
+          appContext.installationId,
           { id: currentEntity.id, contentType: currentEntity.type },
           attachmentId,
         ),
