@@ -60,7 +60,7 @@ modules:
         function: main-page-resolver
       viewportSize: max
       title: ONLYOFFICE
-  confluence:fullPage:
+  global:fullPage:
     - key: editor-page
       resource: custom-ui
       resolver:

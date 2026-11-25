@@ -130,12 +130,7 @@ export const buildContentTreeRows = (
   const onClickEdit = (entity: Content) => {
     if (parentId) {
       router.open(
-        getEditorPageUrl(
-          appContext.appId,
-          appContext.environmentId,
-          parentId,
-          entity.id,
-        ),
+        getEditorPageUrl(appContext.installationId, parentId, entity.id),
       );
     }
   };

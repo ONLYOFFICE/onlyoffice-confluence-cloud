@@ -19,12 +19,11 @@
 import { History } from "history";
 
 export const getEditorPageUrl = (
-  appId: string,
-  environmentId: string,
+  installationId: string,
   parentId: { id: string; contentType: string },
   attachmentId: string,
 ) => {
-  return `/forge-apps/a/${appId}/e/${environmentId}/r/editor?parentId=${parentId.contentType}:${parentId.id}&attachmentId=${attachmentId}`;
+  return `/apps/full-page/${installationId}/editor?parentId=${parentId.contentType}:${parentId.id}&attachmentId=${attachmentId}`;
 };
 
 export const updateHistory = (

@@ -1,5 +1,9 @@
 # Change Log
 
+## [Unreleased]
+## Fixed
+- "App loading error" when opening attachments in the editor: the editor page is migrated from the removed `confluence:fullPage` module to `global:fullPage`
+
 ## 2.1.0
 ## Added
 - new empty file templates

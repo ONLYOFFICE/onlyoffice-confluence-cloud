@@ -22,8 +22,7 @@ export enum SortOrder {
 }
 
 export interface AppContext {
-  appId: string;
-  environmentId: string;
+  installationId: string;
 }
 
 export interface Format {
