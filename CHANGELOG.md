@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unreleased]
+## 2.2.0
 ## Changed
 - updated dependencies to fix security vulnerabilities (undici, lodash, markdown-it, vite and others)
 
